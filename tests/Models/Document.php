@@ -16,7 +16,7 @@ abstract class Document extends Model implements SequenceableContract
         Sequenceable::__construct as private __sequenceableConstructor;
     }
 
-    protected $fillable = ['number', 'number_string'];
+    protected $fillable = [ 'number', 'number_string', 'type' ];
 
     protected $table = 'documents';
 
