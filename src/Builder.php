@@ -13,14 +13,17 @@ use Illuminate\Database\Eloquent\Model;
 use Enea\Sequenceable\Contracts\SequenceableContract;
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Enea\Sequenceable\Exceptions\SequenceException;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 
 class Builder
 {
     /**
+     * Model where sequences are generated
+     *
      * @var SequenceableContract|Model
      */
-    private $model;
-
+    protected $model;
 
     /**
      * Builder constructor.
@@ -54,116 +57,55 @@ class Builder
      */
     public final function make( )
     {
-        $sequences = $this->model->getSequencesConfig( );
+        foreach ($this->model->getSequencesConfiguration() as $key => $size ) {
 
-        foreach ($sequences as $key => $size ) {
-
-            if ( ! $this->isAvailable($key, $size) ) {
+            if ( ! Helper::isAvailableSequence($key, $size) ) {
                 throw new SequenceException( "Wrong sequence configuration format key: $key value: $size" );
             }
 
-            $column = $this->getColumnName($key, $size);
+            $column = Helper::getColumnName($key, $size);
 
-            $sequence = $this->sequence( $this->getKeyName($key, $size), $column )->next( );
+            $sequence = $this->createSequence( Helper::getKeyName($key, $size), $column )->next( );
 
-            $this->model->setAttribute($column, $this->model->autocomplete( $sequence, $this->getSize($key, $size) ));
-        }
-
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     * @return mixed
-     */
-    protected function getKeyName($key, $value )
-    {
-        if( is_array($value) || is_integer($value)){
-            return $key;
-        }
-
-        return $value;
-    }
-
-    /**
-     * @param string|integer $key
-     * @param string|array $value
-     * @return string
-     */
-    protected function getColumnName($key, $value )
-    {
-        $isValueArray = is_array($value);
-
-        if ( is_integer($key) && ! $isValueArray) {
-            return $value;
-        }
-
-        if( $isValueArray ) {
-            $key = key($value);
-            return is_string($key) ? $key : current($value);
-        }
-
-        return $key;
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     * @return mixed
-     */
-    protected function getSize($key, $value)
-    {
-        if(is_integer($key) && ! is_array($value)) {
-            return 0;
-        }
-
-        if (is_array($value)) {
-            $value = current($value);
-            return is_integer($value) ? $value : 0;
-        }
-
-        return $value;
-    }
-
-
-    /**
-     * @param $key
-     * @param $value
-     * @return bool
-     */
-    protected function isAvailable($key, $value )
-    {
-        if( is_string( $key ) || is_numeric($key) ) {
-            if ( is_array($value)) {
-
-                $key = key($value);
-                $value = current($value);
-
-                return (is_string($key) && is_integer($value)) || (is_integer($key) && is_string($value));
+            if ($this->isAutoCompletable( ) ) {
+                $sequence = $this->model->autocomplete( $sequence, Helper::getSize($key, $size) );
             }
 
-            return is_integer($value) && !is_numeric($key);
+            $this->model->setAttribute($column, $sequence );
         }
 
-        return is_integer($key) && is_string($value);
     }
-
 
     /**
      * @param $column
      * @return SequenceContract
      * @throws SequenceException
      */
-    protected final function sequenceModel($column )
+    protected function sequenceModel( $column )
     {
+        $instance = $this->model->getSequencesInstances( )->search(function ( array $values ) use ( $column ) {
+            return in_array($column, $values);
+        });
 
-        foreach ($this->model->getSequenceBindings() as $class => $columns ) {
-            if ( array_search($column, $columns) ) {
-                return new $class;
-            }
+        if ( $instance ) {
+            return new $instance;
         }
 
-        return $this->model->getSequenceModel( );
+        if ( $model = config( 'sequenceable.model' )) {
+            return new $model;
+        }
+
+        return new Sequence( );
+    }
+
+    /**
+     * Returns true if the sequence is to be filled
+     *
+     * @return bool
+     */
+    protected function isAutoCompletable( ): bool
+    {
+        return config('sequenceable.autofilling', false);
     }
 
     /**
@@ -174,7 +116,7 @@ class Builder
      * @return SequenceContract
      * @throws SequenceException
      */
-    protected final function sequence($id, $column )
+    protected function createSequence( $id, $column )
     {
         $sequenceable = $this->sequenceModel( $column );
 
@@ -184,5 +126,19 @@ class Builder
 
         return $sequenceable->findOrCreate( $id, $this->model->getTable(), $column );
     }
+
+    /**
+     * Configuration of the sequences
+     *
+     * @return Collection
+     * @throws SequenceException
+     */
+    public function getSequencesConfiguration( ): Collection
+    {
+        return  collect($this->model->sequencesSetup( ));
+    }
+
+
+
 
 }

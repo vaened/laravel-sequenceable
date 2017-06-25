@@ -1,10 +1,7 @@
 <?php
 /**
- * Created by eneasdh-fs
- * Date: 08/01/17
- * Time: 10:26 PM
+ * Created by enea dhack - 17/06/17 10:16 PM
  */
-
 namespace Enea\Sequenceable;
 
 use Illuminate\Database\Eloquent\Model;
@@ -22,13 +19,35 @@ use Enea\Sequenceable\Model\Sequence;
  *
  * @package Core\Resources\Sequenceable
  *
- * @property  array sequences
- * @property  array bindings
- * @property  string sequence_model
  *
  */
 trait Sequenceable
 {
+
+    /**
+     * Sequence configuration
+     *
+     * @var Collection
+     * */
+    protected $sequencesConfiguration;
+
+    /**
+     * Sequence models
+     *
+     * @var Collection
+     * */
+    protected $instances;
+
+    /**
+     * The constructor is used to compile the configuration of the sequences in
+     * different collections so as to facilitate the use and to save resources
+     *
+     * Sequenceable constructor.
+     */
+    public function __construct( )
+    {
+        $this->compileSequences( );
+    }
 
     /**
      * Model builds key
@@ -64,61 +83,6 @@ trait Sequenceable
         return $key;
     }
 
-    /**
-     * Sequence settings by model
-     * @return array
-     */
-    public function getSequenceBindings()
-    {
-        return isset($this->bindings) ? $this->bindings : array();
-    }
-
-    /**
-     * Gets the sequence model
-     *
-     * @return SequenceContract
-     * @throws SequenceException
-     */
-    public function getSequenceModel()
-    {
-        if( isset( $this->sequence_model ) ) {
-            return new $this->sequence_model;
-        }
-
-        if ( $model = config( 'sequenceable.model' )) {
-            return new $model;
-        }
-
-        return new Sequence( );
-    }
-
-
-
-    /**
-     * Configuration of the sequences
-     *
-     * @return Collection
-     * @throws SequenceException
-     */
-    public final function getSequencesConfig( )
-    {
-        if ( ! $this instanceof  Model ) {
-            throw  new SequenceException( static::class  . ' Must be an instance of ' . Model::class);
-        }
-
-        if( method_exists($this, 'sequences') ) {
-            $sequences = $this->sequences();
-        }else if (  property_exists($this, 'sequences')) {
-            $sequences = $this->sequences;
-        }else{
-            $sequences = [ $this->getKeyName( )  ];
-        }
-
-        return  collect($sequences);
-    }
-
-
-
 
     /**
      * @return Collection
@@ -127,7 +91,7 @@ trait Sequenceable
     {
         $collection = collect( );
 
-        foreach ( $this->getSequencesConfig( ) as $key => $sequence) {
+        foreach ( $this->getSequencesConfiguration( ) as $key => $sequence) {
 
             if (is_array($sequence)) {
                 $key = key($sequence);
@@ -141,16 +105,29 @@ trait Sequenceable
         return $collection;
     }
 
-
+    /**
+     * Returns, only if defined, the custom instances
+     *
+     * @return Collection
+     * */
+    public function getSequencesInstances( ): Collection
+    {
+        return $this->instances;
+    }
 
     /**
-     * Modify this method if necessary
+     * Returns the sequences defined in the model
      *
-     * @return bool
+     * @return Collection
+     * @throws SequenceException
      */
-    protected static function isSequenceableAvailable()
+    public function getSequencesConfiguration( ): Collection
     {
-        return true;
+        if ( ! $this instanceof  Model ) {
+            throw new SequenceException( static::class  . ' Must be an instance of ' . Model::class);
+        }
+
+        return $this->sequencesConfiguration;
     }
 
     /**
@@ -163,5 +140,54 @@ trait Sequenceable
             static::observe(new SequenceObserver());
         }
     }
+
+    /**
+     * Modify this method if necessary
+     *
+     * @return bool
+     */
+    protected static function isSequenceableAvailable()
+    {
+        return true;
+    }
+
+
+    /**
+     * Orders the sequence configuration by separating the
+     * columns and instances of the sequenceable contract
+     *
+     * @return void
+     */
+    protected function compileSequences( )
+    {
+        $this->sequencesConfiguration = collect( );
+        $this->instances = collect( );
+
+        collect($this->sequencesSetup( ))->each( function ( $values, $key  ) {
+
+            $sequences = array( );
+
+            if ( ! class_exists( $key )) {
+                $this->sequencesConfiguration->put( $key, $values );
+            } else {
+
+                foreach ( (array) $values as $k => $value ) {
+
+                    if (is_numeric( $k )) {
+                        $this->sequencesConfiguration->push($value);
+                    } else {
+                        $this->sequencesConfiguration->put( $k, $value );
+                    }
+
+                    $sequences[ ] = is_array( $value ) ? key( $value ) : (
+                    is_numeric( $value ) ? $k: $value
+                    );
+                }
+
+                $this->instances->put( $key, $sequences );
+            }
+        });
+    }
+
 
 }
