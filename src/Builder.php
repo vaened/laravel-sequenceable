@@ -30,100 +30,85 @@ class Builder
      * @param SequenceableContract|Sequenceable $model
      * @throws SequenceException
      */
-    public function __construct( SequenceableContract $model )
+    public function __construct( SequenceableContract $model = null )
     {
-        if  ( ! $model instanceof  Model) {
-            throw  new SequenceException( get_class( $model )  . ' Must be an instance of ' . Model::class);
-        }
-
         $this->model = $model;
     }
 
     /**
-     * Build sequence for new resource
+     * Establish a model
      *
-     * @throws SequenceException
+     * @param SequenceableContract $model
+     * @return void
      */
-    public function __invoke()
+    public function setSequenceableModel( SequenceableContract $model )
     {
-        $this->make( );
-    }
-
-
-    /**
-     * Build sequence for new resource
-     *
-     * @throws SequenceException
-     */
-    public final function make( )
-    {
-        foreach ($this->model->getSequencesConfiguration() as $key => $size ) {
-
-            if ( ! Helper::isAvailableSequence($key, $size) ) {
-                throw new SequenceException( "Wrong sequence configuration format key: $key value: $size" );
-            }
-
-            $column = Helper::getColumnName($key, $size);
-
-            $sequence = $this->createSequence( Helper::getKeyName($key, $size), $column )->next( );
-
-            if ($this->isAutoCompletable( ) ) {
-                $sequence = $this->model->autocomplete( $sequence, Helper::getSize($key, $size) );
-            }
-
-            $this->model->setAttribute($column, $sequence );
-        }
-
+        $this->model = $model;
     }
 
     /**
-     * @param $column
+     * Creates the sequence model and generates the sequence
+     *
+     * @param $key
+     * @param $value
      * @return SequenceContract
      * @throws SequenceException
      */
-    protected function sequenceModel( $column )
+    public function sequence( $key, $value ): SequenceContract
     {
-        $instance = $this->model->getSequencesInstances( )->search(function ( array $values ) use ( $column ) {
+        if ( ! Helper::isAvailableSequence($key, $value) ) {
+            throw new SequenceException( "Wrong sequence configuration format key: $key value: $value" );
+        }
+
+        $column = Helper::getColumnName( $key, $value );
+
+        return $this->createSequence( Helper::getKeyName($key, $value), $column );
+    }
+
+    /**
+     * Builds the sequence model
+     *
+     * @param $key
+     * @param $value
+     * @return SequenceContract|Model
+     * @throws SequenceException
+     */
+    public function model($key, $value ): SequenceContract
+    {
+        if ( ! Helper::isAvailableSequence($key, $value) ) {
+            throw new SequenceException( "Wrong sequence configuration format key: $key value: $value" );
+        }
+
+        return $this->createModel( Helper::getColumnName( $key, $value ) );
+    }
+
+    /**
+     * Returns the configured sequence model and, if not defined, takes the default value
+     *
+     * @param $column
+     * @return SequenceContract
+     */
+    protected function createModel( $column ): SequenceContract
+    {
+        $instance = $this->model->getSequenceModels( )->search(function ( array $values ) use ( $column ) {
             return in_array($column, $values);
         });
 
-        if ( $instance ) {
-            return new $instance;
-        }
-
-        if ( $model = config( 'sequenceable.model' )) {
-            return new $model;
-        }
-
-        return new Sequence( );
+        return new $instance;
     }
 
-    /**
-     * Returns true if the sequence is to be filled
-     *
-     * @return bool
-     */
-    protected function isAutoCompletable( ): bool
-    {
-        return config('sequenceable.autofilling', false);
-    }
 
     /**
-     * To obtain the sequential model
+     * Look for the sequence in the table and, if it is not found, generate it
      *
      * @param $id
      * @param $column
      * @return SequenceContract
      * @throws SequenceException
      */
-    protected function createSequence( $id, $column )
+    protected function createSequence( $id, $column ): SequenceContract
     {
-        $sequenceable = $this->sequenceModel( $column );
-
-        if( ! $sequenceable instanceof  SequenceContract ) {
-            throw  new SequenceException( 'The sequence must be an instance of ' . SequenceContract::class );
-        }
-
+        $sequenceable = $this->createModel( $column );
         return $sequenceable->findOrCreate( $id, $this->model->getTable(), $column );
     }
 
@@ -137,8 +122,5 @@ class Builder
     {
         return  collect($this->model->sequencesSetup( ));
     }
-
-
-
 
 }

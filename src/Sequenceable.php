@@ -83,23 +83,25 @@ trait Sequenceable
      *
      * @return Collection
      * */
-    public function getSequencesInstances( ): Collection
+    public function getSequenceModels( ): Collection
     {
         $instances = collect( );
-
-        foreach ( $this->sequencesSetup( ) as $key => $values ){
+        $common = array();
+        foreach ( $this->sequencesSetup( ) as $key => $values ) {
             $sequences = array( );
+            if ( ! class_exists( $key )  ) {
+                $common[ ] = Helper::getColumnName($key, $values);
+            } else {
 
-            if ( class_exists( $key )) {
-               // get columns
                 foreach ( (array) $values as $k => $value ) {
-                    $sequences[ ] = is_array( $value ) ? key( $value ) : (
-                        is_numeric( $value ) ? $k: $value
-                    );
+                    $sequences[ ] = Helper::getColumnName($k, $value);
                 }
+
                 $instances->put( $key, $sequences );
             }
         }
+
+        $instances->put( $this->defaultSequenceName( ), $common );
 
         return $instances;
     }
@@ -158,4 +160,17 @@ trait Sequenceable
         return true;
     }
 
+    /**
+     * Returns the full path of the default sequence model
+     *
+     * @return string
+     */
+    protected function defaultSequenceName( ): string
+    {
+        if ($model = config('sequenceable.model')) {
+            return $model;
+        }
+
+        return Sequence::class;
+    }
 }
