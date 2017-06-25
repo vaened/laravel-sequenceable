@@ -17,6 +17,7 @@ class CreateDocumentsTable extends Migration
             $table->increments( 'id') ;
             $table->unsignedInteger('number')->nullable();
             $table->string('number_string')->nullable();
+            $table->string('type')->nullable();
             $table->timestamps( );
         });
     }
