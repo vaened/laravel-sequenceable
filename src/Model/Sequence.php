@@ -149,7 +149,7 @@ class Sequence extends Model implements SequenceContract
      */
     public function findOrCreate( $key, $table, $column ): SequenceContract
     {
-        $table = $table . '.' . $key ;
+        $table = "$table.$column.$key";
         return static::firstOrCreate([ 'id' => $this->keyFormatted( $table ) ], [ 'source' => $table, 'sequence' => 0 ]);
     }
 
