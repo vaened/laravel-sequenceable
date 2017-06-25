@@ -33,8 +33,8 @@ class Helper
     /**
      * Get the name of the code that identifies the column that is automatically completed
      * 
-     * @param $key
-     * @param $value
+     * @param string|int $key
+     * @param array|string|int $value
      * @return mixed
      */
     public static function getKeyName($key, $value )
@@ -45,8 +45,8 @@ class Helper
     /**
      * Get the name of the column that is automatically completed
      *
-     * @param string|integer $key
-     * @param string|array $value
+     * @param string|int $key
+     * @param array|string|int $value
      * @return string
      */
     public static function getColumnName($key, $value )
@@ -66,9 +66,9 @@ class Helper
     /**
      * Get autocomplete size
      *
-     * @param $key
-     * @param $value
-     * @return mixed
+     * @param string|int $key
+     * @param array|string|int $value
+     * @return string
      */
     public static function getSize($key, $value)
     {
@@ -84,5 +84,6 @@ class Helper
 
         return $value;
     }
+
 
 }
