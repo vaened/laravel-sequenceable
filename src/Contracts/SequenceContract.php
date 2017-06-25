@@ -15,21 +15,21 @@ interface SequenceContract
      *
      * @return integer
      */
-    public function next( );
+    public function next( ): int;
 
     /**
      * Decrements the sequence by one and return it
      *
      * @return integer
      */
-    public function prev( );
+    public function prev( ): int;
 
     /**
      * Gets the current sequence
      *
      * @return integer
      * */
-    public function current();
+    public function current( ): int;
 
     /**
      * Get the first record matching the attributes or create it.
@@ -37,9 +37,9 @@ interface SequenceContract
      * @param  string|integer $key
      * @param  string $table
      * @param  string $column
-     *  @return static
+     *  @return SequenceContract
      */
-    public function findOrCreate( $key, $table, $column );
+    public function findOrCreate( $key, $table, $column ): SequenceContract;
 
 
 }

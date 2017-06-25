@@ -1,30 +1,34 @@
 <?php
 /**
- * Created eneasdh-fs
- * Date: 11/01/17
- * Time: 10:07 PM
+ * Created by enea dhack - 17/06/17 10:16 PM
  */
 
 namespace Enea\Sequenceable\Contracts;
 
-use Enea\Sequenceable\Exceptions\SequenceException;
+use Illuminate\Support\Collection;
 
 
 interface SequenceableContract
 {
 
     /**
-     * Gets the sequence model
+     * Returns the configuration of the sequences
      *
-     * @return SequenceContract
-     * @throws SequenceException
-     */
-    public function getSequenceModel( );
-
-    /**
-     * Sequence settings by model
      * @return array
      */
-    public function getSequenceBindings();
+    public function sequencesSetup( ): array;
 
+    /**
+     * Returns, only if defined, the custom instances
+     *
+     * @return Collection
+     * */
+    public function getSequencesInstances( ): Collection;
+
+    /**
+     * Returns the sequences defined in the model
+     *
+     * @return Collection
+     */
+    public function getSequencesConfiguration( ): Collection;
 }
