@@ -37,6 +37,13 @@ class Sequence extends Model implements SequenceContract
     protected $table = 'sequences';
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [ 'next', 'prev', 'current' ];
+
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
@@ -67,14 +74,44 @@ class Sequence extends Model implements SequenceContract
     ];
 
     /**
+     * Returns the previous sequence
+     *
+     * @return int
+     */
+    public function getPrevAttribute( ): int
+    {
+        return $this->sequence --;
+    }
+
+    /**
+     * Returns the current sequence
+     *
+     * @return int
+     */
+    public function getCurrentAttribute( ): int
+    {
+        return $this->sequence;
+    }
+
+    /**
+     * Returns the next sequence
+     *
+     * @return int
+     */
+    public function getNextAttribute( ): int
+    {
+        return $this->sequence ++;
+    }
+
+    /**
      * Increase sequence by one and return it
      *
      * @return integer
      */
-    public function next()
+    public function next( ): int
     {
         $this->sequence ++;
-        $this->save();
+        $this->save( );
         return $this->sequence;
     }
 
@@ -83,7 +120,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @return integer
      */
-    public function prev()
+    public function prev( ): int
     {
         $this->sequence --;
         $this->save();
@@ -96,7 +133,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @return integer
      * */
-    public function current()
+    public function current( ): int
     {
         return $this->sequence;
     }
@@ -108,9 +145,9 @@ class Sequence extends Model implements SequenceContract
      * @param string|integer $key
      * @param string $table
      * @param string $column
-     * @return static
+     * @return SequenceContract
      */
-    public function findOrCreate( $key, $table, $column )
+    public function findOrCreate( $key, $table, $column ): SequenceContract
     {
         $table = $table . '.' . $key ;
         return static::firstOrCreate([ 'id' => $this->keyFormatted( $table ) ], [ 'source' => $table, 'sequence' => 0 ]);
