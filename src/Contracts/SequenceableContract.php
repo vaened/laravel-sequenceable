@@ -23,7 +23,7 @@ interface SequenceableContract
      *
      * @return Collection
      * */
-    public function getSequencesInstances( ): Collection;
+    public function getSequenceModels( ): Collection;
 
     /**
      * Returns the sequences defined in the model
