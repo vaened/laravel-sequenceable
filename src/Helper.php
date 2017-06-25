@@ -31,6 +31,8 @@ class Helper
     }
 
     /**
+     * Get the name of the code that identifies the column that is automatically completed
+     * 
      * @param $key
      * @param $value
      * @return mixed
@@ -41,6 +43,8 @@ class Helper
     }
 
     /**
+     * Get the name of the column that is automatically completed
+     *
      * @param string|integer $key
      * @param string|array $value
      * @return string
@@ -60,6 +64,8 @@ class Helper
     }
 
     /**
+     * Get autocomplete size
+     *
      * @param $key
      * @param $value
      * @return mixed
