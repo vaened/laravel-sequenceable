@@ -23,32 +23,6 @@ use Enea\Sequenceable\Model\Sequence;
  */
 trait Sequenceable
 {
-
-    /**
-     * Sequence configuration
-     *
-     * @var Collection
-     * */
-    protected $sequencesConfiguration;
-
-    /**
-     * Sequence models
-     *
-     * @var Collection
-     * */
-    protected $instances;
-
-    /**
-     * The constructor is used to compile the configuration of the sequences in
-     * different collections so as to facilitate the use and to save resources
-     *
-     * Sequenceable constructor.
-     */
-    public function __construct( )
-    {
-        $this->compileSequences( );
-    }
-
     /**
      * Model builds key
      *
@@ -101,7 +75,6 @@ trait Sequenceable
             $collection->put($key, $sequence);
         }
 
-
         return $collection;
     }
 
@@ -112,7 +85,23 @@ trait Sequenceable
      * */
     public function getSequencesInstances( ): Collection
     {
-        return $this->instances;
+        $instances = collect( );
+
+        foreach ( $this->sequencesSetup( ) as $key => $values ){
+            $sequences = array( );
+
+            if ( class_exists( $key )) {
+               // get columns
+                foreach ( (array) $values as $k => $value ) {
+                    $sequences[ ] = is_array( $value ) ? key( $value ) : (
+                        is_numeric( $value ) ? $k: $value
+                    );
+                }
+                $instances->put( $key, $sequences );
+            }
+        }
+
+        return $instances;
     }
 
     /**
@@ -127,7 +116,25 @@ trait Sequenceable
             throw new SequenceException( static::class  . ' Must be an instance of ' . Model::class);
         }
 
-        return $this->sequencesConfiguration;
+        $sequencesConfiguration = collect( );
+
+        foreach ( $this->sequencesSetup( ) as $key => $values ) {
+
+            if ( ! class_exists( $key )) {
+                $sequencesConfiguration->put( $key, $values );
+            } else {
+                foreach ( (array) $values as $k => $value ) {
+                    if (is_numeric( $k )) {
+                        $sequencesConfiguration->push($value);
+                    } else {
+                        $sequencesConfiguration->put( $k, $value );
+                    }
+                }
+            }
+
+        }
+
+        return $sequencesConfiguration;
     }
 
     /**
@@ -150,44 +157,5 @@ trait Sequenceable
     {
         return true;
     }
-
-
-    /**
-     * Orders the sequence configuration by separating the
-     * columns and instances of the sequenceable contract
-     *
-     * @return void
-     */
-    protected function compileSequences( )
-    {
-        $this->sequencesConfiguration = collect( );
-        $this->instances = collect( );
-
-        collect($this->sequencesSetup( ))->each( function ( $values, $key  ) {
-
-            $sequences = array( );
-
-            if ( ! class_exists( $key )) {
-                $this->sequencesConfiguration->put( $key, $values );
-            } else {
-
-                foreach ( (array) $values as $k => $value ) {
-
-                    if (is_numeric( $k )) {
-                        $this->sequencesConfiguration->push($value);
-                    } else {
-                        $this->sequencesConfiguration->put( $k, $value );
-                    }
-
-                    $sequences[ ] = is_array( $value ) ? key( $value ) : (
-                    is_numeric( $value ) ? $k: $value
-                    );
-                }
-
-                $this->instances->put( $key, $sequences );
-            }
-        });
-    }
-
 
 }
