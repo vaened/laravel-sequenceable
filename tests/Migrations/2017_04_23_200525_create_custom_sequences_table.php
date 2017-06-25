@@ -18,7 +18,10 @@ class CreateCustomSequencesTable extends Migration
             $table->primary( 'id' ) ;
 
             $table->unsignedBigInteger('sequence')->default( 0 );
-            $table->string( 'source' );
+
+            $table->string( 'source', 50 );
+            $table->string( 'column_key', 60 );
+            $table->string( 'description', 150 )->nullable();
 
             $table->timestamps( );
         });

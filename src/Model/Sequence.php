@@ -10,14 +10,19 @@ namespace Enea\Sequenceable\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use Enea\Sequenceable\Contracts\SequenceContract;
+use Illuminate\Support\Collection;
 
 /**
  * Model Sequence
  *
  * Attributes
  *
- * @property  string id
  * @property  integer sequence
+ *
+ * @property  string id
+ * @property  string source
+ * @property  string description
+ * @property  string column_key
  * */
 class Sequence extends Model implements SequenceContract
 {
@@ -62,7 +67,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @var array
      */
-    protected $fillable = [ 'id', 'source' ];
+    protected $fillable = [ 'id', 'source', 'column_key', 'description' ];
 
     /**
      * The attributes that should be cast to native types.
@@ -80,7 +85,9 @@ class Sequence extends Model implements SequenceContract
      */
     public function getPrevAttribute( ): int
     {
-        return $this->sequence --;
+        $prev = $this->sequence;
+        $prev --;
+        return $prev;
     }
 
     /**
@@ -100,7 +107,9 @@ class Sequence extends Model implements SequenceContract
      */
     public function getNextAttribute( ): int
     {
-        return $this->sequence ++;
+        $next = $this->sequence;
+        $next ++;
+        return $next;
     }
 
     /**
@@ -139,7 +148,37 @@ class Sequence extends Model implements SequenceContract
     }
 
     /**
+     * Returns the field that stores the column to which the sequence belongs
+     *
+     * @return string
+     * */
+    public function getColumnKey(): string
     {
+        return $this->column_key;
+    }
+
+    /**
+     * Returns the name of the field that stores the table to which the sequence belongs
+     *
+     * @return string
+     * */
+    public function sourceTableName(): string
+    {
+        return 'source';
+    }
+
+    /**
+     * Filters only the tables that are passed by parameter
+     *
+     * @param string $table
+     * @return Collection
+     */
+    public function source(string $table): Collection
+    {
+        return static::where( $this->sourceTableName( ), $table )->get();
+    }
+
+    /**
      * Get the first record matching the attributes or create it.
      *
      * @param string|integer $key
@@ -149,8 +188,18 @@ class Sequence extends Model implements SequenceContract
      */
     public function findOrCreate( $key, $table, $column ): SequenceContract
     {
-        $table = "$table.$column.$key";
-        return static::firstOrCreate([ 'id' => $this->keyFormatted( $table ) ], [ 'source' => $table, 'sequence' => 0 ]);
+        if ( $key !== $column ) {
+            $column .= '.' . $key;
+        }
+
+        $description = "$table.$column";
+
+        return static::firstOrCreate([ 'id' => $this->keyFormatted( $description ) ], [
+            $this->sourceTableName() => $table,
+            'column_key' => $column,
+            'description' => $description,
+            'sequence' => 0
+        ]);
     }
 
     /**
@@ -164,5 +213,6 @@ class Sequence extends Model implements SequenceContract
     {
         return hash(self::HASH, $key, false);
     }
+
 
 }

@@ -7,6 +7,7 @@
 
 namespace Enea\Sequenceable\Contracts;
 
+use Illuminate\Support\Collection;
 
 interface SequenceContract
 {
@@ -32,6 +33,21 @@ interface SequenceContract
     public function current( ): int;
 
     /**
+     * Returns the name of the field that stores the column to which the sequence belongs
+     *
+     * @return string
+     * */
+    public function getColumnKey(): string;
+
+    /**
+     * Filters only the tables that are passed by parameter
+     *
+     * @param string $table
+     * @return Collection
+     */
+    public function source(string $table): Collection;
+
+    /**
      * Get the first record matching the attributes or create it.
      *
      * @param  string|integer $key
@@ -40,6 +56,5 @@ interface SequenceContract
      *  @return SequenceContract
      */
     public function findOrCreate( $key, $table, $column ): SequenceContract;
-
 
 }
