@@ -5,15 +5,23 @@
 
 namespace Enea\Tests;
 
-use Enea\Tests\Models\CustomSequence;
-use Enea\Tests\Models\Document;
+use Enea\Tests\Models\BasicSequenceConfiguration;
+use Enea\Tests\Models\CustomCodeSequenceConfiguration;
+use Enea\Tests\Models\CustomSequenceModelConfiguration;
+use Enea\Tests\Models\DynamicCodeSequenceConfiguration;
+use Enea\Tests\Models\SimpleSequenceConfiguration;
 
 class GenerateSequenceTest extends DataBaseTestCase
 {
 
     function test_the_sequences_are_generated()
     {
-        $documents = [ 1 => new BasicSequenceConfiguration(), 2 => new BasicSequenceConfiguration( ), 3 => new BasicSequenceConfiguration(), 4 => new BasicSequenceConfiguration() ];
+        $documents = [
+            1 => new SimpleSequenceConfiguration(),
+            2 => new SimpleSequenceConfiguration( ),
+            3 => new SimpleSequenceConfiguration(),
+            4 => new SimpleSequenceConfiguration()
+        ];
 
         foreach ( $documents as $sequence => $document ) {
             $document->save( );
@@ -22,7 +30,12 @@ class GenerateSequenceTest extends DataBaseTestCase
                 'number' => $sequence,
             ]);
 
-            $this->assertDatabaseHas('sequences', ['source' => 'documents.number.number', 'sequence' => $sequence ]);
+            $this->assertDatabaseHas('sequences', [
+                'source' => 'documents',
+                'column_key' => 'number',
+                'description' => 'documents.number',
+                'sequence' => $sequence
+            ]);
         }
     }
 
@@ -36,8 +49,18 @@ class GenerateSequenceTest extends DataBaseTestCase
             'number_string' => 1,
         ]);
 
-        $this->assertDatabaseHas('sequences', ['source' => 'documents.number.number', 'sequence' => 1 ]);
-        $this->assertDatabaseHas('sequences', ['source' => 'documents.number_string.number_string', 'sequence' => 1]);
+        $this->assertDatabaseHas('sequences', [
+            'source' => 'documents',
+            'column_key' => 'number',
+            'description' => 'documents.number',
+            'sequence' => 1
+        ]);
+        $this->assertDatabaseHas('sequences', [
+            'source' => 'documents',
+            'column_key' => 'number_string',
+            'description' => 'documents.number_string',
+            'sequence' => 1
+        ]);
     }
 
     function test_an_custom_code_sequence_is_generated( )
@@ -50,8 +73,18 @@ class GenerateSequenceTest extends DataBaseTestCase
             'number_string' => 1,
         ]);
 
-        $this->assertDatabaseHas('sequences', ['source' => 'documents.number.custom_number_code', 'sequence' => 1 ]);
-        $this->assertDatabaseHas('sequences', ['source' => 'documents.number_string.custom_number_string_code', 'sequence' => 1]);
+        $this->assertDatabaseHas('sequences', [
+            'source' => 'documents',
+            'column_key' => 'number.custom_number_code',
+            'description' => 'documents.number.custom_number_code',
+            'sequence' => 1
+        ]);
+        $this->assertDatabaseHas('sequences', [
+            'source' => 'documents',
+            'column_key' => 'number_string.custom_number_string_code',
+            'description' => 'documents.number_string.custom_number_string_code',
+            'sequence' => 1
+        ]);
     }
 
     function test_a_sequence_is_generated_with_a_custom_model()
@@ -64,8 +97,17 @@ class GenerateSequenceTest extends DataBaseTestCase
             'number_string' => 1,
         ]);
 
-        $this->assertDatabaseHas('custom_sequences', ['source' => 'documents.number.custom_number_code', 'sequence' => 1 ]);
-        $this->assertDatabaseHas('custom_sequences', ['source' => 'documents.number_string.number_string', 'sequence' => 1]);
+        $this->assertDatabaseHas('custom_sequences', [
+            'source' => 'documents',
+            'column_key' => 'number.custom_number_code',
+            'description' => 'documents.number.custom_number_code',
+            'sequence' => 1 
+        ]);
+        $this->assertDatabaseHas('custom_sequences', [
+            'source' => 'documents',
+            'column_key' => 'number_string',
+            'description' => 'documents.number_string', 'sequence' => 1
+        ]);
     }
 
     function test_a_sequence_with_a_dynamic_value_is_generated()
@@ -75,71 +117,23 @@ class GenerateSequenceTest extends DataBaseTestCase
         ]);
         $document->save();
         $this->assertDatabaseHas('documents', [ 'number' => 1, 'type' => 'tk' ]);
-        $this->assertDatabaseHas('sequences', ['source' => 'documents.number.ticket', 'sequence' => 1 ]);
+        $this->assertDatabaseHas('sequences', [
+            'source' => 'documents',
+            'column_key' => 'number.ticket',
+            'description' => 'documents.number.ticket', 'sequence' => 1
+        ]);
 
         $document = new DynamicCodeSequenceConfiguration([
             'type' => 'iv'
         ]);
         $document->save();
         $this->assertDatabaseHas('documents', [ 'number' => 1, 'type' => 'iv' ]);
-        $this->assertDatabaseHas('sequences', ['source' => 'documents.number.invoice', 'sequence' => 1]);
+        $this->assertDatabaseHas('sequences', [
+            'source' => 'documents',
+            'column_key' => 'number.invoice',
+            'description' => 'documents.number.invoice',
+            'sequence' => 1
+        ]);
     }
 
-}
-
-class SimpleSequenceConfiguration extends Document
-{
-    public function sequencesSetup( ): array
-    {
-        return [ 'number' ];
-    }
-}
-
-class BasicSequenceConfiguration extends Document
-{
-    public function sequencesSetup( ): array
-    {
-        return [ 'number', 'number_string' ];
-    }
-
-}
-
-class CustomCodeSequenceConfiguration extends Document
-{
-    public function sequencesSetup(): array
-    {
-        return [
-            'custom_number_code' =>  'number',
-            'custom_number_string_code' => [ 'number_string' ],
-        ];
-    }
-}
-
-class DynamicCodeSequenceConfiguration extends Document
-{
-    public function sequencesSetup(): array
-    {
-        return [
-            $this->getType( ) =>  'number',
-        ];
-    }
-
-    public function getType( )
-    {
-        return $this->type === 'tk' ? 'ticket' : 'invoice';
-    }
-}
-
-
-class CustomSequenceModelConfiguration extends Document
-{
-    public function sequencesSetup(): array
-    {
-        return [
-            CustomSequence::class => [
-                'custom_number_code' => 'number',
-                'number_string',
-            ],
-        ];
-    }
 }
