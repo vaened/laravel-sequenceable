@@ -1,10 +1,7 @@
 <?php
 /**
- * Created by eneasdh-fs
- * Date: 08/01/17
- * Time: 10:27 PM
+ * Created by enea dhack - 24/06/17 09:56 PM
  */
-
 namespace Enea\Sequenceable;
 
 
@@ -20,7 +17,7 @@ class SequenceObserver
      */
     public function creating(SequenceableContract $model )
     {
-        (new Builder( $model ))->make();
+        (new Generator( $model ))->make();
     }
 
 
