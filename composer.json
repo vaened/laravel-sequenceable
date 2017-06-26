@@ -1,5 +1,5 @@
 {
-    "name": "enea/sequenceable",
+    "name": "enea/laravel-sequenceable",
     "description": "Facilitates the generation and autocompletion of a sequential value in the database",
     "authors": [
         {
