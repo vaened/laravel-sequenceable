@@ -22,7 +22,7 @@ class FacadeTest extends DataBaseTestCase
         $document->save();
         $this->assertDatabaseHas('documents', [ 'number' => 1 ]);
 
-        $collect = Succession::to( DynamicCodeSequenceConfiguration::class );
+        $collect = Succession::on( DynamicCodeSequenceConfiguration::class );
 
         $ticket = $collect->first( )->toArray();
 
