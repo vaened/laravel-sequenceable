@@ -188,16 +188,12 @@ class Sequence extends Model implements SequenceContract
      */
     public function findOrCreate( $key, $table, $column ): SequenceContract
     {
-        if ( $key !== $column ) {
-            $column .= '.' . $key;
-        }
+        $column = $this->buildColumnKey($column, $key);
 
-        $description = "$table.$column";
-
-        return static::firstOrCreate([ 'id' => $this->keyFormatted( $description ) ], [
+        return static::firstOrCreate([ 'id' => $this->keyFormatted( $table, $column ) ], [
             $this->sourceTableName() => $table,
             'column_key' => $column,
-            'description' => $description,
+            'description' => "$table.$column",
             'sequence' => 0
         ]);
     }
@@ -206,13 +202,29 @@ class Sequence extends Model implements SequenceContract
      * Format for the primary key
      * In case you do not need to format, return the primary key of the parameter
      *
-     * @param $key
-     * @return string|integer
+     * @param string $table
+     * @param string $column_key
+     * @return string
      */
-    protected function keyFormatted( $key )
+    protected function keyFormatted( string $table, string $column_key ): string
     {
-        return hash(self::HASH, $key, false);
+        return hash(self::HASH, "$table.$column_key", false);
     }
 
+    /**
+     * Format the key of the column
+     *
+     * @param string $column
+     * @param string $key
+     * @return string
+     */
+    protected function buildColumnKey(string $column, string $key ): string
+    {
+        if ( $key !== $column ) {
+            $column .= '.' . $key;
+        }
+
+        return $column;
+    }
 
 }
