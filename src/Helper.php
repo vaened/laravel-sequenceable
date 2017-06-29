@@ -32,7 +32,7 @@ class Helper
 
     /**
      * Get the name of the code that identifies the column that is automatically completed
-     * 
+     *
      * @param string|int $key
      * @param array|string|int $value
      * @return mixed
