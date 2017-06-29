@@ -1,6 +1,6 @@
 # Laravel Sequenceable Package
 This package provides functionality for creating database sequences.
-## Cómo instalar
+## How to Install
 1. It is recommended to install this package through the composer.
 ```sh
 $ composer require enea/laravel-sequenceable
