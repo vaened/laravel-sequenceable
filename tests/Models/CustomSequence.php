@@ -20,41 +20,13 @@ use Illuminate\Support\Collection;
  * */
 class CustomSequence extends Model implements SequenceContract
 {
-    /**
-     * Codification adler32
-     *
-     * @var string
-     */
-    const HASH = 'adler32';
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'custom_sequences';
-
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = true;
-
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [ 'id', 'source', 'column_key', 'description' ];
+    protected $fillable = [ 'id', 'source', 'column_key', 'key'];
 
     /**
      * The attributes that should be cast to native types.
@@ -64,6 +36,13 @@ class CustomSequence extends Model implements SequenceContract
     protected $casts = [
         'sequence' => 'integer'
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * Increase sequence by one and return it
@@ -110,15 +89,6 @@ class CustomSequence extends Model implements SequenceContract
         return $this->column_key;
     }
 
-    /**
-     * Returns the name of the field that stores the table to which the sequence belongs
-     *
-     * @return string
-     * */
-    public function sourceTableName(): string
-    {
-        return 'source';
-    }
 
     /**
      * Filters only the tables that are passed by parameter
@@ -128,7 +98,7 @@ class CustomSequence extends Model implements SequenceContract
      */
     public function source(string $table): Collection
     {
-        return static::where( $this->sourceTableName( ), $table )->get();
+        return static::where( 'source', $table )->get();
     }
 
     /**
@@ -141,30 +111,15 @@ class CustomSequence extends Model implements SequenceContract
      */
     public function findOrCreate( $key, $table, $column ): SequenceContract
     {
-        if ( $key !== $column ) {
+        if ($key !== $column) {
             $column .= '.' . $key;
         }
 
-        $description = "$table.$column";
-
-        return static::firstOrCreate([ 'id' => $this->keyFormatted( $description ) ], [
-            $this->sourceTableName() => $table,
+        return static::firstOrCreate([ 'key' => $key ], [
+            'source' => $table,
             'column_key' => $column,
-            'description' => $description,
             'sequence' => 0
         ]);
-    }
-
-    /**
-     * Format for the primary key
-     * In case you do not need to format, return the primary key of the parameter
-     *
-     * @param $key
-     * @return string|integer
-     */
-    protected function keyFormatted( $key )
-    {
-        return hash(self::HASH, $key, false);
     }
 
 }

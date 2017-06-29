@@ -12,8 +12,8 @@ class CustomSequenceModelConfiguration extends Document
     {
         return [
             CustomSequence::class => [
-                'custom_number_code' => 'number',
-                'number_string',
+                'ccn' => 'number',
+                'cns' => 'number_string',
             ],
         ];
     }
