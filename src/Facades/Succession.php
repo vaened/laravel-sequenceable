@@ -18,7 +18,7 @@ use Enea\Sequenceable\Succession as BaseSuccession;
  *
  * Methods
  *
- * @method static Collection to( string|int $class )
+ * @method static Collection on( string|int $class )
  *
  * @see \Enea\Sequenceable\Succession
  */

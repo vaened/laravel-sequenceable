@@ -35,7 +35,7 @@ class Succession
      * @return Collection
      * @throws SequenceException
      */
-    public function to( $class ): Collection
+    public function on( $class ): Collection
     {
         if ( is_string( $class ) ) {
             $class  = new $class;
