@@ -9,7 +9,6 @@ namespace Enea\Sequenceable;
 use Enea\Sequenceable\Contracts\SequenceableContract;
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Enea\Sequenceable\Exceptions\SequenceException;
-use function foo\func;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
