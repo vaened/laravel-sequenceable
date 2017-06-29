@@ -32,11 +32,10 @@ class Succession
 
     /**
      * @param Model|SequenceableContract $class
-     * @param array $keys
      * @return Collection
      * @throws SequenceException
      */
-    public function to( $class, array $keys = array() ): Collection
+    public function to( $class ): Collection
     {
         if ( is_string( $class ) ) {
             $class  = new $class;
