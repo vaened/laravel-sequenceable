@@ -6,9 +6,6 @@ namespace Enea\Sequenceable;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-
-
-use Enea\Sequenceable\Contracts\SequenceContract;
 use Enea\Sequenceable\Exceptions\SequenceException;
 use Enea\Sequenceable\Model\Sequence;
 

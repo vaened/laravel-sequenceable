@@ -7,14 +7,11 @@
 
 namespace Enea\Sequenceable;
 
-
-use Enea\Sequenceable\Model\Sequence;
 use Illuminate\Database\Eloquent\Model;
 use Enea\Sequenceable\Contracts\SequenceableContract;
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Enea\Sequenceable\Exceptions\SequenceException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
 
 class Builder
 {
