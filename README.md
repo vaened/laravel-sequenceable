@@ -116,7 +116,7 @@ You can review the [Sequence](https://github.com/eneasdh-fs/laravel-sequenceable
 #### Base Structure
 You can implement the `SequenceContract` interface or the `Sequence` model's extension to modify the behavior that you consider appropriate.
 
- campo          | Descripción
+ Column         | Description
 ----------------|------------------------------------------------------------------------------------
  **id**         | It is generated on the basis of the union of the table, column and key.
 **sequence**    | Stores the current field sequence.
