@@ -5,7 +5,6 @@
 
 namespace Enea\Sequenceable;
 
-
 use Enea\Sequenceable\Contracts\SequenceableContract;
 use Enea\Sequenceable\Exceptions\SequenceException;
 use Illuminate\Database\Eloquent\Model;
@@ -59,7 +58,7 @@ class Generator
      * @return void
      * @throws SequenceException
      */
-    public function make( ): void
+    public function make( )
     {
         foreach ($this->model->getSequencesConfiguration() as $key => $value ) {
 
@@ -79,7 +78,7 @@ class Generator
      *
      * @return bool
      */
-    protected function isAutoCompletable( ): bool
+    protected function isAutoCompletable( )
     {
         return config('sequenceable.autofilling', false);
     }

@@ -16,19 +16,19 @@ interface SequenceableContract
      *
      * @return array
      */
-    public function sequencesSetup( ): array;
+    public function sequencesSetup( );
 
     /**
      * Returns, only if defined, the custom instances
      *
      * @return Collection
      * */
-    public function getSequenceModels( ): Collection;
+    public function getSequenceModels( );
 
     /**
      * Returns the sequences defined in the model
      *
      * @return Collection
      */
-    public function getSequencesConfiguration( ): Collection;
+    public function getSequencesConfiguration( );
 }

@@ -8,7 +8,7 @@ namespace Enea\Tests\Models;
 
 class CustomCodeSequenceConfiguration extends Document
 {
-    public function sequencesSetup(): array
+    public function sequencesSetup()
     {
         return [
             'custom_number_code' =>  'number',

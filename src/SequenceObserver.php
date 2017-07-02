@@ -4,7 +4,6 @@
  */
 namespace Enea\Sequenceable;
 
-
 use Enea\Sequenceable\Contracts\SequenceableContract;
 
 class SequenceObserver

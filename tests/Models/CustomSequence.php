@@ -49,7 +49,7 @@ class CustomSequence extends Model implements SequenceContract
      *
      * @return integer
      */
-    public function next( ): int
+    public function next( )
     {
         $this->sequence ++;
         $this->save( );
@@ -61,7 +61,7 @@ class CustomSequence extends Model implements SequenceContract
      *
      * @return integer
      */
-    public function prev( ): int
+    public function prev( )
     {
         $this->sequence --;
         $this->save();
@@ -74,7 +74,7 @@ class CustomSequence extends Model implements SequenceContract
      *
      * @return integer
      * */
-    public function current( ): int
+    public function current( )
     {
         return $this->sequence;
     }
@@ -84,7 +84,7 @@ class CustomSequence extends Model implements SequenceContract
      *
      * @return string
      * */
-    public function getColumnKey(): string
+    public function getColumnKey()
     {
         return $this->column_key;
     }
@@ -96,7 +96,7 @@ class CustomSequence extends Model implements SequenceContract
      * @param string $table
      * @return Collection
      */
-    public function source(string $table): Collection
+    public function source( $table )
     {
         return static::where( 'source', $table )->get();
     }
@@ -109,7 +109,7 @@ class CustomSequence extends Model implements SequenceContract
      * @param string $column
      * @return SequenceContract
      */
-    public function findOrCreate( $key, $table, $column ): SequenceContract
+    public function findOrCreate( $key, $table, $column )
     {
         if ($key !== $column) {
             $column .= '.' . $key;

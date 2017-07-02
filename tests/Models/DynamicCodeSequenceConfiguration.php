@@ -8,7 +8,7 @@ namespace Enea\Tests\Models;
 
 class DynamicCodeSequenceConfiguration extends Document
 {
-    public function sequencesSetup(): array
+    public function sequencesSetup()
     {
         return [
             $this->getType( ) =>  'number',

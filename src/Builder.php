@@ -51,7 +51,7 @@ class Builder
      * @return SequenceContract
      * @throws SequenceException
      */
-    public function sequence( $key, $value ): SequenceContract
+    public function sequence( $key, $value )
     {
         if ( ! Helper::isAvailableSequence($key, $value) ) {
             throw new SequenceException( "Wrong sequence configuration format key: $key value: $value" );
@@ -70,7 +70,7 @@ class Builder
      * @return SequenceContract|Model
      * @throws SequenceException
      */
-    public function model($key, $value ): SequenceContract
+    public function model($key, $value )
     {
         if ( ! Helper::isAvailableSequence($key, $value) ) {
             throw new SequenceException( "Wrong sequence configuration format key: $key value: $value" );
@@ -85,7 +85,7 @@ class Builder
      * @param $column
      * @return SequenceContract
      */
-    protected function createModel( $column ): SequenceContract
+    protected function createModel( $column )
     {
         $instance = $this->model->getSequenceModels( )->search(function ( array $values ) use ( $column ) {
             return in_array($column, $values);
@@ -103,7 +103,7 @@ class Builder
      * @return SequenceContract
      * @throws SequenceException
      */
-    protected function createSequence( $id, $column ): SequenceContract
+    protected function createSequence( $id, $column )
     {
         $sequenceable = $this->createModel( $column );
         return $sequenceable->findOrCreate( $id, $this->model->getTable(), $column );
@@ -115,7 +115,7 @@ class Builder
      * @return Collection
      * @throws SequenceException
      */
-    public function getSequencesConfiguration( ): Collection
+    public function getSequencesConfiguration( )
     {
         return  collect($this->model->sequencesSetup( ));
     }

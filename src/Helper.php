@@ -14,7 +14,7 @@ class Helper
      * @param array|string|int $value
      * @return bool
      */
-    public static function isAvailableSequence( $key, $value ): bool
+    public static function isAvailableSequence( $key, $value )
     {
         if( is_string( $key ) ) {
             if ( is_array($value)) {
@@ -35,7 +35,7 @@ class Helper
      *
      * @param string|int $key
      * @param array|string|int $value
-     * @return mixed
+     * @return string
      */
     public static function getKeyName($key, $value )
     {

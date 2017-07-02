@@ -83,7 +83,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @return int
      */
-    public function getPrevAttribute( ): int
+    public function getPrevAttribute( )
     {
         $prev = $this->sequence;
         $prev --;
@@ -95,7 +95,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @return int
      */
-    public function getCurrentAttribute( ): int
+    public function getCurrentAttribute( )
     {
         return $this->sequence;
     }
@@ -105,7 +105,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @return int
      */
-    public function getNextAttribute( ): int
+    public function getNextAttribute( )
     {
         $next = $this->sequence;
         $next ++;
@@ -117,7 +117,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @return integer
      */
-    public function next( ): int
+    public function next( )
     {
         $this->sequence ++;
         $this->save( );
@@ -129,7 +129,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @return integer
      */
-    public function prev( ): int
+    public function prev( )
     {
         $this->sequence --;
         $this->save();
@@ -142,7 +142,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @return integer
      * */
-    public function current( ): int
+    public function current( )
     {
         return $this->sequence;
     }
@@ -152,7 +152,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @return string
      * */
-    public function getColumnKey(): string
+    public function getColumnKey()
     {
         return $this->column_key;
     }
@@ -162,7 +162,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @return string
      * */
-    public function sourceTableName(): string
+    public function sourceTableName()
     {
         return 'source';
     }
@@ -173,7 +173,7 @@ class Sequence extends Model implements SequenceContract
      * @param string $table
      * @return Collection
      */
-    public function source(string $table): Collection
+    public function source( $table )
     {
         return static::where( $this->sourceTableName( ), $table )->get();
     }
@@ -186,7 +186,7 @@ class Sequence extends Model implements SequenceContract
      * @param string $column
      * @return SequenceContract
      */
-    public function findOrCreate( $key, $table, $column ): SequenceContract
+    public function findOrCreate( $key, $table, $column )
     {
         $column = $this->buildColumnKey($column, $key);
 
@@ -206,7 +206,7 @@ class Sequence extends Model implements SequenceContract
      * @param string $column_key
      * @return string
      */
-    protected function keyFormatted( string $table, string $column_key ): string
+    protected function keyFormatted( $table, $column_key )
     {
         return hash(self::HASH, "$table.$column_key", false);
     }
@@ -218,7 +218,7 @@ class Sequence extends Model implements SequenceContract
      * @param string $key
      * @return string
      */
-    protected function buildColumnKey(string $column, string $key ): string
+    protected function buildColumnKey( $column,  $key )
     {
         if ( $key !== $column ) {
             $column .= '.' . $key;

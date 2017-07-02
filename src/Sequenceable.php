@@ -80,7 +80,7 @@ trait Sequenceable
      *
      * @return Collection
      * */
-    public function getSequenceModels( ): Collection
+    public function getSequenceModels( )
     {
         $instances = collect( );
         $common = array();
@@ -109,7 +109,7 @@ trait Sequenceable
      * @return Collection
      * @throws SequenceException
      */
-    public function getSequencesConfiguration( ): Collection
+    public function getSequencesConfiguration( )
     {
         if ( ! $this instanceof  Model ) {
             throw new SequenceException( static::class  . ' Must be an instance of ' . Model::class);
@@ -162,7 +162,7 @@ trait Sequenceable
      *
      * @return string
      */
-    protected function defaultSequenceName( ): string
+    protected function defaultSequenceName( )
     {
         if ($model = config('sequenceable.model')) {
             return $model;

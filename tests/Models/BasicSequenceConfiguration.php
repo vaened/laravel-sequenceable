@@ -8,7 +8,7 @@ namespace Enea\Tests\Models;
 
 class BasicSequenceConfiguration extends Document
 {
-    public function sequencesSetup( ): array
+    public function sequencesSetup( )
     {
         return [ 'number', 'number_string' ];
     }
