@@ -1,0 +1,23 @@
+language: php
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+
+sudo: false
+
+services:
+  - mysql
+
+install:
+  composer install
+
+script:
+  - vendor/bin/phpunit
+
+before_install:
+  - mysql -e 'CREATE DATABASE sequenceable_test;'
+
+matrix:
+  fast_finish: true
