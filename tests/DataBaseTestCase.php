@@ -53,8 +53,8 @@ class DataBaseTestCase extends TestCase
             'driver'   => 'mysql',
             'database' => 'sequenceable_test',
             'host' => '127.0.0.1',
-            'username' => 'nano',
-            'password' => 'nano',
+            'username' => 'test',
+            'password' => 'test',
             'prefix'   => '',
         ]);
     }
