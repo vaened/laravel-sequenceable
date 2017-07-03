@@ -1,4 +1,6 @@
 # Laravel Sequenceable Package
+[![Build Status](https://travis-ci.org/eneasdh-fs/laravel-sequenceable.svg?branch=master)](https://travis-ci.org/eneasdh-fs/laravel-sequenceable)
+
 This package provides functionality for creating database sequences.
 ## How to Install
 1. It is recommended to install this package through the composer.
