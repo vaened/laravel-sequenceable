@@ -142,7 +142,7 @@ return [
    'model' => \Enea\Sequenceable\Model\Sequence::class,
 ];
 ```
-o especificarlo de forma explicita que modelo quieres usar con determinado campo o campos, esto lo puedes logar en la configuración de las secuencias en su modelo.
+o especificar de forma explicita que modelo quieres usar con determinados campos, esto lo puedes lograr en la configuración de las secuencias de tu modelo.
 ```php
     public function sequencesSetup(): array
     {
