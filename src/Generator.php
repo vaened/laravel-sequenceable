@@ -25,16 +25,16 @@ class Generator
      * */
     protected $builder;
 
-
     /**
      * Builder constructor.
      *
      * @param SequenceableContract|Sequenceable $model
+     *
      * @throws SequenceException
      */
     public function __construct(SequenceableContract $model)
     {
-        if  (! $model instanceof  Model) {
+        if (!$model instanceof  Model) {
             throw new SequenceException(get_class($model) . ' Must be an instance of ' . Model::class);
         }
 
@@ -56,12 +56,12 @@ class Generator
      * Build sequence for new resource.
      *
      * @throws SequenceException
+     *
      * @return void
      */
     public function make()
     {
         foreach ($this->model->getSequencesConfiguration() as $key => $value) {
-
             $sequence = $this->builder->sequence($key, $value)->next();
 
             if ($this->isAutoCompletable()) {

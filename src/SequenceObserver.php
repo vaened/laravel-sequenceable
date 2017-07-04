@@ -13,6 +13,7 @@ class SequenceObserver
      * Create observer.
      *
      * @param SequenceableContract $model
+     *
      * @return void
      */
     public function creating(SequenceableContract $model)

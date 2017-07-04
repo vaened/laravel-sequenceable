@@ -5,13 +5,13 @@
 
 namespace Enea\Sequenceable\Facades;
 
+use Enea\Sequenceable\Succession as BaseSuccession;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
-use Enea\Sequenceable\Succession as BaseSuccession;
 
 /**
- * Class Succession
- * @package Enea\Sequenceable\Facade
+ * Class Succession.
+ *
  * @author enea dhack <enea.so@live.com>
  *
  * Methods

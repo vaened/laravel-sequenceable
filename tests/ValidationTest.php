@@ -9,7 +9,7 @@ use Enea\Sequenceable\Helper;
 
 class ValidationTest extends TestCase
 {
-    function test_is_available_sequence()
+    public function test_is_available_sequence()
     {
         // valid sequences
         $this->assertSame(Helper::getKeyName(0, 'column'), 'column');
@@ -27,7 +27,7 @@ class ValidationTest extends TestCase
         $this->assertSame(Helper::getSize(0, 'column'), 0);
         $this->assertSame(Helper::getSize('column', 9), 9);
         $this->assertSame(Helper::getSize('a', 'column'), 0);
-        $this->assertSame(Helper::getSize('b', ['column'] ), 0);
+        $this->assertSame(Helper::getSize('b', ['column']), 0);
         $this->assertSame(Helper::getSize('c', ['column' => 9]), 9);
 
         $this->assertTrue(Helper::isAvailableSequence(0, 'column'));

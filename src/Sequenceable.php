@@ -5,19 +5,19 @@
 
 namespace Enea\Sequenceable;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Enea\Sequenceable\Exceptions\SequenceException;
 use Enea\Sequenceable\Model\Sequence;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 trait Sequenceable
 {
-
     /**
      * Model builds key.
      *
      * @param int|string $key
      * @param string $column
+     *
      * @return string
      * @return string
      */
@@ -25,7 +25,7 @@ trait Sequenceable
     {
         $sequence = $this->getAutocompletableSequence();
 
-        if(! empty($column) && $sequence->has($column)) {
+        if (!empty($column) && $sequence->has($column)) {
             return $this->autocomplete($key, $sequence->get($column));
         }
 
@@ -37,11 +37,12 @@ trait Sequenceable
      *
      * @param int|string $key
      * @param int $size
+     *
      * @return string
      */
     public function autocomplete($key, $size)
     {
-        if ( $size > 1 && is_numeric($key)) {
+        if ($size > 1 && is_numeric($key)) {
             $key = str_pad($key, $size, '0', STR_PAD_LEFT);
         }
 
@@ -51,12 +52,11 @@ trait Sequenceable
     /**
      * @return Collection
      */
-    private final function getAutocompletableSequence()
+    final private function getAutocompletableSequence()
     {
         $collection = collect();
 
         foreach ($this->getSequencesConfiguration() as $key => $sequence) {
-
             if (is_array($sequence)) {
                 $key = key($sequence);
                 $sequence = current($sequence);
@@ -76,13 +76,12 @@ trait Sequenceable
     public function getSequenceModels()
     {
         $instances = collect();
-        $common = array();
+        $common = [];
         foreach ($this->sequencesSetup() as $key => $values) {
-            $sequences = array( );
-            if (! class_exists($key)) {
+            $sequences = [];
+            if (!class_exists($key)) {
                 $common[] = Helper::getColumnName($key, $values);
             } else {
-
                 foreach ((array) $values as $k => $value) {
                     $sequences[] = Helper::getColumnName($k, $value);
                 }
@@ -99,20 +98,20 @@ trait Sequenceable
     /**
      * Returns the sequences defined in the model.
      *
-     * @return Collection
      * @throws SequenceException
+     *
+     * @return Collection
      */
     public function getSequencesConfiguration()
     {
-        if ( ! $this instanceof  Model) {
+        if (!$this instanceof  Model) {
             throw new SequenceException(static::class . ' Must be an instance of ' . Model::class);
         }
 
         $sequencesConfiguration = collect();
 
-        foreach ( $this->sequencesSetup() as $key => $values) {
-
-            if ( ! class_exists($key)) {
+        foreach ($this->sequencesSetup() as $key => $values) {
+            if (!class_exists($key)) {
                 $sequencesConfiguration->put($key, $values);
             } else {
                 foreach ((array) $values as $k => $value) {
@@ -123,7 +122,6 @@ trait Sequenceable
                     }
                 }
             }
-
         }
 
         return $sequencesConfiguration;
@@ -136,7 +134,7 @@ trait Sequenceable
      */
     public static function bootSequenceable()
     {
-        if ( static::isSequenceableAvailable()) {
+        if (static::isSequenceableAvailable()) {
             static::observe(new SequenceObserver());
         }
     }
