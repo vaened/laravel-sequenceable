@@ -16,7 +16,7 @@ class DynamicCodeSequenceConfiguration extends Document
 
     public function getType()
     {
-        switch ($this->type){
+        switch ($this->type) {
             case 'tk': return 'ticket';
             case 'iv': return 'invoice';
         }

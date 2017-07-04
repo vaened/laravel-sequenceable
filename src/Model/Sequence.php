@@ -5,17 +5,16 @@
 
 namespace Enea\Sequenceable\Model;
 
-use Illuminate\Database\Eloquent\Model;
 use Enea\Sequenceable\Contracts\SequenceContract;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
- * Model Sequence
+ * Model Sequence.
  *
  * Attributes
  *
  * @property  int sequence
- *
  * @property  string id
  * @property  string source
  * @property  string description
@@ -23,7 +22,6 @@ use Illuminate\Support\Collection;
  * */
 class Sequence extends Model implements SequenceContract
 {
-
     /**
      * Codification adler32.
      *
@@ -84,6 +82,7 @@ class Sequence extends Model implements SequenceContract
     {
         $prev = $this->sequence;
         $prev--;
+
         return $prev;
     }
 
@@ -106,6 +105,7 @@ class Sequence extends Model implements SequenceContract
     {
         $next = $this->sequence;
         $next++;
+
         return $next;
     }
 
@@ -118,6 +118,7 @@ class Sequence extends Model implements SequenceContract
     {
         $this->sequence++;
         $this->save();
+
         return $this->sequence;
     }
 
@@ -130,9 +131,9 @@ class Sequence extends Model implements SequenceContract
     {
         $this->sequence--;
         $this->save();
+
         return $this->sequence;
     }
-
 
     /**
      * Gets the current sequence.
@@ -168,6 +169,7 @@ class Sequence extends Model implements SequenceContract
      * Filters only the tables that are passed by parameter.
      *
      * @param string $table
+     *
      * @return Collection
      */
     public function source($table)
@@ -181,6 +183,7 @@ class Sequence extends Model implements SequenceContract
      * @param string|int $key
      * @param string $table
      * @param string $column
+     *
      * @return SequenceContract
      */
     public function findOrCreate($key, $table, $column)
@@ -201,6 +204,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @param string $table
      * @param string $column_key
+     *
      * @return string
      */
     protected function keyFormatted($table, $column_key)
@@ -213,9 +217,10 @@ class Sequence extends Model implements SequenceContract
      *
      * @param string $column
      * @param string $key
+     *
      * @return string
      */
-    protected function buildColumnKey($column,  $key)
+    protected function buildColumnKey($column, $key)
     {
         if ($key !== $column) {
             $column .= '.' . $key;
@@ -223,5 +228,4 @@ class Sequence extends Model implements SequenceContract
 
         return $column;
     }
-
 }

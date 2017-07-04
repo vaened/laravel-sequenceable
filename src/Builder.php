@@ -24,6 +24,7 @@ class Builder
      * Builder constructor.
      *
      * @param SequenceableContract|Sequenceable $model
+     *
      * @throws SequenceException
      */
     public function __construct(SequenceableContract $model = null)
@@ -35,6 +36,7 @@ class Builder
      * Establish a model.
      *
      * @param SequenceableContract $model
+     *
      * @return void
      */
     public function setSequenceableModel(SequenceableContract $model)
@@ -47,12 +49,14 @@ class Builder
      *
      * @param $key
      * @param $value
-     * @return SequenceContract
+     *
      * @throws SequenceException
+     *
+     * @return SequenceContract
      */
     public function sequence($key, $value)
     {
-        if (! Helper::isAvailableSequence($key, $value)) {
+        if (!Helper::isAvailableSequence($key, $value)) {
             throw new SequenceException("Wrong sequence configuration format key: $key value: $value");
         }
 
@@ -66,12 +70,14 @@ class Builder
      *
      * @param $key
      * @param $value
+     *
      * @throws SequenceException
+     *
      * @return SequenceContract|Model
      */
     public function model($key, $value)
     {
-        if (! Helper::isAvailableSequence($key, $value)) {
+        if (!Helper::isAvailableSequence($key, $value)) {
             throw new SequenceException("Wrong sequence configuration format key: $key value: $value");
         }
 
@@ -82,6 +88,7 @@ class Builder
      * Returns the configured sequence model and, if not defined, takes the default value.
      *
      * @param $column
+     *
      * @return SequenceContract
      */
     protected function createModel($column)
@@ -98,11 +105,13 @@ class Builder
      *
      * @param $id
      * @param $column
+     *
      * @return SequenceContract
      */
     protected function createSequence($id, $column)
     {
         $sequenceable = $this->createModel($column);
+
         return $sequenceable->findOrCreate($id, $this->model->getTable(), $column);
     }
 
@@ -110,6 +119,7 @@ class Builder
      * Configuration of the sequences.
      *
      * @throws SequenceException
+     *
      * @return Collection
      */
     public function getSequencesConfiguration()

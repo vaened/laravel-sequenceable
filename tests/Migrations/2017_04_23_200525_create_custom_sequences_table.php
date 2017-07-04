@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCustomSequencesTable extends Migration
 {
@@ -14,7 +14,6 @@ class CreateCustomSequencesTable extends Migration
     public function up()
     {
         Schema::create('custom_sequences', function (Blueprint $table) {
-
             $table->increments('id');
 
             $table->char('key', 3)->index();

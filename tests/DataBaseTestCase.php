@@ -16,12 +16,12 @@ class DataBaseTestCase extends TestCase
 
         $this->loadMigrationsFrom([
             '--database' => 'testbench',
-            '--realpath' => realpath(__DIR__.'/../src/DataBase/Migrations'),
+            '--realpath' => realpath(__DIR__ . '/../src/DataBase/Migrations'),
         ]);
 
         $this->loadMigrationsFrom([
             '--database' => 'testbench',
-            '--realpath' => realpath(__DIR__.'/Migrations'),
+            '--realpath' => realpath(__DIR__ . '/Migrations'),
         ]);
     }
 
