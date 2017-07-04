@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateSequencesTable extends Migration
 {
@@ -23,7 +23,7 @@ class CreateSequencesTable extends Migration
             $table->string('column_key', 60);
             $table->string('description', 100)->nullable();
 
-            $table->timestamps();
+            $table->timestamps( );
         });
     }
 

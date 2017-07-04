@@ -2,5 +2,6 @@ disabled:
   - align_double_arrow
   - concat_without_spaces
   - trailing_comma_in_multiline_array
+  - no_blank_lines_after_throw
 enabled:
   - concat_with_spaces

@@ -34,7 +34,7 @@ class Generator
      */
     public function __construct(SequenceableContract $model)
     {
-        if  (! $model instanceof  Model) {
+        if (! $model instanceof Model) {
             throw new SequenceException(get_class($model) . ' Must be an instance of ' . Model::class);
         }
 

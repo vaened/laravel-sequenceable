@@ -49,8 +49,8 @@ class CustomSequence extends Model implements SequenceContract
      */
     public function next()
     {
-        $this->sequence ++;
-        $this->save( );
+        $this->sequence++;
+        $this->save();
         return $this->sequence;
     }
 
@@ -61,7 +61,7 @@ class CustomSequence extends Model implements SequenceContract
      */
     public function prev()
     {
-        $this->sequence --;
+        $this->sequence--;
         $this->save();
         return $this->sequence;
     }
@@ -103,6 +103,7 @@ class CustomSequence extends Model implements SequenceContract
      * @param string|int $key
      * @param string $table
      * @param string $column
+     *
      * @return SequenceContract
      */
     public function findOrCreate($key, $table, $column)

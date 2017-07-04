@@ -11,7 +11,7 @@ class CustomCodeSequenceConfiguration extends Document
     {
         return [
             'custom_number_code' =>  'number',
-            'custom_number_string_code' => [ 'number_string' ],
+            'custom_number_string_code' => ['number_string'],
         ];
     }
 }

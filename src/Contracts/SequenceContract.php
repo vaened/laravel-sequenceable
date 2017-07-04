@@ -12,21 +12,21 @@ interface SequenceContract
     /**
      * Increase sequence by one and return it.
      *
-     * @return integer
+     * @return int
      */
     public function next();
 
     /**
      * Decrements the sequence by one and return it.
      *
-     * @return integer
+     * @return int
      */
     public function prev();
 
     /**
      * Gets the current sequence.
      *
-     * @return integer
+     * @return int
      * */
     public function current();
 
@@ -48,7 +48,7 @@ interface SequenceContract
     /**
      * Get the first record matching the attributes or create it.
      *
-     * @param  string|integer $key
+     * @param  string|int $key
      * @param  string $table
      * @param  string $column
      * @return SequenceContract

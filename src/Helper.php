@@ -7,7 +7,6 @@ namespace Enea\Sequenceable;
 
 class Helper
 {
-
     /**
      * Validates that the sequence is within the formats supported by the package.
      *

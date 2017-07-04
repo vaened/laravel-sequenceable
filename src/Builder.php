@@ -47,8 +47,8 @@ class Builder
      *
      * @param $key
      * @param $value
-     * @return SequenceContract
      * @throws SequenceException
+     * @return SequenceContract
      */
     public function sequence($key, $value)
     {
@@ -82,6 +82,7 @@ class Builder
      * Returns the configured sequence model and, if not defined, takes the default value.
      *
      * @param $column
+     *
      * @return SequenceContract
      */
     protected function createModel($column)
@@ -98,6 +99,7 @@ class Builder
      *
      * @param $id
      * @param $column
+     *
      * @return SequenceContract
      */
     protected function createSequence($id, $column)

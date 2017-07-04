@@ -13,7 +13,7 @@ abstract class Document extends Model implements SequenceableContract
 {
     use Sequenceable;
 
-    protected $fillable = [ 'number', 'number_string', 'type' ];
+    protected $fillable = ['number', 'number_string', 'type'];
 
     protected $table = 'documents';
 }
