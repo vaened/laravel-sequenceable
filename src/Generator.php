@@ -11,15 +11,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Generator
 {
+
     /**
-     * Model where sequences are generated
+     * Model where sequences are generated.
      *
      * @var SequenceableContract|Model
      */
     protected $model;
 
     /**
-     * Construct of the sequence model
+     * Construct of the sequence model.
      *
      * @var Builder
      * */
@@ -27,54 +28,53 @@ class Generator
 
     /**
      * Builder constructor.
+     *
      * @param SequenceableContract|Sequenceable $model
      * @throws SequenceException
      */
-    public function __construct( SequenceableContract $model )
+    public function __construct(SequenceableContract $model)
     {
         if  ( ! $model instanceof  Model) {
-            throw  new SequenceException( get_class( $model )  . ' Must be an instance of ' . Model::class);
+            throw new SequenceException(get_class($model) . ' Must be an instance of ' . Model::class);
         }
 
         $this->model = $model;
-        $this->builder = new Builder( $this->model );
+        $this->builder = new Builder($this->model);
     }
 
-
     /**
-     * Build sequence for new resource
+     * Build sequence for new resource.
      *
      * @throws SequenceException
      */
     public function __invoke()
     {
-        $this->make( );
+        $this->make();
     }
 
-
     /**
-     * Build sequence for new resource
+     * Build sequence for new resource.
      *
      * @return void
      * @throws SequenceException
      */
-    public function make( )
+    public function make()
     {
-        foreach ($this->model->getSequencesConfiguration() as $key => $value ) {
+        foreach ($this->model->getSequencesConfiguration() as $key => $value) {
 
-            $sequence = $this->builder->sequence( $key, $value )->next( );
+            $sequence = $this->builder->sequence($key, $value)->next();
 
-            if ($this->isAutoCompletable( ) ) {
-                $sequence = $this->model->autocomplete( $sequence, Helper::getSize($key, $value) );
+            if ($this->isAutoCompletable()) {
+                $sequence = $this->model->autocomplete($sequence, Helper::getSize($key, $value));
             }
 
-            $this->model->setAttribute(Helper::getColumnName($key, $value), $sequence );
+            $this->model->setAttribute(Helper::getColumnName($key, $value), $sequence);
         }
 
     }
 
     /**
-     * Returns true if the sequence is to be filled
+     * Returns true if the sequence is to be filled.
      *
      * @return bool
      */

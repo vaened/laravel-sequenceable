@@ -5,9 +5,9 @@
 
 namespace Enea\Tests\Models;
 
-
 class DynamicCodeSequenceConfiguration extends Document
 {
+
     public function sequencesSetup()
     {
         return [
@@ -22,4 +22,5 @@ class DynamicCodeSequenceConfiguration extends Document
             case 'iv': return 'invoice';
         }
     }
+
 }

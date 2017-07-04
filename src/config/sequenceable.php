@@ -17,6 +17,7 @@ return [
     | you implement the sequenceContract interface or extend the base model
     |
     */
+
    'model' => \Enea\Sequenceable\Model\Sequence::class,
 
     /*
@@ -28,6 +29,7 @@ return [
      | value with the character you want, by default, if it is true, it will autocomplete to zero
      |
      */
+
     'autofilling' => false,
 
 ];

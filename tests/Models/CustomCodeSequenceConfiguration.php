@@ -5,9 +5,9 @@
 
 namespace Enea\Tests\Models;
 
-
 class CustomCodeSequenceConfiguration extends Document
 {
+
     public function sequencesSetup()
     {
         return [
@@ -15,4 +15,5 @@ class CustomCodeSequenceConfiguration extends Document
             'custom_number_string_code' => [ 'number_string' ],
         ];
     }
+
 }

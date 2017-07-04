@@ -7,16 +7,16 @@
 
 namespace Enea\Sequenceable;
 
-use Illuminate\Database\Eloquent\Model;
 use Enea\Sequenceable\Contracts\SequenceableContract;
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Enea\Sequenceable\Exceptions\SequenceException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class Builder
 {
     /**
-     * Model where sequences are generated
+     * Model where sequences are generated.
      *
      * @var SequenceableContract|Model
      */
@@ -24,100 +24,100 @@ class Builder
 
     /**
      * Builder constructor.
+     *
      * @param SequenceableContract|Sequenceable $model
      * @throws SequenceException
      */
-    public function __construct( SequenceableContract $model = null )
+    public function __construct(SequenceableContract $model = null)
     {
         $this->model = $model;
     }
 
     /**
-     * Establish a model
+     * Establish a model.
      *
      * @param SequenceableContract $model
      * @return void
      */
-    public function setSequenceableModel( SequenceableContract $model )
+    public function setSequenceableModel(SequenceableContract $model)
     {
         $this->model = $model;
     }
 
     /**
-     * Creates the sequence model and generates the sequence
+     * Creates the sequence model and generates the sequence.
      *
      * @param $key
      * @param $value
      * @return SequenceContract
      * @throws SequenceException
      */
-    public function sequence( $key, $value )
+    public function sequence($key, $value)
     {
-        if ( ! Helper::isAvailableSequence($key, $value) ) {
-            throw new SequenceException( "Wrong sequence configuration format key: $key value: $value" );
+        if ( ! Helper::isAvailableSequence($key, $value)) {
+            throw new SequenceException("Wrong sequence configuration format key: $key value: $value");
         }
 
-        $column = Helper::getColumnName( $key, $value );
+        $column = Helper::getColumnName($key, $value);
 
-        return $this->createSequence( Helper::getKeyName($key, $value), $column );
+        return $this->createSequence(Helper::getKeyName($key, $value), $column);
     }
 
     /**
-     * Builds the sequence model
+     * Builds the sequence model.
      *
      * @param $key
      * @param $value
      * @return SequenceContract|Model
      * @throws SequenceException
      */
-    public function model($key, $value )
+    public function model($key, $value)
     {
-        if ( ! Helper::isAvailableSequence($key, $value) ) {
-            throw new SequenceException( "Wrong sequence configuration format key: $key value: $value" );
+        if ( ! Helper::isAvailableSequence($key, $value)) {
+            throw new SequenceException("Wrong sequence configuration format key: $key value: $value");
         }
 
-        return $this->createModel( Helper::getColumnName( $key, $value ) );
+        return $this->createModel(Helper::getColumnName($key, $value));
     }
 
     /**
-     * Returns the configured sequence model and, if not defined, takes the default value
+     * Returns the configured sequence model and, if not defined, takes the default value.
      *
      * @param $column
      * @return SequenceContract
      */
-    protected function createModel( $column )
+    protected function createModel($column)
     {
-        $instance = $this->model->getSequenceModels( )->search(function ( array $values ) use ( $column ) {
+        $instance = $this->model->getSequenceModels()->search(function (array $values) use ($column) {
             return in_array($column, $values);
         });
 
         return new $instance;
     }
 
-
     /**
-     * Look for the sequence in the table and, if it is not found, generate it
+     * Look for the sequence in the table and, if it is not found, generate it.
      *
      * @param $id
      * @param $column
      * @return SequenceContract
      * @throws SequenceException
      */
-    protected function createSequence( $id, $column )
+    protected function createSequence($id, $column)
     {
-        $sequenceable = $this->createModel( $column );
-        return $sequenceable->findOrCreate( $id, $this->model->getTable(), $column );
+        $sequenceable = $this->createModel($column);
+        return $sequenceable->findOrCreate($id, $this->model->getTable(), $column);
     }
 
     /**
-     * Configuration of the sequences
+     * Configuration of the sequences.
      *
      * @return Collection
      * @throws SequenceException
      */
-    public function getSequencesConfiguration( )
+    public function getSequencesConfiguration()
     {
-        return  collect($this->model->sequencesSetup( ));
+        return  collect($this->model->sequencesSetup());
     }
 
 }

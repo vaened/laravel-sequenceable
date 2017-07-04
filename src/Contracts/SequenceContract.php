@@ -12,40 +12,40 @@ use Illuminate\Support\Collection;
 interface SequenceContract
 {
     /**
-     * Increase sequence by one and return it
+     * Increase sequence by one and return it.
      *
      * @return integer
      */
-    public function next( );
+    public function next();
 
     /**
-     * Decrements the sequence by one and return it
+     * Decrements the sequence by one and return it.
      *
      * @return integer
      */
-    public function prev( );
+    public function prev();
 
     /**
-     * Gets the current sequence
+     * Gets the current sequence.
      *
      * @return integer
      * */
-    public function current( );
+    public function current();
 
     /**
-     * Returns the name of the field that stores the column to which the sequence belongs
+     * Returns the name of the field that stores the column to which the sequence belongs.
      *
      * @return string
      * */
-    public function getColumnKey( );
+    public function getColumnKey();
 
     /**
-     * Filters only the tables that are passed by parameter
+     * Filters only the tables that are passed by parameter.
      *
      * @param string $table
      * @return Collection
      */
-    public function source( $table );
+    public function source($table);
 
     /**
      * Get the first record matching the attributes or create it.
@@ -55,6 +55,6 @@ interface SequenceContract
      * @param  string $column
      *  @return SequenceContract
      */
-    public function findOrCreate( $key, $table, $column );
+    public function findOrCreate($key, $table, $column);
 
 }

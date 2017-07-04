@@ -7,7 +7,6 @@
 
 namespace Enea\Sequenceable\Model;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Illuminate\Support\Collection;
@@ -79,11 +78,11 @@ class Sequence extends Model implements SequenceContract
     ];
 
     /**
-     * Returns the previous sequence
+     * Returns the previous sequence.
      *
      * @return int
      */
-    public function getPrevAttribute( )
+    public function getPrevAttribute()
     {
         $prev = $this->sequence;
         $prev --;
@@ -91,21 +90,21 @@ class Sequence extends Model implements SequenceContract
     }
 
     /**
-     * Returns the current sequence
+     * Returns the current sequence.
      *
      * @return int
      */
-    public function getCurrentAttribute( )
+    public function getCurrentAttribute()
     {
         return $this->sequence;
     }
 
     /**
-     * Returns the next sequence
+     * Returns the next sequence.
      *
      * @return int
      */
-    public function getNextAttribute( )
+    public function getNextAttribute()
     {
         $next = $this->sequence;
         $next ++;
@@ -113,11 +112,11 @@ class Sequence extends Model implements SequenceContract
     }
 
     /**
-     * Increase sequence by one and return it
+     * Increase sequence by one and return it.
      *
      * @return integer
      */
-    public function next( )
+    public function next()
     {
         $this->sequence ++;
         $this->save( );
@@ -125,11 +124,11 @@ class Sequence extends Model implements SequenceContract
     }
 
     /**
-     * Decrements the sequence by one and return it
+     * Decrements the sequence by one and return it.
      *
      * @return integer
      */
-    public function prev( )
+    public function prev()
     {
         $this->sequence --;
         $this->save();
@@ -138,17 +137,17 @@ class Sequence extends Model implements SequenceContract
 
 
     /**
-     * Gets the current sequence
+     * Gets the current sequence.
      *
      * @return integer
      * */
-    public function current( )
+    public function current()
     {
         return $this->sequence;
     }
 
     /**
-     * Returns the field that stores the column to which the sequence belongs
+     * Returns the field that stores the column to which the sequence belongs.
      *
      * @return string
      * */
@@ -158,7 +157,7 @@ class Sequence extends Model implements SequenceContract
     }
 
     /**
-     * Returns the name of the field that stores the table to which the sequence belongs
+     * Returns the name of the field that stores the table to which the sequence belongs.
      *
      * @return string
      * */
@@ -168,14 +167,14 @@ class Sequence extends Model implements SequenceContract
     }
 
     /**
-     * Filters only the tables that are passed by parameter
+     * Filters only the tables that are passed by parameter.
      *
      * @param string $table
      * @return Collection
      */
-    public function source( $table )
+    public function source($table)
     {
-        return static::where( $this->sourceTableName( ), $table )->get();
+        return static::where($this->sourceTableName(), $table)->get();
     }
 
     /**
@@ -186,11 +185,11 @@ class Sequence extends Model implements SequenceContract
      * @param string $column
      * @return SequenceContract
      */
-    public function findOrCreate( $key, $table, $column )
+    public function findOrCreate($key, $table, $column)
     {
         $column = $this->buildColumnKey($column, $key);
 
-        return static::firstOrCreate([ 'id' => $this->keyFormatted( $table, $column ) ], [
+        return static::firstOrCreate([ 'id' => $this->keyFormatted($table, $column)], [
             $this->sourceTableName() => $table,
             'column_key' => $column,
             'description' => "$table.$column",
@@ -199,28 +198,28 @@ class Sequence extends Model implements SequenceContract
     }
 
     /**
-     * Format for the primary key
-     * In case you do not need to format, return the primary key of the parameter
+     * Format for the primary key.
+     * In case you do not need to format, return the primary key of the parameter.
      *
      * @param string $table
      * @param string $column_key
      * @return string
      */
-    protected function keyFormatted( $table, $column_key )
+    protected function keyFormatted($table, $column_key)
     {
         return hash(self::HASH, "$table.$column_key", false);
     }
 
     /**
-     * Format the key of the column
+     * Format the key of the column.
      *
      * @param string $column
      * @param string $key
      * @return string
      */
-    protected function buildColumnKey( $column,  $key )
+    protected function buildColumnKey($column,  $key)
     {
-        if ( $key !== $column ) {
+        if ($key !== $column) {
             $column .= '.' . $key;
         }
 

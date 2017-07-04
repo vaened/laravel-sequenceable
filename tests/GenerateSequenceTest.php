@@ -18,13 +18,13 @@ class GenerateSequenceTest extends DataBaseTestCase
     {
         $documents = [
             1 => new SimpleSequenceConfiguration(),
-            2 => new SimpleSequenceConfiguration( ),
+            2 => new SimpleSequenceConfiguration(),
             3 => new SimpleSequenceConfiguration(),
             4 => new SimpleSequenceConfiguration()
         ];
 
-        foreach ( $documents as $sequence => $document ) {
-            $document->save( );
+        foreach ($documents as $sequence => $document) {
+            $document->save();
 
             $this->assertDatabaseHas('documents', [
                 'number' => $sequence,
@@ -39,7 +39,7 @@ class GenerateSequenceTest extends DataBaseTestCase
         }
     }
 
-    function test_a_basic_sequence_is_generated( )
+    function test_a_basic_sequence_is_generated()
     {
         $document = new BasicSequenceConfiguration();
         $document->save();
@@ -63,7 +63,7 @@ class GenerateSequenceTest extends DataBaseTestCase
         ]);
     }
 
-    function test_an_custom_code_sequence_is_generated( )
+    function test_an_custom_code_sequence_is_generated()
     {
         $document = new CustomCodeSequenceConfiguration();
         $document->save();
@@ -117,7 +117,7 @@ class GenerateSequenceTest extends DataBaseTestCase
             'type' => 'tk'
         ]);
         $document->save();
-        $this->assertDatabaseHas('documents', [ 'number' => 1, 'type' => 'tk' ]);
+        $this->assertDatabaseHas('documents', ['number' => 1, 'type' => 'tk']);
         $this->assertDatabaseHas('sequences', [
             'source' => 'documents',
             'column_key' => 'number.ticket',
@@ -128,7 +128,7 @@ class GenerateSequenceTest extends DataBaseTestCase
             'type' => 'iv'
         ]);
         $document->save();
-        $this->assertDatabaseHas('documents', [ 'number' => 1, 'type' => 'iv' ]);
+        $this->assertDatabaseHas('documents', ['number' => 1, 'type' => 'iv']);
         $this->assertDatabaseHas('sequences', [
             'source' => 'documents',
             'column_key' => 'number.invoice',

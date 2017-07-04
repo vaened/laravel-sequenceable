@@ -5,11 +5,12 @@
 
 namespace Enea\Tests\Models;
 
-
 class SimpleSequenceConfiguration extends Document
 {
-    public function sequencesSetup( )
+
+    public function sequencesSetup()
     {
-        return [ 'number' ];
+        return ['number'];
     }
+
 }

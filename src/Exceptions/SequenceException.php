@@ -7,7 +7,7 @@
 
 namespace Enea\Sequenceable\Exceptions;
 
-use \Exception;
+use Exception;
 
 class SequenceException extends Exception
 {

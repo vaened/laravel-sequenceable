@@ -14,23 +14,23 @@ class FacadeTest extends DataBaseTestCase
     function test_the_sequences_of_a_model_are_obtained()
     {
 
-        $document = new DynamicCodeSequenceConfiguration([ 'type' => 'tk' ]);
+        $document = new DynamicCodeSequenceConfiguration(['type' => 'tk']);
         $document->save();
-        $this->assertDatabaseHas('documents', [ 'number' => 1 ]);
+        $this->assertDatabaseHas('documents', ['number' => 1]);
 
-        $document = new DynamicCodeSequenceConfiguration([ 'type' => 'iv' ]);
+        $document = new DynamicCodeSequenceConfiguration(['type' => 'iv']);
         $document->save();
-        $this->assertDatabaseHas('documents', [ 'number' => 1 ]);
+        $this->assertDatabaseHas('documents', ['number' => 1]);
 
-        $collect = Succession::on( DynamicCodeSequenceConfiguration::class );
+        $collect = Succession::on(DynamicCodeSequenceConfiguration::class);
 
-        $ticket = $collect->first( )->toArray();
+        $ticket = $collect->first()->toArray();
 
         $this->assertSame($ticket['sequence'], 1);
         $this->assertSame($ticket['source'], 'documents');
         $this->assertSame($ticket['column_key'], 'number.ticket');
 
-        $invoice = $collect->last( )->toArray();
+        $invoice = $collect->last()->toArray();
 
         $this->assertSame($invoice['sequence'], 1);
         $this->assertSame($invoice['source'], 'documents');

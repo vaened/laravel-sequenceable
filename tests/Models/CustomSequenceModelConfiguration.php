@@ -8,6 +8,7 @@ namespace Enea\Tests\Models;
 
 class CustomSequenceModelConfiguration extends Document
 {
+
     public function sequencesSetup()
     {
         return [
@@ -17,4 +18,5 @@ class CustomSequenceModelConfiguration extends Document
             ],
         ];
     }
+
 }

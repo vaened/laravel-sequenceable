@@ -5,7 +5,6 @@
 
 namespace Enea\Tests\Models;
 
-
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -45,11 +44,11 @@ class CustomSequence extends Model implements SequenceContract
     public $timestamps = false;
 
     /**
-     * Increase sequence by one and return it
+     * Increase sequence by one and return it.
      *
      * @return integer
      */
-    public function next( )
+    public function next()
     {
         $this->sequence ++;
         $this->save( );
@@ -57,30 +56,29 @@ class CustomSequence extends Model implements SequenceContract
     }
 
     /**
-     * Decrements the sequence by one and return it
+     * Decrements the sequence by one and return it.
      *
      * @return integer
      */
-    public function prev( )
+    public function prev()
     {
         $this->sequence --;
         $this->save();
         return $this->sequence;
     }
 
-
     /**
-     * Gets the current sequence
+     * Gets the current sequence.
      *
      * @return integer
      * */
-    public function current( )
+    public function current()
     {
         return $this->sequence;
     }
 
     /**
-     * Returns the field that stores the column to which the sequence belongs
+     * Returns the field that stores the column to which the sequence belongs.
      *
      * @return string
      * */
@@ -89,33 +87,32 @@ class CustomSequence extends Model implements SequenceContract
         return $this->column_key;
     }
 
-
     /**
-     * Filters only the tables that are passed by parameter
+     * Filters only the tables that are passed by parameter.
      *
      * @param string $table
      * @return Collection
      */
-    public function source( $table )
+    public function source($table)
     {
-        return static::where( 'source', $table )->get();
+        return static::where('source', $table)->get();
     }
 
     /**
-     * Get the first record matching the attributes or create it.
+     * Get the first record matching the attributes or create it..
      *
      * @param string|integer $key
      * @param string $table
      * @param string $column
      * @return SequenceContract
      */
-    public function findOrCreate( $key, $table, $column )
+    public function findOrCreate($key, $table, $column)
     {
         if ($key !== $column) {
             $column .= '.' . $key;
         }
 
-        return static::firstOrCreate([ 'key' => $key ], [
+        return static::firstOrCreate([ 'key' => $key], [
             'source' => $table,
             'column_key' => $column,
             'sequence' => 0

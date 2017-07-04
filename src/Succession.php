@@ -5,7 +5,6 @@
 
 namespace Enea\Sequenceable;
 
-
 use Enea\Sequenceable\Contracts\SequenceableContract;
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Enea\Sequenceable\Exceptions\SequenceException;

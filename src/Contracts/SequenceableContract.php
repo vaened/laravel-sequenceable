@@ -7,28 +7,27 @@ namespace Enea\Sequenceable\Contracts;
 
 use Illuminate\Support\Collection;
 
-
 interface SequenceableContract
 {
 
     /**
-     * Returns the configuration of the sequences
+     * Returns the configuration of the sequences.
      *
      * @return array
      */
-    public function sequencesSetup( );
+    public function sequencesSetup();
 
     /**
-     * Returns, only if defined, the custom instances
+     * Returns, only if defined, the custom instances.
      *
      * @return Collection
      * */
-    public function getSequenceModels( );
+    public function getSequenceModels();
 
     /**
-     * Returns the sequences defined in the model
+     * Returns the sequences defined in the model.
      *
      * @return Collection
      */
-    public function getSequencesConfiguration( );
+    public function getSequencesConfiguration();
 }

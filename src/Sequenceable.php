@@ -9,60 +9,52 @@ use Illuminate\Support\Collection;
 use Enea\Sequenceable\Exceptions\SequenceException;
 use Enea\Sequenceable\Model\Sequence;
 
-
-/**
- *
- * Class Sequenceable
- *
- * @package Core\Resources\Sequenceable
- *
- *
- */
 trait Sequenceable
 {
+
     /**
-     * Model builds key
+     * Model builds key.
      *
      * @param integer|string $key
      * @param string $column
      * @return string
      * @return string
      */
-    public function makeKey( $key, $column = null )
+    public function makeKey($key, $column = null)
     {
         $sequence = $this->getAutocompletableSequence();
 
-        if( ! empty($column) && $sequence->has($column)  ) {
-            return $this->autocomplete( $key, $sequence->get($column));
+        if( ! empty($column) && $sequence->has($column)) {
+            return $this->autocomplete($key, $sequence->get($column));
         }
 
         return $key;
     }
 
-
     /**
+     * Fill a string as requested.
+     *
      * @param integer|string $key
      * @param integer $size
      * @return string
      */
-    public function autocomplete($key, $size )
+    public function autocomplete($key, $size)
     {
-        if ( $size > 1 && is_numeric( $key )) {
-            $key = str_pad( $key, $size, '0', STR_PAD_LEFT );
+        if ( $size > 1 && is_numeric($key)) {
+            $key = str_pad($key, $size, '0', STR_PAD_LEFT);
         }
 
         return $key;
     }
-
 
     /**
      * @return Collection
      */
     private final function getAutocompletableSequence()
     {
-        $collection = collect( );
+        $collection = collect();
 
-        foreach ( $this->getSequencesConfiguration( ) as $key => $sequence) {
+        foreach ( $this->getSequencesConfiguration() as $key => $sequence) {
 
             if (is_array($sequence)) {
                 $key = key($sequence);
@@ -76,57 +68,57 @@ trait Sequenceable
     }
 
     /**
-     * Returns, only if defined, the custom instances
+     * Returns, only if defined, the custom instances.
      *
      * @return Collection
      * */
-    public function getSequenceModels( )
+    public function getSequenceModels()
     {
-        $instances = collect( );
+        $instances = collect();
         $common = array();
-        foreach ( $this->sequencesSetup( ) as $key => $values ) {
+        foreach ($this->sequencesSetup() as $key => $values) {
             $sequences = array( );
-            if ( ! class_exists( $key )  ) {
-                $common[ ] = Helper::getColumnName($key, $values);
+            if ( ! class_exists($key)) {
+                $common[] = Helper::getColumnName($key, $values);
             } else {
 
-                foreach ( (array) $values as $k => $value ) {
-                    $sequences[ ] = Helper::getColumnName($k, $value);
+                foreach ((array) $values as $k => $value) {
+                    $sequences[] = Helper::getColumnName($k, $value);
                 }
 
-                $instances->put( $key, $sequences );
+                $instances->put($key, $sequences);
             }
         }
 
-        $instances->put( $this->defaultSequenceName( ), $common );
+        $instances->put($this->defaultSequenceName(), $common);
 
         return $instances;
     }
 
     /**
-     * Returns the sequences defined in the model
+     * Returns the sequences defined in the model.
      *
      * @return Collection
      * @throws SequenceException
      */
-    public function getSequencesConfiguration( )
+    public function getSequencesConfiguration()
     {
-        if ( ! $this instanceof  Model ) {
-            throw new SequenceException( static::class  . ' Must be an instance of ' . Model::class);
+        if ( ! $this instanceof  Model) {
+            throw new SequenceException(static::class . ' Must be an instance of ' . Model::class);
         }
 
-        $sequencesConfiguration = collect( );
+        $sequencesConfiguration = collect();
 
-        foreach ( $this->sequencesSetup( ) as $key => $values ) {
+        foreach ( $this->sequencesSetup() as $key => $values) {
 
-            if ( ! class_exists( $key )) {
-                $sequencesConfiguration->put( $key, $values );
+            if ( ! class_exists($key)) {
+                $sequencesConfiguration->put($key, $values);
             } else {
-                foreach ( (array) $values as $k => $value ) {
-                    if (is_numeric( $k )) {
+                foreach ((array) $values as $k => $value) {
+                    if (is_numeric($k)) {
                         $sequencesConfiguration->push($value);
                     } else {
-                        $sequencesConfiguration->put( $k, $value );
+                        $sequencesConfiguration->put($k, $value);
                     }
                 }
             }
@@ -137,6 +129,7 @@ trait Sequenceable
     }
 
     /**
+     * Add observer.
      *
      * @return void
      */
@@ -148,7 +141,7 @@ trait Sequenceable
     }
 
     /**
-     * Modify this method if necessary
+     * Modify this method if necessary.
      *
      * @return bool
      */
@@ -162,7 +155,7 @@ trait Sequenceable
      *
      * @return string
      */
-    protected function defaultSequenceName( )
+    protected function defaultSequenceName()
     {
         if ($model = config('sequenceable.model')) {
             return $model;
