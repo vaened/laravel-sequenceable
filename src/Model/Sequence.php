@@ -5,8 +5,8 @@
 
 namespace Enea\Sequenceable\Model;
 
-use Illuminate\Database\Eloquent\Model;
 use Enea\Sequenceable\Contracts\SequenceContract;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
@@ -15,7 +15,6 @@ use Illuminate\Support\Collection;
  * Attributes
  *
  * @property  int sequence
- *
  * @property  string id
  * @property  string source
  * @property  string description
@@ -132,7 +131,6 @@ class Sequence extends Model implements SequenceContract
         $this->save();
         return $this->sequence;
     }
-
 
     /**
      * Gets the current sequence.

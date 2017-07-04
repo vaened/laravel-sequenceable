@@ -1,12 +1,9 @@
 <?php
 /**
- * Created by eneasdh-fs
- * Date: 23/04/17
- * Time: 04:06 PM
+ * Created by eneasdh-fs - 23/04/17 04:06 PM.
  */
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Sequence Model
@@ -30,6 +27,5 @@ return [
      |
      */
 
-    'autofilling' => false,
-
+    'autofilling' => false
 ];

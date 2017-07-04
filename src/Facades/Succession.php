@@ -10,7 +10,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * Class Succession
+ * Class Succession.
+ *
  * @package Enea\Sequenceable\Facade
  * @author enea dhack <enea.so@live.com>
  *

@@ -100,7 +100,7 @@ class GenerateSequenceTest extends DataBaseTestCase
             'source' => 'documents',
             'column_key' => 'number.ccn',
             'key' => 'ccn',
-            'sequence' => 1 
+            'sequence' => 1
         ]);
         $this->assertDatabaseHas('custom_sequences', [
             'source' => 'documents',

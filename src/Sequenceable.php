@@ -5,10 +5,10 @@
 
 namespace Enea\Sequenceable;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Enea\Sequenceable\Exceptions\SequenceException;
 use Enea\Sequenceable\Model\Sequence;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 trait Sequenceable
 {
@@ -51,7 +51,7 @@ trait Sequenceable
     /**
      * @return Collection
      */
-    private final function getAutocompletableSequence()
+    private function getAutocompletableSequence()
     {
         $collection = collect();
 
@@ -99,20 +99,20 @@ trait Sequenceable
     /**
      * Returns the sequences defined in the model.
      *
-     * @return Collection
      * @throws SequenceException
+     * @return Collection
      */
     public function getSequencesConfiguration()
     {
-        if ( ! $this instanceof  Model) {
+        if (! $this instanceof  Model) {
             throw new SequenceException(static::class . ' Must be an instance of ' . Model::class);
         }
 
         $sequencesConfiguration = collect();
 
-        foreach ( $this->sequencesSetup() as $key => $values) {
+        foreach ($this->sequencesSetup() as $key => $values) {
 
-            if ( ! class_exists($key)) {
+            if (! class_exists($key)) {
                 $sequencesConfiguration->put($key, $values);
             } else {
                 foreach ((array) $values as $k => $value) {
@@ -136,7 +136,7 @@ trait Sequenceable
      */
     public static function bootSequenceable()
     {
-        if ( static::isSequenceableAvailable()) {
+        if (static::isSequenceableAvailable()) {
             static::observe(new SequenceObserver());
         }
     }

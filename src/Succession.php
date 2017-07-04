@@ -29,8 +29,8 @@ class Succession
 
     /**
      * @param Model|SequenceableContract $class
-     * @return Collection
      * @throws SequenceException
+     * @return Collection
      */
     public function on($class)
     {
@@ -44,14 +44,14 @@ class Succession
 
         $this->builder->setSequenceableModel($class);
 
-        $sequences = collect( );
+        $sequences = collect();
 
         $class->getSequenceModels()->each(function ($value, $key) use ($class, $sequences) {
             /** @var SequenceContract $sequence*/
             $sequence = new $key;
 
-             $sequence->source($class->getTable())->each(function(SequenceContract $sequence) use ($sequences) {
-                 $sequences->put($sequence->getColumnKey() , $sequence);
+            $sequence->source($class->getTable())->each(function(SequenceContract $sequence) use ($sequences) {
+                $sequences->put($sequence->getColumnKey(), $sequence);
             });
         });
 

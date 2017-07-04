@@ -16,7 +16,7 @@ class Helper
      */
     public static function isAvailableSequence($key, $value)
     {
-        if( is_string($key)) {
+        if(is_string($key)) {
             if (is_array($value)) {
                 $key = key($value);
                 $value = current($value);
@@ -72,7 +72,7 @@ class Helper
      */
     public static function getSize($key, $value)
     {
-        if( is_string($value) && (is_integer($key) || is_string($key))) {
+        if(is_string($value) && (is_integer($key) || is_string($key))) {
             return 0;
         }
 

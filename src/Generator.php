@@ -25,7 +25,6 @@ class Generator
      * */
     protected $builder;
 
-
     /**
      * Builder constructor.
      *
