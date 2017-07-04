@@ -1,8 +1,6 @@
 <?php
 /**
- * Created by eneasdh-fs
- * Date: 09/01/17
- * Time: 10:43 PM
+ * Created by eneasdh-fs - 09/01/17 10:43 PM.
  */
 
 namespace Enea\Sequenceable\Exceptions;

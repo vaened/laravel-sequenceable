@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by enea dhack - 25/06/17 12:50 PM
+ * Created by enea dhack - 25/06/17 12:50 PM.
  */
 
 namespace Enea\Tests;
@@ -10,10 +10,8 @@ use Enea\Tests\Models\DynamicCodeSequenceConfiguration;
 
 class FacadeTest extends DataBaseTestCase
 {
-
-    function test_the_sequences_of_a_model_are_obtained()
+    public function test_the_sequences_of_a_model_are_obtained()
     {
-
         $document = new DynamicCodeSequenceConfiguration(['type' => 'tk']);
         $document->save();
         $this->assertDatabaseHas('documents', ['number' => 1]);
@@ -35,7 +33,5 @@ class FacadeTest extends DataBaseTestCase
         $this->assertSame($invoice['sequence'], 1);
         $this->assertSame($invoice['source'], 'documents');
         $this->assertSame($invoice['column_key'], 'number.invoice');
-
     }
-
 }

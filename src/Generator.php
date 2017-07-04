@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by enea dhack - 25/06/17 02:16 PM
+ * Created by enea dhack - 25/06/17 02:16 PM.
  */
 
 namespace Enea\Sequenceable;
@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Generator
 {
-
     /**
      * Model where sequences are generated.
      *
@@ -26,6 +25,7 @@ class Generator
      * */
     protected $builder;
 
+
     /**
      * Builder constructor.
      *
@@ -34,7 +34,7 @@ class Generator
      */
     public function __construct(SequenceableContract $model)
     {
-        if  ( ! $model instanceof  Model) {
+        if  (! $model instanceof  Model) {
             throw new SequenceException(get_class($model) . ' Must be an instance of ' . Model::class);
         }
 
@@ -55,8 +55,8 @@ class Generator
     /**
      * Build sequence for new resource.
      *
-     * @return void
      * @throws SequenceException
+     * @return void
      */
     public function make()
     {
@@ -70,7 +70,6 @@ class Generator
 
             $this->model->setAttribute(Helper::getColumnName($key, $value), $sequence);
         }
-
     }
 
     /**
@@ -78,9 +77,8 @@ class Generator
      *
      * @return bool
      */
-    protected function isAutoCompletable( )
+    protected function isAutoCompletable()
     {
         return config('sequenceable.autofilling', false);
     }
-
 }

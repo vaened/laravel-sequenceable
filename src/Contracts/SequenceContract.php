@@ -1,8 +1,6 @@
 <?php
 /**
- * Created by eneasdh-fs
- * Date: 11/01/17
- * Time: 10:00 PM
+ * Created by eneasdh-fs - 11/01/17 10:00 PM.
  */
 
 namespace Enea\Sequenceable\Contracts;
@@ -53,7 +51,7 @@ interface SequenceContract
      * @param  string|integer $key
      * @param  string $table
      * @param  string $column
-     *  @return SequenceContract
+     * @return SequenceContract
      */
     public function findOrCreate($key, $table, $column);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by enea dhack - 24/06/17 01:58 PM
+ * Created by enea dhack - 24/06/17 01:58 PM.
  */
 
 namespace Enea\Sequenceable\Facades;
@@ -22,10 +22,8 @@ use Enea\Sequenceable\Succession as BaseSuccession;
  */
 class Succession extends Facade
 {
-
     protected static function getFacadeAccessor()
     {
         return BaseSuccession::class;
     }
-
 }

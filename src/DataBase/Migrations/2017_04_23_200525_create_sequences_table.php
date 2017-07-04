@@ -14,16 +14,16 @@ class CreateSequencesTable extends Migration
     public function up()
     {
         Schema::create('sequences', function (Blueprint $table) {
-            $table->char( 'id', 8) ;
-            $table->primary( 'id' ) ;
+            $table->char('id', 8) ;
+            $table->primary('id') ;
 
-            $table->unsignedBigInteger('sequence')->default( 0 );
+            $table->unsignedBigInteger('sequence')->default(0);
 
-            $table->string( 'source', 35 )->index();
-            $table->string( 'column_key', 60 );
-            $table->string( 'description', 100 )->nullable();
+            $table->string('source', 35)->index();
+            $table->string('column_key', 60);
+            $table->string('description', 100)->nullable();
 
-            $table->timestamps( );
+            $table->timestamps();
         });
     }
 

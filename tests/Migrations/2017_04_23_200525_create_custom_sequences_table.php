@@ -19,10 +19,10 @@ class CreateCustomSequencesTable extends Migration
 
             $table->char('key', 3)->index();
 
-            $table->unsignedBigInteger('sequence')->default( 0 );
+            $table->unsignedBigInteger('sequence')->default(0);
 
-            $table->string( 'source', 50 );
-            $table->string( 'column_key', 60 );
+            $table->string('source', 50);
+            $table->string('column_key', 60);
         });
     }
 

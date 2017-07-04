@@ -1,8 +1,6 @@
 <?php
 /**
- * Created by eneasdh-fs
- * Date: 11/01/17
- * Time: 10:06 PM
+ * Created by eneasdh-fs 11/01/17 - 10:06 PM.
  */
 
 namespace Enea\Sequenceable;
@@ -54,7 +52,7 @@ class Builder
      */
     public function sequence($key, $value)
     {
-        if ( ! Helper::isAvailableSequence($key, $value)) {
+        if (! Helper::isAvailableSequence($key, $value)) {
             throw new SequenceException("Wrong sequence configuration format key: $key value: $value");
         }
 
@@ -68,12 +66,12 @@ class Builder
      *
      * @param $key
      * @param $value
-     * @return SequenceContract|Model
      * @throws SequenceException
+     * @return SequenceContract|Model
      */
     public function model($key, $value)
     {
-        if ( ! Helper::isAvailableSequence($key, $value)) {
+        if (! Helper::isAvailableSequence($key, $value)) {
             throw new SequenceException("Wrong sequence configuration format key: $key value: $value");
         }
 
@@ -92,7 +90,7 @@ class Builder
             return in_array($column, $values);
         });
 
-        return new $instance;
+        return new $instance();
     }
 
     /**
@@ -101,7 +99,6 @@ class Builder
      * @param $id
      * @param $column
      * @return SequenceContract
-     * @throws SequenceException
      */
     protected function createSequence($id, $column)
     {
@@ -112,12 +109,11 @@ class Builder
     /**
      * Configuration of the sequences.
      *
-     * @return Collection
      * @throws SequenceException
+     * @return Collection
      */
     public function getSequencesConfiguration()
     {
         return  collect($this->model->sequencesSetup());
     }
-
 }

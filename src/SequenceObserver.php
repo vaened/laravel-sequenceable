@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by enea dhack - 24/06/17 09:56 PM
+ * Created by enea dhack - 24/06/17 09:56 PM.
  */
 
 namespace Enea\Sequenceable;
@@ -9,7 +9,6 @@ use Enea\Sequenceable\Contracts\SequenceableContract;
 
 class SequenceObserver
 {
-
     /**
      * Create observer.
      *
@@ -20,5 +19,4 @@ class SequenceObserver
     {
         (new Generator($model))->make();
     }
-
 }

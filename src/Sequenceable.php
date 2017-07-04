@@ -1,7 +1,8 @@
 <?php
 /**
- * Created by enea dhack - 17/06/17 10:16 PM
+ * Created by enea dhack - 17/06/17 10:16 PM.
  */
+
 namespace Enea\Sequenceable;
 
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,7 @@ trait Sequenceable
     /**
      * Model builds key.
      *
-     * @param integer|string $key
+     * @param int|string $key
      * @param string $column
      * @return string
      * @return string
@@ -24,7 +25,7 @@ trait Sequenceable
     {
         $sequence = $this->getAutocompletableSequence();
 
-        if( ! empty($column) && $sequence->has($column)) {
+        if(! empty($column) && $sequence->has($column)) {
             return $this->autocomplete($key, $sequence->get($column));
         }
 
@@ -34,8 +35,8 @@ trait Sequenceable
     /**
      * Fill a string as requested.
      *
-     * @param integer|string $key
-     * @param integer $size
+     * @param int|string $key
+     * @param int $size
      * @return string
      */
     public function autocomplete($key, $size)
@@ -54,7 +55,7 @@ trait Sequenceable
     {
         $collection = collect();
 
-        foreach ( $this->getSequencesConfiguration() as $key => $sequence) {
+        foreach ($this->getSequencesConfiguration() as $key => $sequence) {
 
             if (is_array($sequence)) {
                 $key = key($sequence);
@@ -78,7 +79,7 @@ trait Sequenceable
         $common = array();
         foreach ($this->sequencesSetup() as $key => $values) {
             $sequences = array( );
-            if ( ! class_exists($key)) {
+            if (! class_exists($key)) {
                 $common[] = Helper::getColumnName($key, $values);
             } else {
 
@@ -151,7 +152,7 @@ trait Sequenceable
     }
 
     /**
-     * Returns the full path of the default sequence model
+     * Returns the full path of the default sequence model.
      *
      * @return string
      */

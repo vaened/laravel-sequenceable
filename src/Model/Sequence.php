@@ -1,8 +1,6 @@
 <?php
 /**
- * Created by eneasdh-fs
- * Date: 11/12/16
- * Time: 09:35 PM
+ * Created by eneasdh-fs - 11/12/16 09:35 PM.
  */
 
 namespace Enea\Sequenceable\Model;
@@ -16,7 +14,7 @@ use Illuminate\Support\Collection;
  *
  * Attributes
  *
- * @property  integer sequence
+ * @property  int sequence
  *
  * @property  string id
  * @property  string source
@@ -27,7 +25,7 @@ class Sequence extends Model implements SequenceContract
 {
 
     /**
-     * Codification adler32
+     * Codification adler32.
      *
      * @var string
      */
@@ -45,7 +43,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @var array
      */
-    protected $appends = [ 'next', 'prev', 'current' ];
+    protected $appends = ['next', 'prev', 'current'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -66,7 +64,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @var array
      */
-    protected $fillable = [ 'id', 'source', 'column_key', 'description' ];
+    protected $fillable = ['id', 'source', 'column_key', 'description'];
 
     /**
      * The attributes that should be cast to native types.
@@ -74,7 +72,7 @@ class Sequence extends Model implements SequenceContract
      * @var array
      */
     protected $casts = [
-       'sequence' => 'integer'
+       'sequence' => 'int'
     ];
 
     /**
@@ -85,7 +83,7 @@ class Sequence extends Model implements SequenceContract
     public function getPrevAttribute()
     {
         $prev = $this->sequence;
-        $prev --;
+        $prev--;
         return $prev;
     }
 
@@ -107,30 +105,30 @@ class Sequence extends Model implements SequenceContract
     public function getNextAttribute()
     {
         $next = $this->sequence;
-        $next ++;
+        $next++;
         return $next;
     }
 
     /**
      * Increase sequence by one and return it.
      *
-     * @return integer
+     * @return int
      */
     public function next()
     {
-        $this->sequence ++;
-        $this->save( );
+        $this->sequence++;
+        $this->save();
         return $this->sequence;
     }
 
     /**
      * Decrements the sequence by one and return it.
      *
-     * @return integer
+     * @return int
      */
     public function prev()
     {
-        $this->sequence --;
+        $this->sequence--;
         $this->save();
         return $this->sequence;
     }
@@ -139,7 +137,7 @@ class Sequence extends Model implements SequenceContract
     /**
      * Gets the current sequence.
      *
-     * @return integer
+     * @return int
      * */
     public function current()
     {
@@ -180,7 +178,7 @@ class Sequence extends Model implements SequenceContract
     /**
      * Get the first record matching the attributes or create it.
      *
-     * @param string|integer $key
+     * @param string|int $key
      * @param string $table
      * @param string $column
      * @return SequenceContract
@@ -189,7 +187,7 @@ class Sequence extends Model implements SequenceContract
     {
         $column = $this->buildColumnKey($column, $key);
 
-        return static::firstOrCreate([ 'id' => $this->keyFormatted($table, $column)], [
+        return static::firstOrCreate(['id' => $this->keyFormatted($table, $column)], [
             $this->sourceTableName() => $table,
             'column_key' => $column,
             'description' => "$table.$column",

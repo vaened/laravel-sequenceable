@@ -1,13 +1,12 @@
 <?php
 /**
- * Created by enea dhack - 24/06/17 09:52 PM
+ * Created by enea dhack - 24/06/17 09:52 PM.
  */
 
 namespace Enea\Tests;
 
 class DataBaseTestCase extends TestCase
 {
-
     /**
      * Setup the test environment.
      */
@@ -24,13 +23,12 @@ class DataBaseTestCase extends TestCase
             '--database' => 'testbench',
             '--realpath' => realpath(__DIR__.'/Migrations'),
         ]);
-
     }
 
     /**
      * Define environment setup.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param \Illuminate\Foundation\Application $app
      *
      * @return void
      */
@@ -63,5 +61,4 @@ class DataBaseTestCase extends TestCase
             \Orchestra\Database\ConsoleServiceProvider::class
         ];
     }
-
 }

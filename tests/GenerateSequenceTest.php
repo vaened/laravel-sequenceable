@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by enea dhack - 24/06/17 01:42 PM
+ * Created by enea dhack - 24/06/17 01:42 PM.
  */
 
 namespace Enea\Tests;
@@ -13,14 +13,13 @@ use Enea\Tests\Models\SimpleSequenceConfiguration;
 
 class GenerateSequenceTest extends DataBaseTestCase
 {
-
-    function test_the_sequences_are_generated()
+    public function test_the_sequences_are_generated()
     {
         $documents = [
             1 => new SimpleSequenceConfiguration(),
             2 => new SimpleSequenceConfiguration(),
             3 => new SimpleSequenceConfiguration(),
-            4 => new SimpleSequenceConfiguration()
+            4 => new SimpleSequenceConfiguration(),
         ];
 
         foreach ($documents as $sequence => $document) {
@@ -34,12 +33,12 @@ class GenerateSequenceTest extends DataBaseTestCase
                 'source' => 'documents',
                 'column_key' => 'number',
                 'description' => 'documents.number',
-                'sequence' => $sequence
+                'sequence' => $sequence,
             ]);
         }
     }
 
-    function test_a_basic_sequence_is_generated()
+    public function test_a_basic_sequence_is_generated()
     {
         $document = new BasicSequenceConfiguration();
         $document->save();
@@ -63,7 +62,7 @@ class GenerateSequenceTest extends DataBaseTestCase
         ]);
     }
 
-    function test_an_custom_code_sequence_is_generated()
+    public function test_an_custom_code_sequence_is_generated()
     {
         $document = new CustomCodeSequenceConfiguration();
         $document->save();
@@ -87,7 +86,7 @@ class GenerateSequenceTest extends DataBaseTestCase
         ]);
     }
 
-    function test_a_sequence_is_generated_with_a_custom_model()
+    public function test_a_sequence_is_generated_with_a_custom_model()
     {
         $document = new CustomSequenceModelConfiguration();
         $document->save();
@@ -111,7 +110,7 @@ class GenerateSequenceTest extends DataBaseTestCase
         ]);
     }
 
-    function test_a_sequence_with_a_dynamic_value_is_generated()
+    public function test_a_sequence_with_a_dynamic_value_is_generated()
     {
         $document = new DynamicCodeSequenceConfiguration([
             'type' => 'tk'
@@ -136,5 +135,4 @@ class GenerateSequenceTest extends DataBaseTestCase
             'sequence' => 1
         ]);
     }
-
 }

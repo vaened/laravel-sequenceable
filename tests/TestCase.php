@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by enea dhack - 30/05/2017 04:42 PM
+ * Created by enea dhack - 30/05/2017 04:42 PM.
  */
 
 namespace Enea\Tests;

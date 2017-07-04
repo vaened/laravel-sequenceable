@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by enea dhack - 24/06/17 11:33 PM
+ * Created by enea dhack - 24/06/17 11:33 PM.
  */
 
 namespace Enea\Tests\Models;
@@ -10,22 +10,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
- * Model Sequence
+ * Model Sequence.
  *
  * Attributes
  *
  * @property  string id
- * @property  integer sequence
+ * @property  int sequence
  * */
 class CustomSequence extends Model implements SequenceContract
 {
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [ 'id', 'source', 'column_key', 'key'];
+    protected $fillable = ['id', 'source', 'column_key', 'key'];
 
     /**
      * The attributes that should be cast to native types.
@@ -33,7 +32,7 @@ class CustomSequence extends Model implements SequenceContract
      * @var array
      */
     protected $casts = [
-        'sequence' => 'integer'
+        'sequence' => 'int'
     ];
 
     /**
@@ -46,7 +45,7 @@ class CustomSequence extends Model implements SequenceContract
     /**
      * Increase sequence by one and return it.
      *
-     * @return integer
+     * @return int
      */
     public function next()
     {
@@ -58,7 +57,7 @@ class CustomSequence extends Model implements SequenceContract
     /**
      * Decrements the sequence by one and return it.
      *
-     * @return integer
+     * @return int
      */
     public function prev()
     {
@@ -70,7 +69,7 @@ class CustomSequence extends Model implements SequenceContract
     /**
      * Gets the current sequence.
      *
-     * @return integer
+     * @return int
      * */
     public function current()
     {
@@ -101,7 +100,7 @@ class CustomSequence extends Model implements SequenceContract
     /**
      * Get the first record matching the attributes or create it..
      *
-     * @param string|integer $key
+     * @param string|int $key
      * @param string $table
      * @param string $column
      * @return SequenceContract
@@ -112,7 +111,7 @@ class CustomSequence extends Model implements SequenceContract
             $column .= '.' . $key;
         }
 
-        return static::firstOrCreate([ 'key' => $key], [
+        return static::firstOrCreate(['key' => $key], [
             'source' => $table,
             'column_key' => $column,
             'sequence' => 0

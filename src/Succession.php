@@ -22,41 +22,39 @@ class Succession
      * Succession constructor.
      * @param Builder $builder
      */
-    public function __construct( Builder $builder )
+    public function __construct(Builder $builder)
     {
         $this->builder = $builder;
     }
-
 
     /**
      * @param Model|SequenceableContract $class
      * @return Collection
      * @throws SequenceException
      */
-    public function on( $class )
+    public function on($class)
     {
-        if ( is_string( $class ) ) {
+        if ( is_string($class)) {
             $class  = new $class;
         }
 
-        if ( ! $class instanceof SequenceableContract ) {
-            throw new SequenceException('The model '. get_class( $class ) . ' must implement the '. SequenceableContract::class);
+        if (! $class instanceof SequenceableContract) {
+            throw new SequenceException('The model '. get_class($class) . ' must implement the '. SequenceableContract::class);
         }
 
-        $this->builder->setSequenceableModel( $class );
+        $this->builder->setSequenceableModel($class);
 
         $sequences = collect( );
 
-        $class->getSequenceModels( )->each( function ( $value, $key ) use ( $class, $sequences ) {
+        $class->getSequenceModels()->each(function ($value, $key) use ($class, $sequences) {
             /** @var SequenceContract $sequence*/
             $sequence = new $key;
 
-             $sequence->source($class->getTable( ))->each( function( SequenceContract $sequence ) use ( $sequences ) {
-                 $sequences->put($sequence->getColumnKey( ) , $sequence);
+             $sequence->source($class->getTable())->each(function(SequenceContract $sequence) use ($sequences) {
+                 $sequences->put($sequence->getColumnKey() , $sequence);
             });
         });
 
         return $sequences;
     }
-
 }
