@@ -60,7 +60,6 @@ class Generator
     public function make()
     {
         foreach ($this->model->getSequencesConfiguration() as $key => $value) {
-
             $sequence = $this->builder->sequence($key, $value)->next();
 
             if ($this->isAutoCompletable()) {

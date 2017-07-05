@@ -12,7 +12,6 @@ use Illuminate\Support\Collection;
 
 trait Sequenceable
 {
-
     /**
      * Model builds key.
      *
@@ -25,7 +24,7 @@ trait Sequenceable
     {
         $sequence = $this->getAutocompletableSequence();
 
-        if(! empty($column) && $sequence->has($column)) {
+        if (! empty($column) && $sequence->has($column)) {
             return $this->autocomplete($key, $sequence->get($column));
         }
 
@@ -41,7 +40,7 @@ trait Sequenceable
      */
     public function autocomplete($key, $size)
     {
-        if ( $size > 1 && is_numeric($key)) {
+        if ($size > 1 && is_numeric($key)) {
             $key = str_pad($key, $size, '0', STR_PAD_LEFT);
         }
 
@@ -56,7 +55,6 @@ trait Sequenceable
         $collection = collect();
 
         foreach ($this->getSequencesConfiguration() as $key => $sequence) {
-
             if (is_array($sequence)) {
                 $key = key($sequence);
                 $sequence = current($sequence);
@@ -78,11 +76,10 @@ trait Sequenceable
         $instances = collect();
         $common = array();
         foreach ($this->sequencesSetup() as $key => $values) {
-            $sequences = array( );
+            $sequences = array();
             if (! class_exists($key)) {
                 $common[] = Helper::getColumnName($key, $values);
             } else {
-
                 foreach ((array) $values as $k => $value) {
                     $sequences[] = Helper::getColumnName($k, $value);
                 }
@@ -111,7 +108,6 @@ trait Sequenceable
         $sequencesConfiguration = collect();
 
         foreach ($this->sequencesSetup() as $key => $values) {
-
             if (! class_exists($key)) {
                 $sequencesConfiguration->put($key, $values);
             } else {
@@ -123,7 +119,6 @@ trait Sequenceable
                     }
                 }
             }
-
         }
 
         return $sequencesConfiguration;

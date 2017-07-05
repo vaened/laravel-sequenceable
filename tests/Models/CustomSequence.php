@@ -51,6 +51,7 @@ class CustomSequence extends Model implements SequenceContract
     {
         $this->sequence++;
         $this->save();
+
         return $this->sequence;
     }
 
@@ -63,6 +64,7 @@ class CustomSequence extends Model implements SequenceContract
     {
         $this->sequence--;
         $this->save();
+
         return $this->sequence;
     }
 
@@ -118,5 +120,4 @@ class CustomSequence extends Model implements SequenceContract
             'sequence' => 0
         ]);
     }
-
 }

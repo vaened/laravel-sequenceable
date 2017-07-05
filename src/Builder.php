@@ -105,6 +105,7 @@ class Builder
     protected function createSequence($id, $column)
     {
         $sequenceable = $this->createModel($column);
+
         return $sequenceable->findOrCreate($id, $this->model->getTable(), $column);
     }
 

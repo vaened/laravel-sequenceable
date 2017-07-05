@@ -54,5 +54,4 @@ interface SequenceContract
      * @return SequenceContract
      */
     public function findOrCreate($key, $table, $column);
-
 }

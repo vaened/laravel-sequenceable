@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
- * Model Sequence
+ * Model Sequence.
  *
  * Attributes
  *
@@ -22,7 +22,6 @@ use Illuminate\Support\Collection;
  * */
 class Sequence extends Model implements SequenceContract
 {
-
     /**
      * Codification adler32.
      *
@@ -83,6 +82,7 @@ class Sequence extends Model implements SequenceContract
     {
         $prev = $this->sequence;
         $prev--;
+
         return $prev;
     }
 
@@ -105,6 +105,7 @@ class Sequence extends Model implements SequenceContract
     {
         $next = $this->sequence;
         $next++;
+
         return $next;
     }
 
@@ -117,6 +118,7 @@ class Sequence extends Model implements SequenceContract
     {
         $this->sequence++;
         $this->save();
+
         return $this->sequence;
     }
 
@@ -129,6 +131,7 @@ class Sequence extends Model implements SequenceContract
     {
         $this->sequence--;
         $this->save();
+
         return $this->sequence;
     }
 
@@ -213,7 +216,7 @@ class Sequence extends Model implements SequenceContract
      * @param string $key
      * @return string
      */
-    protected function buildColumnKey($column,  $key)
+    protected function buildColumnKey($column, $key)
     {
         if ($key !== $column) {
             $column .= '.' . $key;
@@ -221,5 +224,4 @@ class Sequence extends Model implements SequenceContract
 
         return $column;
     }
-
 }

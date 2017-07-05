@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by enea dhack - 24/06/17 02:01 PM
+ * Created by enea dhack - 24/06/17 02:01 PM.
  */
 
 namespace Enea\Sequenceable;
@@ -34,12 +34,12 @@ class Succession
      */
     public function on($class)
     {
-        if ( is_string($class)) {
-            $class  = new $class;
+        if (is_string($class)) {
+            $class = new $class();
         }
 
         if (! $class instanceof SequenceableContract) {
-            throw new SequenceException('The model '. get_class($class) . ' must implement the '. SequenceableContract::class);
+            throw new SequenceException('The model ' . get_class($class) . ' must implement the ' . SequenceableContract::class);
         }
 
         $this->builder->setSequenceableModel($class);
@@ -47,10 +47,10 @@ class Succession
         $sequences = collect();
 
         $class->getSequenceModels()->each(function ($value, $key) use ($class, $sequences) {
-            /** @var SequenceContract $sequence*/
-            $sequence = new $key;
+            /** @var SequenceContract $sequence */
+            $sequence = new $key();
 
-            $sequence->source($class->getTable())->each(function(SequenceContract $sequence) use ($sequences) {
+            $sequence->source($class->getTable())->each(function (SequenceContract $sequence) use ($sequences) {
                 $sequences->put($sequence->getColumnKey(), $sequence);
             });
         });
