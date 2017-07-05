@@ -1,6 +1,7 @@
 {
     "name": "enea/laravel-sequenceable",
     "description": "Facilitates the generation and autocompletion of a sequential value in the database",
+    "keywords": ["sequence", "sequenceable", "succession", "autoincrement", "increment", "enea"],
     "authors": [
         {
             "name": "enea dhack",
