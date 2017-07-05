@@ -18,7 +18,6 @@ class ValidationTest extends TestCase
         $this->assertSame(Helper::getKeyName('b', ['column']), 'b');
         $this->assertSame(Helper::getKeyName('c', ['column' => 9]), 'c');
 
-
         $this->assertSame(Helper::getColumnName(0, 'column'), 'column');
         $this->assertSame(Helper::getColumnName('column', 9), 'column');
         $this->assertSame(Helper::getColumnName('a', 'column'), 'column');

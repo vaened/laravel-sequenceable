@@ -14,7 +14,6 @@ class CreateCustomSequencesTable extends Migration
     public function up()
     {
         Schema::create('custom_sequences', function (Blueprint $table) {
-
             $table->increments('id');
 
             $table->char('key', 3)->index();

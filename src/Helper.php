@@ -16,18 +16,18 @@ class Helper
      */
     public static function isAvailableSequence($key, $value)
     {
-        if(is_string($key)) {
+        if (is_string($key)) {
             if (is_array($value)) {
                 $key = key($value);
                 $value = current($value);
 
-                return is_integer($value) || is_integer($key) && is_string($value);
+                return is_int($value) || is_int($key) && is_string($value);
             }
 
-            return is_string($value) || is_integer($value) && !is_numeric($key);
+            return is_string($value) || is_int($value) && ! is_numeric($key);
         }
 
-        return is_integer($key) && is_string($value);
+        return is_int($key) && is_string($value);
     }
 
     /**
@@ -39,7 +39,7 @@ class Helper
      */
     public static function getKeyName($key, $value)
     {
-        return is_integer($key) ? $value : $key;
+        return is_int($key) ? $value : $key;
     }
 
     /**
@@ -51,16 +51,17 @@ class Helper
      */
     public static function getColumnName($key, $value)
     {
-        if (is_integer($key)) {
+        if (is_int($key)) {
             return $value;
         }
 
-        if ( is_array($value)) {
+        if (is_array($value)) {
             $key = key($value);
+
             return is_string($key) ? $key : current($value);
         }
 
-        return is_integer($value) ? $key : $value;
+        return is_int($value) ? $key : $value;
     }
 
     /**
@@ -72,16 +73,16 @@ class Helper
      */
     public static function getSize($key, $value)
     {
-        if(is_string($value) && (is_integer($key) || is_string($key))) {
+        if (is_string($value) && (is_int($key) || is_string($key))) {
             return 0;
         }
 
         if (is_array($value)) {
             $value = current($value);
-            return is_integer($value) ? $value : 0;
+
+            return is_int($value) ? $value : 0;
         }
 
         return $value;
     }
-
 }

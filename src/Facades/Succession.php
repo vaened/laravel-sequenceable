@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class Succession.
  *
- * @package Enea\Sequenceable\Facade
  * @author enea dhack <enea.so@live.com>
  *
  * Methods
