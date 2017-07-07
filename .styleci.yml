@@ -1,4 +1,5 @@
 disabled:
+  - phpdoc_no_package
   - align_double_arrow
   - concat_without_spaces
   - trailing_comma_in_multiline_array

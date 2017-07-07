@@ -27,5 +27,16 @@ return [
      |
      */
 
-    'autofilling' => false
+    'autofilling' => false,
+
+    /*
+     |---------------------------------------------------------------------------
+     | Prefix
+     |---------------------------------------------------------------------------
+     | This key specifies the prefix that is used when you need to display the sequence with the number of characters
+     | defined in the configuration, if you do not want to use any prefix, set this key to null
+     |
+     */
+
+    'prefix' => 'full_'
 ];
