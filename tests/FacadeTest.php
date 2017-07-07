@@ -14,11 +14,11 @@ class FacadeTest extends DataBaseTestCase
     {
         $document = new DynamicCodeSequenceConfiguration(['type' => 'tk']);
         $document->save();
-        $this->assertDatabaseHas('documents', ['number' => 1]);
+        $this->assertDatabaseHas('documents', ['number' => 1, 'type' => 'tk']);
 
         $document = new DynamicCodeSequenceConfiguration(['type' => 'iv']);
         $document->save();
-        $this->assertDatabaseHas('documents', ['number' => 1]);
+        $this->assertDatabaseHas('documents', ['number' => 1, 'type' => 'iv']);
 
         $collect = Succession::on(DynamicCodeSequenceConfiguration::class);
 
