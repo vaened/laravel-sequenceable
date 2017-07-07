@@ -31,5 +31,4 @@ class AutofillingTest extends DataBaseTestCase
         $this->assertTrue(strlen($document->full_number_string) === 10);
         $this->assertSame($document->full_number_string, '0000000001');
     }
-
 }

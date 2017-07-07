@@ -15,15 +15,9 @@ namespace Enea\Tests\Models;
  *
  * @property string full_number
  * @property string full_number_string
- *
  */
 class AutofillingToShowConfiguration extends Document
 {
-    /**
-     * Returns the configuration of the sequences.
-     *
-     * @return array
-     */
     public function sequencesSetup()
     {
         return [
