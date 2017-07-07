@@ -14,7 +14,6 @@ namespace Enea\Tests\Models;
  * Properties.
  *
  * @property string number_string
- *
  */
 class AutofillingToStoreConfiguration extends Document
 {

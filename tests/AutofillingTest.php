@@ -47,4 +47,3 @@ class AutofillingTest extends DataBaseTestCase
         $this->assertSame($document->number_string, '00001');
     }
 }
-
