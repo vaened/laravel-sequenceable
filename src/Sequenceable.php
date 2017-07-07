@@ -9,6 +9,7 @@ use Enea\Sequenceable\Exceptions\SequenceException;
 use Enea\Sequenceable\Model\Sequence;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 
 trait Sequenceable
 {
@@ -45,25 +46,6 @@ trait Sequenceable
         }
 
         return $key;
-    }
-
-    /**
-     * @return Collection
-     */
-    private function getAutocompletableSequence()
-    {
-        $collection = collect();
-
-        foreach ($this->getSequencesConfiguration() as $key => $sequence) {
-            if (is_array($sequence)) {
-                $key = key($sequence);
-                $sequence = current($sequence);
-            }
-
-            $collection->put($key, $sequence);
-        }
-
-        return $collection;
     }
 
     /**
@@ -137,6 +119,27 @@ trait Sequenceable
     }
 
     /**
+     * Returns the sequence constructed based on the number of characters that were defined in the configuration.
+     *
+     * @param string $key
+     * @return string|null
+     */
+    public function __get($key)
+    {
+        $prefix = $this->getSequenceColumnPrefix();
+
+        if (empty($prefix) || ! starts_with($key, $prefix)) {
+            return $this->getAttribute($key);
+        }
+
+        $column = substr($key, strlen($prefix));
+
+        if ($value = $this->getAttribute($column)) {
+            return $this->makeKey($this->getAttribute($column), $column);
+        }
+    }
+
+    /**
      * Modify this method if necessary.
      *
      * @return bool
@@ -153,10 +156,45 @@ trait Sequenceable
      */
     protected function defaultSequenceName()
     {
-        if ($model = config('sequenceable.model')) {
+        if ($model = Config::get('sequenceable.model')) {
             return $model;
         }
 
         return Sequence::class;
+    }
+
+    /**
+     * Returns the prefix that will be used to call a sequence.
+     *
+     * @return string
+     */
+    protected function getSequenceColumnPrefix()
+    {
+        if ($prefix = Config::get('sequenceable.prefix')) {
+            return $prefix;
+        }
+
+        return '';
+    }
+
+    /**
+     * Fill in the sequence with the number of characters that were defined in the sequence configuration.
+     *
+     * @return Collection
+     */
+    private function getAutocompletableSequence()
+    {
+        $collection = collect();
+
+        foreach ($this->getSequencesConfiguration() as $key => $sequence) {
+            if (is_array($sequence)) {
+                $key = key($sequence);
+                $sequence = current($sequence);
+            }
+
+            $collection->put($key, $sequence);
+        }
+
+        return $collection;
     }
 }
