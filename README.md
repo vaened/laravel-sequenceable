@@ -43,7 +43,7 @@ class Document extends Model implements SequenceableContract
      *
      * @return array
      */
-    public function sequencesSetup(): array
+    public function sequencesSetup()
     {
         return [
             'number'
@@ -53,17 +53,22 @@ class Document extends Model implements SequenceableContract
 ```
 
 ## Configuration
-The sequences can be configured in several ways.
-1. The simplest form.
+You can configure the sequences of 5 possible shapes, each one follows a logical structure in addition to being able to be combined with each other.
+- ##### Simple.
+    This is the easiest way, you just need to define the columns you need in the configuration array.
+
 ```php
-    public function sequencesSetup(): array
+    public function sequencesSetup()
     {
         return [ 'number' ];
     }
 ```
-2. With a custom key.
+
+- ##### Custom key.
+    You can set a key for the sequence using the following syntax.
+
 ```php
-    public function sequencesSetup(): array
+    public function sequencesSetup()
     {
         return [ 
             'custom_key' => [
@@ -72,25 +77,42 @@ The sequences can be configured in several ways.
         ];
     }
 ```
-2. With a dynamic key, sequences are generated depending on the origin.
+
+- ##### Dynamic key.
+    This way you can generate independent sequences according to the key, in this example you can see how it is established that the key will be built according to the type of document, generating as many sequences as document types. You can see an example of this in the `a_sequence_with_a_dynamic_value_is_generated` test located in the file [`GenerateSequenceTest`](https://github.com/eneasdh-fs/laravel-sequenceable/blob/master/tests/GenerateSequenceTest.php)
+
 ```php
-    public function sequencesSetup(): array
+    public function sequencesSetup()
     {
         return [ 
-            $this->makeType() => [
+            $this->sequenceKey() => [
                 'number' 
             ]
         ];
     }
 
-    protected function makeType()
+    protected function sequenceKey()
     {
-        return $this->origin;
+        return $this->type;
     }
 ```
-4. Everything can be encapsulated in a custom sequence model.
+
+- ##### Fixed length.
+    Setting a length in the sequence will be useful when you need to give it a presentation format, for this to work, you must call the column by prefixing a prefix that is set in the configuration file  `config\sequenceable.php` in the key `prefix`.
 ```php
-    public function sequencesSetup(): array
+    public function sequencesSetup()
+    {
+        return [
+            'number' => 8,
+        ];
+    }
+```
+
+- ##### Custom model
+    You can encapsulate the sequences in a custom model, this sequence model must be configured so that the sequences can persist in the database. This is shown at the bottom of the documentation.
+
+```php
+    public function sequencesSetup()
     {
         return [ 
             CustomSequence::class => [
@@ -113,7 +135,7 @@ The package has a configuration that generates the sequences with the following 
 ----------|----------|-----------|------------|------------------|---------------------|---------------------
  37cc068a |        1 | documents | number     | documents.number | 2017-06-29 18:40:44 | 2017-06-29 18:40:44 
 
-You can review the [Sequence](https://github.com/eneasdh-fs/laravel-sequenceable/blob/master/src/Model/Sequence.php) model that is configured in the package to learn more about its operation.
+You can review the [`Sequence`](https://github.com/eneasdh-fs/laravel-sequenceable/blob/master/src/Model/Sequence.php) model that is configured in the package to learn more about its operation.
 
 #### Base Structure
 You can implement the `SequenceContract` interface or the `Sequence` model's extension to modify the behavior that you consider appropriate.
@@ -145,7 +167,9 @@ return [
    'model' => \Enea\Sequenceable\Model\Sequence::class,
 ];
 ```
+
 Or explicitly specify the model you want to use with certain fields, you can achieve this from the configuration of the sequences in your model.
+
 ```php
     public function sequencesSetup(): array
     {
@@ -156,6 +180,64 @@ Or explicitly specify the model you want to use with certain fields, you can ach
         ];
     }
 ```
+
+#### Sequence storage
+If necessary, you can define how the sequences in your database will be stored from `config\sequenceable.php` on the `autoffilling` key, in this way the sequences will be filled with the length you have configured in the configuration of the model at Moment of being persisted in the database.
+
+```php
+<?php
+return [
+     /*
+     |---------------------------------------------------------------------------
+     | Auto filling
+     |---------------------------------------------------------------------------
+     | This option allows you to automatically fill the fields in your database, as specified in 
+     | the model configuration. If you want to customize the value with which to autofill, 
+     | you must change this key by replacing the value with the  character you want, 
+     | by default, if it is true, it will autocomplete to zero
+     |
+     */
+
+    'autofilling' => false,
+];
+```
+
+#### Prefix
+In case you do not want to store sequences with a fixed length in your database but still want to present them in a format, you can simply leave `autofilling` false and call your columns by prefixing a prefix.
+
+```php
+<?php
+return [
+    /*
+     |---------------------------------------------------------------------------
+     | Prefix
+     |---------------------------------------------------------------------------
+     | This key specifies the prefix that is used when you need to display the sequence with the 
+     | number of characters defined in the configuration, if you do not want to use any 
+     | prefix, set this key to null
+     */
+
+    'prefix' => 'full_'
+];
+```
+
+When configuring the sequence with a [`fixed length`](#fixed-length), the call would be made by concatenating `prefix + column`, in this case `full_number`, this will return the sequence belonging to the `number` column that will be filled with zeros The left until it reaches the length set in the model.
+
+```php
+    public function store()
+    {
+        $document = new Document();
+        $document->save();
+        
+        // number = 1
+        // full_number = 00000001
+        
+        return view('document.show', [
+            'document_number' => $document->full_number
+        ]);
+    }
+```
+
 #### Storage table
 If you already have a table that stores the sequences in your database, you may need a different sequence model than the one already configured.
 
