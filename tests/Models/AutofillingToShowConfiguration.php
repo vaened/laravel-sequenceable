@@ -21,7 +21,7 @@ class AutofillingToShowConfiguration extends Document
     public function sequencesSetup()
     {
         return [
-            'number' => 8,
+            'custom_key' => ['number' => 8],
             'number_string' => 10,
         ];
     }
