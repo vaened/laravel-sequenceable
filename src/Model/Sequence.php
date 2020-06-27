@@ -6,6 +6,7 @@
 namespace Enea\Sequenceable\Model;
 
 use Enea\Sequenceable\Contracts\SequenceContract;
+use Enea\Sequenceable\Serie;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -62,7 +63,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @var array
      */
-    protected $fillable = ['id', 'source', 'column_key', 'description'];
+    protected $fillable = ['id', 'source', 'column_key', 'sequence', 'description'];
 
     /**
      * The attributes that should be cast to native types.
@@ -70,7 +71,7 @@ class Sequence extends Model implements SequenceContract
      * @var array
      */
     protected $casts = [
-       'sequence' => 'int'
+        'sequence' => 'int'
     ];
 
     /**
@@ -78,12 +79,10 @@ class Sequence extends Model implements SequenceContract
      *
      * @return int
      */
-    public function getPrevAttribute()
+    public function getPrevAttribute(): int
     {
         $prev = $this->sequence;
-        $prev--;
-
-        return $prev;
+        return --$prev;
     }
 
     /**
@@ -91,7 +90,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @return int
      */
-    public function getCurrentAttribute()
+    public function getCurrentAttribute(): int
     {
         return $this->sequence;
     }
@@ -101,56 +100,40 @@ class Sequence extends Model implements SequenceContract
      *
      * @return int
      */
-    public function getNextAttribute()
+    public function getNextAttribute(): int
     {
         $next = $this->sequence;
-        $next++;
-
-        return $next;
+        return ++$next;
     }
 
     /**
-     * Increase sequence by one and return it.
-     *
-     * @return int
+     * {@inheritdoc}
      */
-    public function next()
+    public function next(): int
     {
-        $this->sequence++;
-        $this->save();
-
-        return $this->sequence;
+        return ++$this->sequence;
     }
 
     /**
-     * Decrements the sequence by one and return it.
-     *
-     * @return int
+     * {@inheritdoc}
      */
-    public function prev()
+    public function prev(): int
     {
-        $this->sequence--;
-        $this->save();
-
-        return $this->sequence;
+        return --$this->sequence;
     }
 
     /**
-     * Gets the current sequence.
-     *
-     * @return int
+     * {@inheritdoc}
      * */
-    public function current()
+    public function current(): int
     {
         return $this->sequence;
     }
 
     /**
-     * Returns the field that stores the column to which the sequence belongs.
-     *
-     * @return string
+     * {@inheritdoc}
      * */
-    public function getColumnKey()
+    public function getColumnKey(): string
     {
         return $this->column_key;
     }
@@ -160,68 +143,43 @@ class Sequence extends Model implements SequenceContract
      *
      * @return string
      * */
-    public function sourceTableName()
+    public function sourceTableName(): string
     {
         return 'source';
     }
 
     /**
-     * Filters only the tables that are passed by parameter.
-     *
-     * @param string $table
-     * @return Collection
+     * {@inheritdoc}
      */
-    public function source($table)
+    public function getSeriesFrom(string $table): Collection
     {
         return static::where($this->sourceTableName(), $table)->get();
     }
 
-    /**
-     * Get the first record matching the attributes or create it.
-     *
-     * @param string|int $key
-     * @param string $table
-     * @param string $column
-     * @return SequenceContract
-     */
-    public function findOrCreate($key, $table, $column)
+    public function locateSerieModel(string $table, Serie $serie): SequenceContract
     {
-        $column = $this->buildColumnKey($column, $key);
+        $columnID = $serie->getColumnKeyName();
+        $serieID = $this->createSerieID($table, $columnID);
+        return static::firstOrCreate(['id' => $serieID], $this->structure($table, $columnID));
+    }
 
-        return static::firstOrCreate(['id' => $this->keyFormatted($table, $column)], [
+    private function structure(string $table, string $columnKeyName): array
+    {
+        return [
             $this->sourceTableName() => $table,
-            'column_key' => $column,
-            'description' => "$table.$column",
+            'column_key' => $columnKeyName,
+            'description' => "$table.$columnKeyName",
             'sequence' => 0
-        ]);
+        ];
     }
 
-    /**
-     * Format for the primary key.
-     * In case you do not need to format, return the primary key of the parameter.
-     *
-     * @param string $table
-     * @param string $column_key
-     * @return string
-     */
-    protected function keyFormatted($table, $column_key)
+    public function apply(): void
     {
-        return hash(self::HASH, "$table.$column_key", false);
+        $this->save();
     }
 
-    /**
-     * Format the key of the column.
-     *
-     * @param string $column
-     * @param string $key
-     * @return string
-     */
-    protected function buildColumnKey($column, $key)
+    protected function createSerieID(string $table, string $getRealColumnName): string
     {
-        if ($key !== $column) {
-            $column .= '.' . $key;
-        }
-
-        return $column;
+        return hash(self::HASH, "{$table}.{$getRealColumnName}", false);
     }
 }

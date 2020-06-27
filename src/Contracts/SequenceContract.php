@@ -5,6 +5,7 @@
 
 namespace Enea\Sequenceable\Contracts;
 
+use Enea\Sequenceable\Serie;
 use Illuminate\Support\Collection;
 
 interface SequenceContract
@@ -14,28 +15,28 @@ interface SequenceContract
      *
      * @return int
      */
-    public function next();
+    public function next(): int;
 
     /**
      * Decrements the sequence by one and return it.
      *
      * @return int
      */
-    public function prev();
+    public function prev(): int;
 
     /**
      * Gets the current sequence.
      *
      * @return int
      * */
-    public function current();
+    public function current(): int;
 
     /**
      * Returns the name of the field that stores the column to which the sequence belongs.
      *
      * @return string
      * */
-    public function getColumnKey();
+    public function getColumnKey(): string;
 
     /**
      * Filters only the tables that are passed by parameter.
@@ -43,15 +44,21 @@ interface SequenceContract
      * @param string $table
      * @return Collection
      */
-    public function source($table);
+    public function getSeriesFrom(string $table): Collection;
 
     /**
      * Get the first record matching the attributes or create it.
      *
-     * @param  string|int $key
-     * @param  string $table
-     * @param  string $column
+     * @param string $table
+     * @param Serie $serie
      * @return SequenceContract
      */
-    public function findOrCreate($key, $table, $column);
+    public function locateSerieModel(string $table, Serie $serie): SequenceContract;
+
+    /**
+     * Changes made to the sequence are saved in the database.
+     *
+     * @return void
+     */
+    public function apply(): void;
 }

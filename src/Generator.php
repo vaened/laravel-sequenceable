@@ -6,31 +6,15 @@
 namespace Enea\Sequenceable;
 
 use Enea\Sequenceable\Contracts\SequenceableContract;
+use Enea\Sequenceable\Contracts\SequenceContract;
 use Enea\Sequenceable\Exceptions\SequenceException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Generator
 {
-    /**
-     * Model where sequences are generated.
-     *
-     * @var SequenceableContract|Model
-     */
-    protected $model;
+    protected SequenceableContract $model;
 
-    /**
-     * Construct of the sequence model.
-     *
-     * @var Builder
-     * */
-    protected $builder;
-
-    /**
-     * Builder constructor.
-     *
-     * @param SequenceableContract|Sequenceable $model
-     * @throws SequenceException
-     */
     public function __construct(SequenceableContract $model)
     {
         if (! $model instanceof Model) {
@@ -38,45 +22,29 @@ class Generator
         }
 
         $this->model = $model;
-        $this->builder = new Builder($this->model);
     }
 
-    /**
-     * Build sequence for new resource.
-     *
-     * @throws SequenceException
-     */
-    public function __invoke()
+    public function generate(): void
     {
-        $this->make();
+        $this->model->getGroupedSequences()->each(fn(Group $group
+        ) => $this->increase($group->sequence(), $group->series()));
     }
 
-    /**
-     * Build sequence for new resource.
-     *
-     * @throws SequenceException
-     * @return void
-     */
-    public function make()
+    private function increase(SequenceContract $sequence, Collection $series): void
     {
-        foreach ($this->model->getSequencesConfiguration() as $key => $value) {
-            $sequence = $this->builder->sequence($key, $value)->next();
-
-            if ($this->isAutoCompletable()) {
-                $sequence = $this->model->autocomplete($sequence, Helper::getSize($key, $value));
-            }
-
-            $this->model->setAttribute(Helper::getColumnName($key, $value), $sequence);
-        }
+        $series->each(fn(Serie $serie) => $this->apply($sequence, $serie));
     }
 
-    /**
-     * Returns true if the sequence is to be filled.
-     *
-     * @return bool
-     */
-    protected function isAutoCompletable()
+    private function apply(SequenceContract $sequence, Serie $serie): void
     {
-        return config('sequenceable.autofilling', false);
+        $sequence = $sequence->locateSerieModel($this->model->getTable(), $serie);
+        $number = $this->fill($sequence->next(), $serie->getFixedLength());
+        $this->model->setAttribute($serie->getColumnName(), $number);
+        $sequence->apply();
+    }
+
+    private function fill(string $number, int $length): string
+    {
+        return str_pad($number, $length, '0', STR_PAD_LEFT);
     }
 }

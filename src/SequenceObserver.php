@@ -9,14 +9,8 @@ use Enea\Sequenceable\Contracts\SequenceableContract;
 
 class SequenceObserver
 {
-    /**
-     * Create observer.
-     *
-     * @param SequenceableContract $model
-     * @return void
-     */
-    public function creating(SequenceableContract $model)
+    public function creating(SequenceableContract $model): void
     {
-        (new Generator($model))->make();
+        (new Generator($model))->generate();
     }
 }
