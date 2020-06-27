@@ -6,6 +6,7 @@
 namespace Enea\Tests\Models;
 
 use Enea\Sequenceable\Contracts\SequenceContract;
+use Enea\Sequenceable\Serie;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -43,11 +44,9 @@ class CustomSequence extends Model implements SequenceContract
     public $timestamps = false;
 
     /**
-     * Increase sequence by one and return it.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function next()
+    public function next(): int
     {
         $this->sequence++;
         $this->save();
@@ -56,11 +55,9 @@ class CustomSequence extends Model implements SequenceContract
     }
 
     /**
-     * Decrements the sequence by one and return it.
-     *
-     * @return int
+     * {@inheritDoc}
      */
-    public function prev()
+    public function prev(): int
     {
         $this->sequence--;
         $this->save();
@@ -69,55 +66,46 @@ class CustomSequence extends Model implements SequenceContract
     }
 
     /**
-     * Gets the current sequence.
-     *
-     * @return int
+     * {@inheritDoc}
      * */
-    public function current()
+    public function current(): int
     {
         return $this->sequence;
     }
 
     /**
-     * Returns the field that stores the column to which the sequence belongs.
-     *
-     * @return string
+     * {@inheritDoc}
      * */
-    public function getColumnKey()
+    public function getColumnKey(): string
     {
         return $this->column_key;
     }
 
     /**
-     * Filters only the tables that are passed by parameter.
-     *
-     * @param string $table
-     * @return Collection
-     */
-    public function source($table)
+     * {@inheritDoc}
+     * */
+    public function getSeriesFrom(string $table): Collection
     {
-        return static::where('source', $table)->get();
+        return static::query()->where('source', $table)->get();
     }
 
     /**
-     * Get the first record matching the attributes or create it..
-     *
-     * @param string|int $key
-     * @param string $table
-     * @param string $column
-     *
-     * @return SequenceContract
-     */
-    public function findOrCreate($key, $table, $column)
+     * {@inheritDoc}
+     * */
+    public function locateSerieModel(string $table, Serie $serie): SequenceContract
     {
-        if ($key !== $column) {
-            $column .= '.' . $key;
-        }
-
-        return static::firstOrCreate(['key' => $key], [
+        return static::firstOrCreate(['key' => $serie->getAliasForColumn()], [
             'source' => $table,
-            'column_key' => $column,
+            'column_key' => $serie->getColumnKeyName(),
             'sequence' => 0
         ]);
+    }
+
+    /**
+     * {@inheritDoc}
+     * */
+    public function apply(): void
+    {
+        $this->save();
     }
 }
