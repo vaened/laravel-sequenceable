@@ -5,8 +5,8 @@
 
 namespace Enea\Sequenceable\Facades;
 
+use Enea\Sequenceable\SequenceCollection;
 use Enea\Sequenceable\Succession as BaseSuccession;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * Methods
  *
- * @method static Collection on(string|int $class)
+ * @method static SequenceCollection from(string $class)
  *
  * @see \Enea\Sequenceable\Succession
  */
