@@ -22,7 +22,7 @@ trait Sequenceable
         ): Group => $this->createGroup($sequence, $collection));
     }
 
-    private function createGroup(string $sequenceClassName, Collection $collection): Group
+    private function createGroup(?string $sequenceClassName, Collection $collection): Group
     {
         if (! empty($sequenceClassName) && class_exists($sequenceClassName)) {
             return new Group(new $sequenceClassName(), $collection);
