@@ -13,7 +13,7 @@ class DatabaseTestCase extends TestCase
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__ . '/../src/DataBase/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadMigrationsFrom(__DIR__ . '/migrations');
     }
 
