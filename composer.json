@@ -1,39 +1,42 @@
 {
-    "name": "enea/laravel-sequenceable",
-    "description": "Facilitates the generation and autocompletion of a sequential value in the database",
-    "keywords": ["sequence", "sequenceable", "succession", "autoincrement", "increment", "enea"],
-    "authors": [
-        {
-            "name": "enea dhack",
-            "email": "enea.so@live.com"
-        }
-    ],
-    "require": {
-        "php": ">=7.4",
-        "laravel/framework": "5.*"
-    },
-
-    "license": "MIT",
-    "type": "library",
-
-    "minimum-stability": "stable",
-    "require-dev": {
-        "phpunit/phpunit": "~5.7",
-        "orchestra/testbench": "~3.0",
-        "orchestra/database": "^3.4",
-        "composer/composer": "^1.10"
-    },
-    "autoload": {
-        "psr-4": {
-            "Enea\\Sequenceable\\": "src/"
-        }
-    },
-
-    "autoload-dev": {
-        "psr-4": {
-            "Enea\\Tests\\": "tests/"
-        }
+  "name": "enea/laravel-sequenceable",
+  "description": "Facilitates the generation and autocompletion of a sequential value in the database",
+  "keywords": [
+    "sequence",
+    "sequenceable",
+    "succession",
+    "autoincrement",
+    "increment",
+    "enea"
+  ],
+  "authors": [
+    {
+      "name": "enea dhack",
+      "email": "enea.so@live.com"
     }
-
-
+  ],
+  "require": {
+    "php": ">=7.4",
+    "illuminate/support": "^7.0",
+    "illuminate/database": "^7.0"
+  },
+  "license": "MIT",
+  "type": "library",
+  "minimum-stability": "stable",
+  "require-dev": {
+    "phpunit/phpunit": "^8.0",
+    "orchestra/testbench": "^5",
+    "orchestra/database": "^5",
+    "composer/composer": "^1.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "Enea\\Sequenceable\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Enea\\Tests\\": "tests/"
+    }
+  }
 }
