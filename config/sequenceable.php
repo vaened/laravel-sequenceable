@@ -15,7 +15,7 @@ return [
     |
     */
 
-   'model' => \Enea\Sequenceable\Model\Sequence::class,
+    'model' => \Enea\Sequenceable\Model\Sequence::class,
 
     /*
      |---------------------------------------------------------------------------
