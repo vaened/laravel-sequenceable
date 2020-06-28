@@ -13,7 +13,7 @@ class Succession
 {
     public function from(string $class): SequenceCollection
     {
-        $model = new $class;
+        $model = new $class();
 
         if (! $model instanceof SequenceableContract) {
             throw new SequenceException('The model ' . get_class($class) . ' must implement the ' . SequenceableContract::class);
@@ -21,9 +21,9 @@ class Succession
 
         $sequences = $this->createCollection();
 
-        $model->getGroupedSequences()->each(function (Group $group) use ($model, $sequences) : void {
+        $model->getGroupedSequences()->each(function (Group $group) use ($model, $sequences): void {
             $series = $group->sequence()->getSeriesFrom($model->getTable());
-            $series->each(fn(SequenceContract $sequence) => $sequences->push($sequence));
+            $series->each(fn (SequenceContract $sequence) => $sequences->push($sequence));
         });
 
         return $sequences;

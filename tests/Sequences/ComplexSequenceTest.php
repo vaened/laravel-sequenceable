@@ -56,14 +56,14 @@ class ComplexSequenceTest extends SequenceTestCase
     {
         return [
             Document::create([
-                Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('num')),
+                Wrap::create(CustomSequence::class, fn (Wrap $wrap) => $wrap->column('number')->alias('num')),
             ]),
             Document::create([
                 Serie::lineal('number_string')->alias('invoice')->length(5),
             ]),
             Document::create([
                 Serie::lineal('number_string')->alias('ticket')->length(8),
-                Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('num')),
+                Wrap::create(CustomSequence::class, fn (Wrap $wrap) => $wrap->column('number')->alias('num')),
             ]),
         ];
     }

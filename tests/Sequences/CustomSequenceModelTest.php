@@ -25,7 +25,7 @@ class CustomSequenceModelTest extends SequenceTestCase
     {
         return [
             Document::create([
-                Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('ccn')),
+                Wrap::create(CustomSequence::class, fn (Wrap $wrap) => $wrap->column('number')->alias('ccn')),
             ]),
         ];
     }

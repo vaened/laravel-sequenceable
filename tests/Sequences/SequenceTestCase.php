@@ -22,7 +22,7 @@ abstract class SequenceTestCase extends DatabaseTestCase
 
     protected function generate(): void
     {
-        array_map(fn(Document $document) => $document->save(), $this->models());
+        array_map(fn (Document $document) => $document->save(), $this->models());
     }
 
     public function test_create_document_with_proper_sequence(): void

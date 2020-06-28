@@ -26,13 +26,14 @@ class Generator
 
     public function generate(): void
     {
-        $this->model->getGroupedSequences()->each(fn(Group $group
+        $this->model->getGroupedSequences()->each(fn (
+            Group $group
         ) => $this->increase($group->sequence(), $group->series()));
     }
 
     private function increase(SequenceContract $sequence, Collection $series): void
     {
-        $series->each(fn(Serie $serie) => $this->apply($sequence, $serie));
+        $series->each(fn (Serie $serie) => $this->apply($sequence, $serie));
     }
 
     private function apply(SequenceContract $sequence, Serie $serie): void

@@ -14,9 +14,9 @@ trait Sequenceable
 {
     public function getGroupedSequences(): Collection
     {
-        return collect($this->sequencesSetup())->flatten()->groupBy(fn(
+        return collect($this->sequencesSetup())->flatten()->groupBy(fn (
             Serie $serie
-        ): ?string => $serie->getSequenceClassName())->map(fn(
+        ): ?string => $serie->getSequenceClassName())->map(fn (
             Collection $collection,
             ?string $sequence
         ): Group => $this->createGroup($sequence, $collection));
@@ -25,7 +25,7 @@ trait Sequenceable
     private function createGroup(string $sequenceClassName, Collection $collection): Group
     {
         if (! empty($sequenceClassName) && class_exists($sequenceClassName)) {
-            return new Group(new $sequenceClassName, $collection);
+            return new Group(new $sequenceClassName(), $collection);
         }
 
         return new Group($this->getDefaultSequenceModel(), $collection);
@@ -34,7 +34,7 @@ trait Sequenceable
     protected function getDefaultSequenceModel(): SequenceContract
     {
         if ($model = config('sequenceable.model', null)) {
-            return new $model;
+            return new $model();
         }
 
         return new Sequence();
@@ -42,6 +42,6 @@ trait Sequenceable
 
     public static function bootSequenceable(): void
     {
-        static::creating(fn(SequenceableContract $model) => (new Generator($model))->generate());
+        static::creating(fn (SequenceableContract $model) => (new Generator($model))->generate());
     }
 }
