@@ -13,7 +13,7 @@ class Succession
 {
     public function from(string $class): SequenceCollection
     {
-        $model = new $class;
+        $model = new $class();
 
         if (! $model instanceof SequenceableContract) {
             throw new SequenceException('The model ' . get_class($class) . ' must implement the ' . SequenceableContract::class);

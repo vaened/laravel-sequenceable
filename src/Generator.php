@@ -26,7 +26,8 @@ class Generator
 
     public function generate(): void
     {
-        $this->model->getGroupedSequences()->each(fn(Group $group
+        $this->model->getGroupedSequences()->each(fn(
+            Group $group
         ) => $this->increase($group->sequence(), $group->series()));
     }
 

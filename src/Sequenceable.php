@@ -25,7 +25,7 @@ trait Sequenceable
     private function createGroup(string $sequenceClassName, Collection $collection): Group
     {
         if (! empty($sequenceClassName) && class_exists($sequenceClassName)) {
-            return new Group(new $sequenceClassName, $collection);
+            return new Group(new $sequenceClassName(), $collection);
         }
 
         return new Group($this->getDefaultSequenceModel(), $collection);
@@ -34,7 +34,7 @@ trait Sequenceable
     protected function getDefaultSequenceModel(): SequenceContract
     {
         if ($model = config('sequenceable.model', null)) {
-            return new $model;
+            return new $model();
         }
 
         return new Sequence();
