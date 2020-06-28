@@ -139,47 +139,39 @@ class Sequence extends Model implements SequenceContract
     }
 
     /**
-     * Returns the name of the field that stores the table to which the sequence belongs.
-     *
-     * @return string
-     * */
-    public function sourceTableName(): string
+     * {@inheritdoc}
+     */
+    public function getSeriesFrom(string $table): Collection
     {
-        return 'source';
+        return static::query()->where('source', '=', $table)->get();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSeriesFrom(string $table): Collection
-    {
-        return static::where($this->sourceTableName(), $table)->get();
-    }
-
     public function locateSerieModel(string $table, Serie $serie): SequenceContract
     {
         $columnID = $serie->getColumnKeyName();
         $serieID = $this->createSerieID($table, $columnID);
-        return static::firstOrCreate(['id' => $serieID], $this->structure($table, $columnID));
-    }
 
-    private function structure(string $table, string $columnKeyName): array
-    {
-        return [
-            $this->sourceTableName() => $table,
-            'column_key' => $columnKeyName,
-            'description' => "$table.$columnKeyName",
+        return static::firstOrCreate(['id' => $serieID], [
+            'source' => $table,
+            'column_key' => $columnID,
+            'description' => "$table.$columnID",
             'sequence' => 0
-        ];
+        ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function apply(): void
     {
         $this->save();
     }
 
-    protected function createSerieID(string $table, string $getRealColumnName): string
+    protected function createSerieID(string $table, string $columnID): string
     {
-        return hash(self::HASH, "{$table}.{$getRealColumnName}", false);
+        return hash(self::HASH, "{$table}.{$columnID}", false);
     }
 }
