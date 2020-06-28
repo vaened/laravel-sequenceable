@@ -44,7 +44,7 @@ class CustomSequence extends Model implements SequenceContract
     public $timestamps = false;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function next(): int
     {
@@ -55,7 +55,7 @@ class CustomSequence extends Model implements SequenceContract
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function prev(): int
     {
@@ -66,7 +66,7 @@ class CustomSequence extends Model implements SequenceContract
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      * */
     public function current(): int
     {
@@ -74,7 +74,7 @@ class CustomSequence extends Model implements SequenceContract
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      * */
     public function getColumnKey(): string
     {
@@ -82,7 +82,7 @@ class CustomSequence extends Model implements SequenceContract
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      * */
     public function getSeriesFrom(string $table): Collection
     {
@@ -90,7 +90,7 @@ class CustomSequence extends Model implements SequenceContract
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      * */
     public function locateSerieModel(string $table, Serie $serie): SequenceContract
     {
@@ -102,7 +102,7 @@ class CustomSequence extends Model implements SequenceContract
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      * */
     public function apply(): void
     {
