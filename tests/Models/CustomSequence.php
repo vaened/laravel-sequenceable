@@ -48,10 +48,7 @@ class CustomSequence extends Model implements SequenceContract
      */
     public function next(): int
     {
-        $this->sequence++;
-        $this->save();
-
-        return $this->sequence;
+        return ++$this->sequence;
     }
 
     /**
@@ -59,10 +56,7 @@ class CustomSequence extends Model implements SequenceContract
      */
     public function prev(): int
     {
-        $this->sequence--;
-        $this->save();
-
-        return $this->sequence;
+        return --$this->sequence;
     }
 
     /**
