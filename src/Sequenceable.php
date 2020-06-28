@@ -5,6 +5,7 @@
 
 namespace Enea\Sequenceable;
 
+use Enea\Sequenceable\Contracts\SequenceableContract;
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Enea\Sequenceable\Model\Sequence;
 use Illuminate\Support\Collection;
@@ -41,6 +42,6 @@ trait Sequenceable
 
     public static function bootSequenceable(): void
     {
-        static::observe(new SequenceObserver());
+        static::creating(fn(SequenceableContract $model) => (new Generator($model))->generate());
     }
 }
