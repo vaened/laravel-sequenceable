@@ -8,6 +8,7 @@ namespace Enea\Sequenceable\Model;
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Enea\Sequenceable\Serie;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 /**
@@ -18,7 +19,6 @@ use Illuminate\Support\Collection;
  * @property  int sequence
  * @property  string id
  * @property  string source
- * @property  string description
  * @property  string column_id
  * */
 class Sequence extends Model implements SequenceContract
@@ -63,7 +63,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @var array
      */
-    protected $fillable = ['id', 'source', 'column_id', 'sequence', 'description'];
+    protected $fillable = ['id', 'source', 'column_id', 'sequence'];
 
     /**
      * The attributes that should be cast to native types.
@@ -157,8 +157,7 @@ class Sequence extends Model implements SequenceContract
         return static::firstOrCreate(['id' => $serieID], [
             'source' => $table,
             'column_id' => $columnID,
-            'description' => "$table.$columnID",
-            'sequence' => 0
+            'created_at' => Carbon::now(),
         ]);
     }
 

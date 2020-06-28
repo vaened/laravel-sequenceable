@@ -21,7 +21,6 @@ class CreateSequencesTable extends Migration
 
             $table->string('source', 35)->index();
             $table->string('column_id', 60);
-            $table->string('description', 100)->nullable();
 
             $table->timestamps();
         });
