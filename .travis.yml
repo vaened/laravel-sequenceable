@@ -7,19 +7,11 @@ php:
 
 sudo: false
 
-services:
-  - mysql
-
 install:
   composer install
 
 script:
   - vendor/bin/phpunit
-
-before_install:
-  - mysql -u root -e 'CREATE DATABASE sequenceable_test;'
-  - mysql -u root -e "CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';"
-  - mysql -u root -e "GRANT ALL ON sequenceable_test.* TO 'test'@'localhost';"
 
 matrix:
   fast_finish: true
