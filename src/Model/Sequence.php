@@ -19,7 +19,7 @@ use Illuminate\Support\Collection;
  * @property  string id
  * @property  string source
  * @property  string description
- * @property  string column_key
+ * @property  string column_id
  * */
 class Sequence extends Model implements SequenceContract
 {
@@ -63,7 +63,7 @@ class Sequence extends Model implements SequenceContract
      *
      * @var array
      */
-    protected $fillable = ['id', 'source', 'column_key', 'sequence', 'description'];
+    protected $fillable = ['id', 'source', 'column_id', 'sequence', 'description'];
 
     /**
      * The attributes that should be cast to native types.
@@ -133,9 +133,9 @@ class Sequence extends Model implements SequenceContract
     /**
      * {@inheritdoc}
      * */
-    public function getColumnKey(): string
+    public function getColumnID(): string
     {
-        return $this->column_key;
+        return $this->column_id;
     }
 
     /**
@@ -151,12 +151,12 @@ class Sequence extends Model implements SequenceContract
      */
     public function locateSerieModel(string $table, Serie $serie): SequenceContract
     {
-        $columnID = $serie->getColumnKeyName();
+        $columnID = $serie->getColumnID();
         $serieID = $this->createSerieID($table, $columnID);
 
         return static::firstOrCreate(['id' => $serieID], [
             'source' => $table,
-            'column_key' => $columnID,
+            'column_id' => $columnID,
             'description' => "$table.$columnID",
             'sequence' => 0
         ]);

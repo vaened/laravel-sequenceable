@@ -25,7 +25,7 @@ class CustomSequence extends Model implements SequenceContract
      *
      * @var array
      */
-    protected $fillable = ['id', 'source', 'column_key', 'key'];
+    protected $fillable = ['id', 'source', 'column_id', 'key'];
 
     /**
      * The attributes that should be cast to native types.
@@ -70,7 +70,7 @@ class CustomSequence extends Model implements SequenceContract
     /**
      * {@inheritdoc}
      * */
-    public function getColumnKey(): string
+    public function getColumnID(): string
     {
         return $this->column_key;
     }
@@ -90,7 +90,7 @@ class CustomSequence extends Model implements SequenceContract
     {
         return static::firstOrCreate(['key' => $serie->getAliasForColumn()], [
             'source' => $table,
-            'column_key' => $serie->getColumnKeyName(),
+            'column_id' => $serie->getColumnID(),
             'sequence' => 0
         ]);
     }

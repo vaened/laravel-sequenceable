@@ -63,8 +63,12 @@ final class Serie
         return $this->sequenceClassName;
     }
 
-    public function getColumnKeyName(): string
+    public function getColumnID(): string
     {
-        return $this->hasAlias() ? "{$this->getColumnName()}.{$this->getAliasForColumn()}" : $this->getColumnName();
+        if (! $this->hasAlias()) {
+            return $this->getColumnName();
+        }
+
+        return "{$this->getColumnName()}.{$this->getAliasForColumn()}";
     }
 }

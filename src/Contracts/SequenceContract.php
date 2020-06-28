@@ -36,7 +36,7 @@ interface SequenceContract
      *
      * @return string
      * */
-    public function getColumnKey(): string;
+    public function getColumnID(): string;
 
     /**
      * Filters only the tables that are passed by parameter.
