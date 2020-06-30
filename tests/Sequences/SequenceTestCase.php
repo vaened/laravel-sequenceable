@@ -14,21 +14,30 @@ abstract class SequenceTestCase extends DatabaseTestCase
 
     abstract protected function models(): array;
 
+    abstract public function getExpectedDocumentValues(): array;
+
     public function setUp(): void
     {
         parent::setUp();
         $this->generate();
     }
 
+    public function test_create_document_with_proper_sequence(): void
+    {
+        $documents = $this->getExpectedDocumentValues();
+
+        $this->assertDatabaseCount('documents', count($documents));
+        foreach ($documents as $document) {
+            $this->assertDatabaseHas('documents', [
+                'number' => $document['number'],
+                'number_string' => $document['number_string'],
+                'type' => $document['type'],
+            ]);
+        }
+    }
+
     protected function generate(): void
     {
         array_map(fn(Document $document) => $document->save(), $this->models());
-    }
-
-    public function test_create_document_with_proper_sequence(): void
-    {
-        $this->assertDatabaseHas('documents', [
-            'number' => 1,
-        ]);
     }
 }

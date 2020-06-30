@@ -15,7 +15,6 @@ use Illuminate\Support\Collection;
  *
  * Attributes
  *
- * @property  string id
  * @property  int sequence
  * */
 class CustomSequence extends Model implements SequenceContract
@@ -25,7 +24,7 @@ class CustomSequence extends Model implements SequenceContract
      *
      * @var array
      */
-    protected $fillable = ['id', 'source', 'column_id', 'key'];
+    protected $fillable = ['id', 'source', 'column_id', 'sequence'];
 
     /**
      * The attributes that should be cast to native types.
@@ -72,7 +71,7 @@ class CustomSequence extends Model implements SequenceContract
      * */
     public function getColumnID(): string
     {
-        return $this->column_key;
+        return $this->getAttributeValue('column_id');
     }
 
     /**
@@ -88,7 +87,7 @@ class CustomSequence extends Model implements SequenceContract
      * */
     public function getSourceValue(): string
     {
-        return $this->source;
+        return $this->getAttributeValue('source');
     }
 
     /**
@@ -101,12 +100,11 @@ class CustomSequence extends Model implements SequenceContract
         return $model->getAttributeValue('sequence');
     }
 
-    public function locateSerieModel(string $table, Serie $serie): Model
+    protected function locateSerieModel(string $table, Serie $serie): Model
     {
-        return static::query()->firstOrCreate(['key' => $serie->getAliasForColumn()], [
+        return static::query()->firstOrCreate([
             'source' => $table,
-            'column_id' => $serie->getColumnID(),
-            'sequence' => 0
+            'column_id' => $serie->getColumnID()
         ]);
     }
 }

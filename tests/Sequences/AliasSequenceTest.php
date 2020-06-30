@@ -15,6 +15,12 @@ class AliasSequenceTest extends SequenceTestCase
         $this->assertDatabaseHas('sequences', [
             'source' => 'documents',
             'column_id' => 'number.invoice',
+            'sequence' => 2
+        ]);
+
+        $this->assertDatabaseHas('sequences', [
+            'source' => 'documents',
+            'column_id' => 'number.ticket',
             'sequence' => 1
         ]);
     }
@@ -22,14 +28,18 @@ class AliasSequenceTest extends SequenceTestCase
     protected function models(): array
     {
         return [
-            Document::create([Serie::lineal('number')->alias('invoice')])
+            Document::create([Serie::lineal('number')->alias('invoice')], ['type' => 'invoice']),
+            Document::create([Serie::lineal('number')->alias('invoice')], ['type' => 'invoice']),
+            Document::create([Serie::lineal('number')->alias('ticket')], ['type' => 'ticket']),
         ];
     }
 
-    protected function expectedDocument(): array
+    public function getExpectedDocumentValues(): array
     {
         return [
-            'number' => 1,
+            ['number' => 1, 'number_string' => null, 'type' => 'invoice'],
+            ['number' => 2, 'number_string' => null, 'type' => 'invoice'],
+            ['number' => 1, 'number_string' => null, 'type' => 'ticket'],
         ];
     }
 }

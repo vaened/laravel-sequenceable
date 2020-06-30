@@ -12,40 +12,29 @@ use Enea\Tests\Models\Document;
 
 class ComplexSequenceTest extends SequenceTestCase
 {
-    public function test_create_document_with_proper_sequence(): void
-    {
-        $this->assertDatabaseHas('documents', [
-            'number' => 1,
-            'number_string' => null,
-        ]);
-        $this->assertDatabaseHas('documents', [
-            'number' => null,
-            'number_string' => '00001',
-        ]);
-        $this->assertDatabaseHas('documents', [
-            'number' => 2,
-            'number_string' => '00000001',
-        ]);
-    }
-
     public function test_generate_sequence(): void
     {
-        $this->assertDatabaseHas('custom_sequences', [
-            'source' => 'documents',
-            'column_id' => 'number.num',
-            'key' => 'num',
-            'sequence' => 2
-        ]);
-
         $this->assertDatabaseHas('sequences', [
             'source' => 'documents',
-            'column_id' => 'number_string.ticket',
+            'column_id' => 'number_string.invoice',
             'sequence' => 1
         ]);
 
         $this->assertDatabaseHas('sequences', [
             'source' => 'documents',
-            'column_id' => 'number_string.invoice',
+            'column_id' => 'number_string.ticket',
+            'sequence' => 2
+        ]);
+
+        $this->assertDatabaseHas('custom_sequences', [
+            'source' => 'documents',
+            'column_id' => 'number.val',
+            'sequence' => 2
+        ]);
+
+        $this->assertDatabaseHas('custom_sequences', [
+            'source' => 'documents',
+            'column_id' => 'number_string.val',
             'sequence' => 1
         ]);
     }
@@ -53,16 +42,32 @@ class ComplexSequenceTest extends SequenceTestCase
     protected function models(): array
     {
         return [
+            Document::create([Serie::lineal('number_string')->alias('invoice')->length(5)], ['type' => 'invoice']),
+            Document::create([Serie::lineal('number_string')->alias('ticket')->length(8)], ['type' => 'ticket']),
+            Document::create([Serie::lineal('number_string')->alias('ticket')->length(8)], ['type' => 'ticket']),
+
             Document::create([
-                Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('num')),
-            ]),
+                Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('val')),
+            ], ['type' => 'val']),
+
             Document::create([
-                Serie::lineal('number_string')->alias('invoice')->length(5),
-            ]),
-            Document::create([
-                Serie::lineal('number_string')->alias('ticket')->length(8),
-                Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('num')),
-            ]),
+                Wrap::create(CustomSequence::class, function (Wrap $wrap): void {
+                    $wrap->column('number')->alias('val');
+                    $wrap->column('number_string')->alias('val')->length(3);
+                }),
+            ], ['type' => 'val']),
+        ];
+    }
+
+    public function getExpectedDocumentValues(): array
+    {
+        return [
+            ['number' => null, 'number_string' => '00001', 'type' => 'invoice'],
+            ['number' => null, 'number_string' => '00000001', 'type' => 'ticket'],
+            ['number' => null, 'number_string' => '00000002', 'type' => 'ticket'],
+
+            ['number' => 1, 'number_string' => null, 'type' => 'val'],
+            ['number' => 2, 'number_string' => '001', 'type' => 'val'],
         ];
     }
 }

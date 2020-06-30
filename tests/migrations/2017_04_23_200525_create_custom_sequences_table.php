@@ -15,13 +15,12 @@ class CreateCustomSequencesTable extends Migration
     {
         Schema::create('custom_sequences', function (Blueprint $table) {
             $table->increments('id');
-
-            $table->char('key', 3)->index();
-
-            $table->unsignedBigInteger('sequence')->default(0);
-
             $table->string('source', 50);
             $table->string('column_id', 60);
+            $table->unsignedBigInteger('sequence')->default(0);
+
+            $table->index(['source', 'column_id']);
+
         });
     }
 

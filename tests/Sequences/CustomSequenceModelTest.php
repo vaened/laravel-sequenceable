@@ -13,11 +13,11 @@ class CustomSequenceModelTest extends SequenceTestCase
 {
     public function test_generate_sequence(): void
     {
+        $this->assertDatabaseCount('sequences', 0);
         $this->assertDatabaseHas('custom_sequences', [
             'source' => 'documents',
-            'column_id' => 'number.ccn',
-            'key' => 'ccn',
-            'sequence' => 1
+            'column_id' => 'number.hai',
+            'sequence' => 2
         ]);
     }
 
@@ -25,8 +25,20 @@ class CustomSequenceModelTest extends SequenceTestCase
     {
         return [
             Document::create([
-                Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('ccn')),
-            ]),
+                Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('hai')),
+            ], ['type' => 'hai']),
+
+            Document::create([
+                Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('hai')),
+            ], ['type' => 'hai']),
+        ];
+    }
+
+    public function getExpectedDocumentValues(): array
+    {
+        return [
+            ['number' => 1, 'number_string' => null, 'type' => 'hai'],
+            ['number' => 2, 'number_string' => null, 'type' => 'hai'],
         ];
     }
 }
