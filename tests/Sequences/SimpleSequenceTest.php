@@ -14,8 +14,7 @@ class SimpleSequenceTest extends SequenceTestCase
     {
         $this->assertDatabaseHas('sequences', [
             'source' => 'documents',
-            'column_key' => 'number',
-            'description' => 'documents.number',
+            'column_id' => 'number',
             'sequence' => 1
         ]);
     }

@@ -21,8 +21,7 @@ class FixedLengthSequenceTest extends SequenceTestCase
     {
         $this->assertDatabaseHas('sequences', [
             'source' => 'documents',
-            'column_key' => 'number_string',
-            'description' => 'documents.number_string',
+            'column_id' => 'number_string',
             'sequence' => 1
         ]);
     }

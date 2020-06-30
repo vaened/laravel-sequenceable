@@ -32,22 +32,20 @@ class ComplexSequenceTest extends SequenceTestCase
     {
         $this->assertDatabaseHas('custom_sequences', [
             'source' => 'documents',
-            'column_key' => 'number.num',
+            'column_id' => 'number.num',
             'key' => 'num',
             'sequence' => 2
         ]);
 
         $this->assertDatabaseHas('sequences', [
             'source' => 'documents',
-            'column_key' => 'number_string.ticket',
-            'description' => 'documents.number_string.ticket',
+            'column_id' => 'number_string.ticket',
             'sequence' => 1
         ]);
 
         $this->assertDatabaseHas('sequences', [
             'source' => 'documents',
-            'column_key' => 'number_string.invoice',
-            'description' => 'documents.number_string.invoice',
+            'column_id' => 'number_string.invoice',
             'sequence' => 1
         ]);
     }

@@ -14,8 +14,7 @@ class AliasSequenceTest extends SequenceTestCase
     {
         $this->assertDatabaseHas('sequences', [
             'source' => 'documents',
-            'column_key' => 'number.invoice',
-            'description' => 'documents.number.invoice',
+            'column_id' => 'number.invoice',
             'sequence' => 1
         ]);
     }

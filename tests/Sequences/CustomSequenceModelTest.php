@@ -15,7 +15,7 @@ class CustomSequenceModelTest extends SequenceTestCase
     {
         $this->assertDatabaseHas('custom_sequences', [
             'source' => 'documents',
-            'column_key' => 'number.ccn',
+            'column_id' => 'number.ccn',
             'key' => 'ccn',
             'sequence' => 1
         ]);
