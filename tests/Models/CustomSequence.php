@@ -86,20 +86,27 @@ class CustomSequence extends Model implements SequenceContract
     /**
      * {@inheritdoc}
      * */
-    public function locateSerieModel(string $table, Serie $serie): SequenceContract
+    public function getSourceValue(): string
     {
-        return static::firstOrCreate(['key' => $serie->getAliasForColumn()], [
-            'source' => $table,
-            'column_id' => $serie->getColumnID(),
-            'sequence' => 0
-        ]);
+        return $this->source;
     }
 
     /**
      * {@inheritdoc}
      * */
-    public function apply(): void
+    public function incrementOneTo(string $table, Serie $serie): int
     {
-        $this->save();
+        $model = $this->locateSerieModel($table, $serie);
+        $model->increment('sequence');
+        return $model->getAttributeValue('sequence');
+    }
+
+    public function locateSerieModel(string $table, Serie $serie): Model
+    {
+        return static::query()->firstOrCreate(['key' => $serie->getAliasForColumn()], [
+            'source' => $table,
+            'column_id' => $serie->getColumnID(),
+            'sequence' => 0
+        ]);
     }
 }

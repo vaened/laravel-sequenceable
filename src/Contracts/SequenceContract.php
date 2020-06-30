@@ -11,35 +11,42 @@ use Illuminate\Support\Collection;
 interface SequenceContract
 {
     /**
-     * Increase sequence by one and return it.
+     * Superficially increases by one.
      *
      * @return int
      */
     public function next(): int;
 
     /**
-     * Decrements the sequence by one and return it.
+     * Superficially decreases by one.
      *
      * @return int
      */
     public function prev(): int;
 
     /**
-     * Gets the current sequence.
+     * Returns the current sequence in use.
      *
      * @return int
      * */
     public function current(): int;
 
     /**
-     * Returns the name of the field that stores the column to which the sequence belongs.
+     * returns the ID of the column, which consists of column and alias.
      *
      * @return string
      * */
     public function getColumnID(): string;
 
     /**
-     * Filters only the tables that are passed by parameter.
+     * Returns the name of the table.
+     *
+     * @return string
+     */
+    public function getSourceValue(): string;
+
+    /**
+     * Filter all sequences from a given table.
      *
      * @param string $table
      * @return Collection
@@ -47,18 +54,11 @@ interface SequenceContract
     public function getSeriesFrom(string $table): Collection;
 
     /**
-     * Get the first record matching the attributes or create it.
+     * Increment the sequence by one and store its value in the database.
      *
      * @param string $table
      * @param Serie $serie
-     * @return SequenceContract
+     * @return int
      */
-    public function locateSerieModel(string $table, Serie $serie): SequenceContract;
-
-    /**
-     * Changes made to the sequence are saved in the database.
-     *
-     * @return void
-     */
-    public function apply(): void;
+    public function incrementOneTo(string $table, Serie $serie): int;
 }

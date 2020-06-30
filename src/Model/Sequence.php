@@ -141,6 +141,14 @@ class Sequence extends Model implements SequenceContract
     /**
      * {@inheritdoc}
      */
+    public function getSourceValue(): string
+    {
+        return $this->source;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSeriesFrom(string $table): Collection
     {
         return static::query()->where('source', '=', $table)->get();
@@ -149,24 +157,23 @@ class Sequence extends Model implements SequenceContract
     /**
      * {@inheritdoc}
      */
-    public function locateSerieModel(string $table, Serie $serie): SequenceContract
+    public function incrementOneTo(string $table, Serie $serie): int
+    {
+        $model = $this->findOrCreateSerieModel($table, $serie);
+        $model->increment('sequence', 1);
+        return $model->getAttributeValue('sequence');
+    }
+
+    protected function findOrCreateSerieModel(string $table, Serie $serie): Model
     {
         $columnID = $serie->getColumnID();
         $serieID = $this->createSerieID($table, $columnID);
 
-        return static::firstOrCreate(['id' => $serieID], [
+        return static::query()->firstOrCreate(['id' => $serieID], [
             'source' => $table,
             'column_id' => $columnID,
             'created_at' => Carbon::now(),
         ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function apply(): void
-    {
-        $this->save();
     }
 
     protected function createSerieID(string $table, string $columnID): string
