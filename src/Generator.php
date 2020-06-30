@@ -28,20 +28,24 @@ class Generator
     {
         $this->model->getGroupedSequences()->each(fn(
             Group $group
-        ) => $this->increase($group->sequence(), $group->series()));
+        ) => $this->incrementByModel($group->sequence(), $group->series()));
     }
 
-    private function increase(SequenceContract $sequence, Collection $series): void
+    private function incrementByModel(SequenceContract $orphanedSequence, Collection $series): void
     {
-        $series->each(fn(Serie $serie) => $this->apply($sequence, $serie));
+        $series->each(fn(Serie $serie) => $this->applySerieTo($orphanedSequence, $serie));
     }
 
-    private function apply(SequenceContract $sequence, Serie $serie): void
+    private function applySerieTo(SequenceContract $orphanedSequence, Serie $serie): void
     {
-        $sequence = $sequence->locateSerieModel($this->model->getTable(), $serie);
-        $number = $this->fill($sequence->next(), $serie->getFixedLength());
-        $this->model->setAttribute($serie->getColumnName(), $number);
-        $sequence->apply();
+        $unusedSequenceNumber = $orphanedSequence->incrementOneTo($this->model->getTable(), $serie);
+        $stylizedSequence = $this->stylize($serie, $unusedSequenceNumber);
+        $this->model->setAttribute($serie->getColumnName(), $stylizedSequence);
+    }
+
+    private function stylize(Serie $serie, int $sequence): string
+    {
+        return $this->fill($sequence, $serie->getFixedLength());
     }
 
     private function fill(string $number, int $length): string
