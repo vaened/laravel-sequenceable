@@ -5,6 +5,7 @@
 
 namespace Enea\Sequenceable;
 
+use Closure;
 use Enea\Sequenceable\Contracts\SequenceableContract;
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Enea\Sequenceable\Model\Sequence;
@@ -14,12 +15,18 @@ trait Sequenceable
 {
     public function getGroupedSequences(): Collection
     {
-        return collect($this->sequencesSetup())->flatten()->groupBy(fn(
-            Serie $serie
-        ): ?string => $serie->getSequenceClassName())->map(fn(
-            Collection $collection,
-            ?string $sequence
-        ): Group => $this->createGroup($sequence, $collection));
+        $series = collect($this->sequencesSetup())->flatten();
+        return $series->groupBy($this->modelName())->map($this->toGroup());
+    }
+
+    private function modelName(): Closure
+    {
+        return fn(Serie $serie): ?string => $serie->getSequenceClassName();
+    }
+
+    private function toGroup(): Closure
+    {
+        return fn(Collection $collection, ?string $sequence): Group => $this->createGroup($sequence, $collection);
     }
 
     private function createGroup(?string $sequenceClassName, Collection $collection): Group
@@ -33,11 +40,8 @@ trait Sequenceable
 
     protected function getDefaultSequenceModel(): SequenceContract
     {
-        if ($model = config('sequenceable.model', null)) {
-            return new $model();
-        }
-
-        return new Sequence();
+        $model = config('sequenceable.model') ?: Sequence::class;
+        return new $model();
     }
 
     public static function bootSequenceable(): void
