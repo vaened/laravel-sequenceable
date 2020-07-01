@@ -7,6 +7,8 @@ namespace Enea\Tests\Models;
 
 use Enea\Sequenceable\Contracts\SequenceableContract;
 use Enea\Sequenceable\Sequenceable;
+use Enea\Sequenceable\Serie;
+use Enea\Sequenceable\Wrap;
 use Illuminate\Database\Eloquent\Model;
 
 class Document extends Model implements SequenceableContract
@@ -32,6 +34,18 @@ class Document extends Model implements SequenceableContract
 
     public function sequencesSetup(): array
     {
-        return $this->sequences;
+        if (! empty($this->sequences)) {
+            return $this->sequences;
+        }
+
+        return $this->defaultSequences();
+    }
+
+    private function defaultSequences(): array
+    {
+        return [
+            Serie::lineal('number')->alias('document'),
+            Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number_string')),
+        ];
     }
 }
