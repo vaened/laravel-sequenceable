@@ -10,13 +10,22 @@ use Enea\Sequenceable\Contracts\SequenceableContract;
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Enea\Sequenceable\Model\Sequence;
 use Illuminate\Support\Collection;
+use LogicException;
 
 trait Sequenceable
 {
     public function getGroupedSequences(): Collection
     {
         $series = collect($this->sequencesSetup())->flatten();
+        $this->validateDuplicates($series);
         return $series->groupBy($this->modelName())->map($this->toGroup());
+    }
+
+    private function validateDuplicates(Collection $series): void
+    {
+        $series->duplicates(fn(Serie $serie) => $serie->getColumnName())->each(function (string $column): void {
+            throw new LogicException("Column '{$column}' should only have one sequence");
+        });
     }
 
     private function modelName(): Closure
