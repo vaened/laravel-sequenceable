@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 
 class SequenceCollection
 {
-    protected array $sequences;
+    protected array $sequences = [];
 
     public function all(): Collection
     {
