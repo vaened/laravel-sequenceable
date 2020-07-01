@@ -45,11 +45,6 @@ class Generator
 
     private function stylize(Serie $serie, int $sequence): string
     {
-        return $this->fill($sequence, $serie->getFixedLength());
-    }
-
-    private function fill(string $number, int $length): string
-    {
-        return str_pad($number, $length, '0', STR_PAD_LEFT);
+        return (new Builder())->build($serie, $sequence);
     }
 }
