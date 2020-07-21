@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSequencesTable extends Migration
+class CreateCustomSequencesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,14 @@ class CreateSequencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sequences', function (Blueprint $table) {
-            $table->char('id', 8);
-            $table->primary('id');
-
+        Schema::create('custom_sequences', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('source', 50);
+            $table->string('column_id', 60);
             $table->unsignedBigInteger('sequence')->default(0);
 
-            $table->string('source', 35)->index();
-            $table->string('column_key', 60);
-            $table->string('description', 100)->nullable();
+            $table->index(['source', 'column_id']);
 
-            $table->timestamps();
         });
     }
 
@@ -34,6 +31,6 @@ class CreateSequencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sequences');
+        Schema::dropIfExists('custom_sequences');
     }
 }

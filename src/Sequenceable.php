@@ -5,196 +5,56 @@
 
 namespace Enea\Sequenceable;
 
-use Enea\Sequenceable\Exceptions\SequenceException;
+use Closure;
+use Enea\Sequenceable\Contracts\SequenceableContract;
+use Enea\Sequenceable\Contracts\SequenceContract;
 use Enea\Sequenceable\Model\Sequence;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
+use LogicException;
 
 trait Sequenceable
 {
-    /**
-     * Model builds key.
-     *
-     * @param int|string $key
-     * @param string $column
-     * @return string
-     * @return string
-     */
-    public function makeKey($key, $column = null)
+    public function getGroupedSequences(): Collection
     {
-        $sequence = $this->getAutocompletableSequence();
-
-        if (! empty($column) && $sequence->has($column)) {
-            return $this->autocomplete($key, $sequence->get($column));
-        }
-
-        return $key;
+        $series = collect($this->sequencesSetup())->flatten();
+        $this->validateDuplicates($series);
+        return $series->groupBy($this->modelName())->map($this->toGroup());
     }
 
-    /**
-     * Fill a string as requested.
-     *
-     * @param int|string $key
-     * @param int $size
-     * @return string
-     */
-    public function autocomplete($key, $size)
+    private function validateDuplicates(Collection $series): void
     {
-        if ($size > 1 && is_numeric($key)) {
-            $key = str_pad($key, $size, '0', STR_PAD_LEFT);
-        }
-
-        return $key;
+        $series->duplicates(fn(Serie $serie) => $serie->getColumnName())->each(function (string $column): void {
+            throw new LogicException("Column '{$column}' should only have one sequence");
+        });
     }
 
-    /**
-     * Returns, only if defined, the custom instances.
-     *
-     * @return Collection
-     * */
-    public function getSequenceModels()
+    private function modelName(): Closure
     {
-        $instances = collect();
-        $common = array();
-        foreach ($this->sequencesSetup() as $key => $values) {
-            $sequences = array();
-            if (! class_exists($key)) {
-                $common[] = Helper::getColumnName($key, $values);
-            } else {
-                foreach ((array) $values as $k => $value) {
-                    $sequences[] = Helper::getColumnName($k, $value);
-                }
-
-                $instances->put($key, $sequences);
-            }
-        }
-
-        $instances->put($this->defaultSequenceName(), $common);
-
-        return $instances;
+        return fn(Serie $serie): ?string => $serie->getSequenceClassName();
     }
 
-    /**
-     * Returns the sequences defined in the model.
-     *
-     * @throws SequenceException
-     * @return Collection
-     */
-    public function getSequencesConfiguration()
+    private function toGroup(): Closure
     {
-        if (! $this instanceof  Model) {
-            throw new SequenceException(static::class . ' Must be an instance of ' . Model::class);
-        }
-
-        $sequencesConfiguration = collect();
-
-        foreach ($this->sequencesSetup() as $key => $values) {
-            if (! class_exists($key)) {
-                $sequencesConfiguration->put($key, $values);
-            } else {
-                foreach ((array) $values as $k => $value) {
-                    if (is_numeric($k)) {
-                        $sequencesConfiguration->push($value);
-                    } else {
-                        $sequencesConfiguration->put($k, $value);
-                    }
-                }
-            }
-        }
-
-        return $sequencesConfiguration;
+        return fn(Collection $collection, ?string $sequence): Group => $this->createGroup($sequence, $collection);
     }
 
-    /**
-     * Add observer.
-     *
-     * @return void
-     */
-    public static function bootSequenceable()
+    private function createGroup(?string $sequenceClassName, Collection $collection): Group
     {
-        if (static::isSequenceableAvailable()) {
-            static::observe(new SequenceObserver());
+        if (! empty($sequenceClassName) && class_exists($sequenceClassName)) {
+            return new Group(new $sequenceClassName(), $collection);
         }
+
+        return new Group($this->getDefaultSequenceModel(), $collection);
     }
 
-    /**
-     * Returns the sequence constructed based on the number of characters that were defined in the configuration.
-     *
-     * @param string $key
-     * @return string|null
-     */
-    public function __get($key)
+    protected function getDefaultSequenceModel(): SequenceContract
     {
-        $prefix = $this->getSequenceColumnPrefix();
-
-        if (empty($prefix) || ! starts_with($key, $prefix)) {
-            return $this->getAttribute($key);
-        }
-
-        $column = substr($key, strlen($prefix));
-
-        if ($value = $this->getAttribute($column)) {
-            return $this->makeKey($this->getAttribute($column), $column);
-        }
+        $model = config('sequenceable.model') ?: Sequence::class;
+        return new $model();
     }
 
-    /**
-     * Modify this method if necessary.
-     *
-     * @return bool
-     */
-    protected static function isSequenceableAvailable()
+    public static function bootSequenceable(): void
     {
-        return true;
-    }
-
-    /**
-     * Returns the full path of the default sequence model.
-     *
-     * @return string
-     */
-    protected function defaultSequenceName()
-    {
-        if ($model = Config::get('sequenceable.model')) {
-            return $model;
-        }
-
-        return Sequence::class;
-    }
-
-    /**
-     * Returns the prefix that will be used to call a sequence.
-     *
-     * @return string
-     */
-    protected function getSequenceColumnPrefix()
-    {
-        if ($prefix = Config::get('sequenceable.prefix')) {
-            return $prefix;
-        }
-
-        return '';
-    }
-
-    /**
-     * Fill in the sequence with the number of characters that were defined in the sequence configuration.
-     *
-     * @return Collection
-     */
-    private function getAutocompletableSequence()
-    {
-        $collection = collect();
-
-        foreach ($this->getSequencesConfiguration() as $key => $sequence) {
-            if (is_array($sequence)) {
-                $key = key($sequence);
-                $sequence = current($sequence);
-            }
-
-            $collection->put($key, $sequence);
-        }
-
-        return $collection;
+        static::creating(fn(SequenceableContract $model) => (new Generator($model))->generate());
     }
 }

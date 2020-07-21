@@ -1,25 +1,19 @@
 language: php
 
 php:
-  - 5.6
-  - 7.0
-  - 7.1
+  - 7.4
 
 sudo: false
-
-services:
-  - mysql
 
 install:
   composer install
 
-script:
-  - vendor/bin/phpunit
-
-before_install:
-  - mysql -u root -e 'CREATE DATABASE sequenceable_test;'
-  - mysql -u root -e "CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';"
-  - mysql -u root -e "GRANT ALL ON sequenceable_test.* TO 'test'@'localhost';"
-
 matrix:
   fast_finish: true
+
+script:
+  - vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
