@@ -1,160 +1,135 @@
 # Laravel Sequenceable Package
-[![Build Status](https://travis-ci.org/eneav/laravel-sequenceable.svg?branch=master)](https://travis-ci.org/eneav/laravel-sequenceable) [![StyleCI](https://styleci.io/repos/94660091/shield?branch=master)](https://styleci.io/repos/94660091)
 
-This package provides functionality for creating database sequences.
-## How to Install
-1. It is recommended to install this package through the composer.
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/vaened/laravel-sequenceable/badges/quality-score.png?b=upgrade)](https://scrutinizer-ci.com/g/vaened/laravel-sequenceable/?branch=upgrade)  [![Build Status](https://travis-ci.org/vaened/laravel-sequenceable.svg?branch=master)](https://travis-ci.org/vaened/laravel-sequenceable)  [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) 
+
+Laravel Sequenceable is a library to generate and manage sequences for laravel models.
+
+```php
+// simple sequence
+Serie::lineal('document_number');
+
+// sequence with an alias
+Serie::lineal('document_number')->alias('invoice');
+
+// sequence with an alias and fixed length
+Serie::lineal('document_number')->alias('invoice')->length(8);
+```
+
+## Installation
+Laravel Sequenceable requires PHP 7.4. This version supports Laravel 7
+
+To get the latest version, simply require the project using Composer:
 ```sh
 $ composer require enea/laravel-sequenceable
 ```
-2. Add the provider to the `providers` key in `config/app.php`.
-```php
-'providers' => [
-    // ...
-    Enea\Sequenceable\Providers\SequenceableServiceProvider::class,
-    // ...
-],
-```
-3. Publish the configuration files.1
+
+Once installed, if you are not using automatic package discovery, then you need to register the [`Enea\Sequenceable\SequenceableServiceProvider`](https://github.com/vaened/laravel-sequenceable/blob/master/src/SequenceableServiceProvider.php) service provider in your `config/app.php`.
+
+Now. Publish the configuration file.
+
 ```sh
-$ php artisan vendor:publish --provider='Enea\Sequenceable\Providers\SequenceableServiceProvider'
+$ php artisan vendor:publish --provider='Enea\Sequenceable\SequenceableServiceProvider'
 ```
-4. Run the table migration for the sequences.
+And finally run migrations.
+
 ```sh
 $ php artisan migrate
 ```
 
 ## Basic Usage
-To start with the package is as simple as using the `Sequenceable` trait  and implementing the `SequenceableContract` interface, after which you only have to specify which fields will auto-increment
+Getting started with the library is as simple as using the `Sequenceable` trait and implementing the `SequenceableContract` interface, after that you only need to specify the sequences you want to generate.
 ```php
 <?php namespace App;
 
 use Enea\Sequenceable\Contracts\SequenceableContract;
 use Enea\Sequenceable\Sequenceable;
+use Enea\Sequenceable\Serie;
 use Illuminate\Database\Eloquent\Model;
 
 class Document extends Model implements SequenceableContract
 {
-
     use Sequenceable;
 
-    /**
-     * Returns the configuration of the sequences
-     *
-     * @return array
-     */
-    public function sequencesSetup()
+    public function sequencesSetup(): array
     {
-        return [
-            'number'
-        ];
+      return [
+          Serie::lineal('document_number')
+      ];
     }
 }
 ```
 
-## Configuration
-You can configure the sequences of 5 possible shapes, each one follows a logical structure in addition to being able to be combined with each other.
-- ##### Simple.
-    This is the easiest way, you just need to define the columns you need in the configuration array.
+## Advanced
+We exemplify all the options to generate a `sequence` with the case of a payment document.
+
+- To start, we need a column to store the sequence, and for this we will use a column called `number`.
 
 ```php
-    public function sequencesSetup()
+    public function sequencesSetup(): array
     {
-        return [ 'number' ];
+        return [ Serie::lineal('document_number') ];
     }
 ```
-
-- ##### Custom key.
-    You can set a key for the sequence using the following syntax.
+- Now that we have the column defined, we realize that we need to create a separate sequence for each type of document. For this problem, the library offers the possibility of adding an alias for the column.
 
 ```php
-    public function sequencesSetup()
+    public function sequencesSetup(): array
     {
         return [ 
-            'custom_key' => [
-                'number' 
-            ]
+            Serie::lineal('document_number')->alias($this->type())
         ];
     }
-```
 
-- ##### Dynamic key.
-    This way you can generate independent sequences according to the key, in this example you can see how it is established that the key will be built according to the type of document, generating as many sequences as document types. You can see an example of this in the `a_sequence_with_a_dynamic_value_is_generated` test located in the file [`GenerateSequenceTest`](https://github.com/eneasdh-fs/laravel-sequenceable/blob/master/tests/GenerateSequenceTest.php)
+  	protected function type(): string
+    {
+        return $this->payment_document_type;
+    }
+```
+- Everything is fine, but now we want the sequences not to be saved in a numeric value, but instead to be a text string with a fixed length of 10.
 
 ```php
-    public function sequencesSetup()
+    public function sequencesSetup(): array
     {
         return [ 
-            $this->sequenceKey() => [
-                'number' 
-            ]
-        ];
-    }
-
-    protected function sequenceKey()
-    {
-        return $this->type;
-    }
-```
-
-- ##### Fixed length.
-    Setting a length in the sequence will be useful when you need to give it a presentation format, for this to work, you must call the column by prefixing a prefix that is set in the configuration file  `config\sequenceable.php` in the key `prefix`.
-```php
-    public function sequencesSetup()
-    {
-        return [
-            'number' => 8,
+            Serie::lineal('document_number')->alias($this->type())->length(10)
         ];
     }
 ```
+- Concluding, we could also say that we do not want to use the default table for sequences and we need a special table to store the payment sequences, for this you have to [create your own sequence table](#customize).
 
-- ##### Custom model
-    You can encapsulate the sequences in a custom model, this sequence model must be configured so that the sequences can persist in the database. This is shown at the bottom of the documentation.
+  > We can wrap a block of sequences using the class `Enea\Sequenceable\Wrap::create`
 
 ```php
-    public function sequencesSetup()
+    public function sequencesSetup(): array
     {
         return [ 
-            CustomSequence::class => [
-                // sequences
-            ]
+            Wrap::create(PaymentSequence::class, 
+                         fn(Wrap $wrap) => Serie::lineal('document_number')->alias($this->type())->length(10))
         ];
     }
 ```
-## Facade
-There is a 'facade' to facilitate the obtaining of the sequences that belong to a model.
+## List
+To retrieve all the sequences of a model, you can use the `Enea\Sequenceable\Facades\Succession` facade which is linked to the [`Enea\Sequenceable\Succession`](https://github.com/vaened/laravel-sequenceable/blob/master/src/Succession.php) class.
+
 ```php
-Succession::on(Document::class);
+$collection = Succession::from(Document::class);
 ```
-This returns an instance of `Illuminate\Support\Collection` where each key is represented by the `column_key` defined in the model configuration, and the value is an instance of the model of the sequence to which it belongs.
+This returns an instance of [`Enea\Sequenceable\SequenceCollection`](https://github.com/vaened/laravel-sequenceable/blob/master/src/SequenceCollection.php) . With which you can do things like:
 
-## Customize
-The package has a configuration that generates the sequences with the following structure.
+```php
+// return all sequences
+$collection->all();
 
- id       | sequence | source    | column_key | description      | created_at          | updated_at          
-----------|----------|-----------|------------|------------------|---------------------|---------------------
- 37cc068a |        1 | documents | number     | documents.number | 2017-06-29 18:40:44 | 2017-06-29 18:40:44 
+// find sequence by name
+$collection->find('document_number', 'invoice');
+```
 
-You can review the [`Sequence`](https://github.com/eneasdh-fs/laravel-sequenceable/blob/master/src/Model/Sequence.php) model that is configured in the package to learn more about its operation.
+## Config
 
-#### Base Structure
-You can implement the `SequenceContract` interface or the `Sequence` model's extension to modify the behavior that you consider appropriate.
-
- Column         | Description
-----------------|------------------------------------------------------------------------------------
- **id**         | It is generated on the basis of the union of the table, column and key.
-**sequence**    | Stores the current field sequence.
-**source**      | Contains the name of the table.
-**column_key**  | Name and key of the concatenated column.
-**description** | Contains the description of the sequence.
-**created_at**  | Indicates the date and time the sequence was created.
-**updated_at**  | Indicates the last time the sequence is updated.
-
-#### Model
 You can change the default sequence model of `config\sequenceable.php` in the `model` key.
 ```php
 <?php
-return [
+return [    
     /*
     |--------------------------------------------------------------------------
     | Sequence Model
@@ -162,91 +137,60 @@ return [
     |
     | This key defines the base sequence model that will be used to generate the autoincrementable 
     | values, you can modify this key and define your own sequence model whenever 
-    | you implement the sequenceContract interface or extend the base model
+    | you implement the SequenceContract interface or extend the base model
     */
    'model' => \Enea\Sequenceable\Model\Sequence::class,
 ];
 ```
-
 Or explicitly specify the model you want to use with certain fields, you can achieve this from the configuration of the sequences in your model.
-
 ```php
     public function sequencesSetup(): array
     {
         return [ 
-            CustomSequence::class => [
-                // sequences
-            ]
+             Wrap::create(CustomSequence::class, function(Wrap $wrap): void {
+                $wrap->column('column-name');                
+                $wrap->column('another-column-name');
+                //..
+            }),
         ];
     }
 ```
 
-#### Sequence storage
-If necessary, you can define how the sequences in your database will be stored from `config\sequenceable.php` on the `autoffilling` key, in this way the sequences will be filled with the length you have configured in the configuration of the model at Moment of being persisted in the database.
+## Customize
+if you already have a model to store your sequences, you need to implement the [`Enea\Sequenceable\Contracts\SequenceContract`](https://github.com/vaened/laravel-sequenceable/blob/master/src/Contracts/SequenceContract.php) interface, or extend the default model [`Enea\Sequenceable\Model\Sequence`](https://github.com/vaened/laravel-sequenceable/blob/master/src/Model/Sequence.php).
 
-```php
-<?php
-return [
-     /*
-     |---------------------------------------------------------------------------
-     | Auto filling
-     |---------------------------------------------------------------------------
-     | This option allows you to automatically fill the fields in your database, as specified in 
-     | the model configuration. If you want to customize the value with which to autofill, 
-     | you must change this key by replacing the value with the  character you want, 
-     | by default, if it is true, it will autocomplete to zero
-     |
-     */
+In case you have your own sequence model, there are some fields that you should store in its sequence table:
 
-    'autofilling' => false,
-];
-```
+1. The **column ID**, and this is obtained by concatenating the column name and alias.
+2. The name of the **table** to which the sequence belongs.
+3. An integer type **sequence**.
 
-#### Prefix
-In case you do not want to store sequences with a fixed length in your database but still want to present them in a format, you can simply leave `autofilling` false and call your columns by prefixing a prefix.
+### Example
 
-```php
-<?php
-return [
-    /*
-     |---------------------------------------------------------------------------
-     | Prefix
-     |---------------------------------------------------------------------------
-     | This key specifies the prefix that is used when you need to display the sequence with the 
-     | number of characters defined in the configuration, if you do not want to use any 
-     | prefix, set this key to null
-     */
+To better exemplify this, we will use the default [`Sequence`](https://github.com/vaened/laravel-sequenceable/blob/master/src/Model/Sequence.php) model.
 
-    'prefix' => 'full_'
-];
-```
 
-When configuring the sequence with a [`fixed length`](#fixed-length), the call would be made by concatenating `prefix + column`, in this case `full_number`, this will return the sequence belonging to the `number` column that will be filled with zeros The left until it reaches the length set in the model.
+This model comes with a default configuration.
 
-```php
-    public function store()
-    {
-        $document = new Document();
-        $document->save();
-        
-        // number = 1
-        // full_number = 00000001
-        
-        return view('document.show', [
-            'document_number' => $document->full_number
-        ]);
-    }
-```
+ id       | sequence | source    | column_id              | created_at          | updated_at          
+ -------- | -------- | --------- | ---------------------- | ------------------- | ------------------- 
+ e4910d63 | 1        | documents | document_number.invoce | 2020-07-03 18:40:44 | 2020-07-03 18:40:44 
 
-#### Storage table
-If you already have a table that stores the sequences in your database, you may need a different sequence model than the one already configured.
+#### Migration
 
-There are some fields you should store in your sequence table such as:
-1. The key to the sequence.
-2. The contents of the column plus the key, separated by a period.
-3. The name of the table to which the sequence belongs.
+The table structure has the required fields, you can see the migration in [`CreateSequencesTable`](https://github.com/vaened/laravel-sequenceable/blob/master/database/migrations/2017_04_23_200525_create_sequences_table.php)
 
-You can see an example of this in the 'test' folder and look for the files `Models\CustomSequence.php` and `Migrations/2017_04_23_200525_create_custom_sequences_table.php`
+ Column         | Description								| Required 
+------------------------|---------------------------------------------------------------------------------|:-:
+ **id**      | It is generated on the basis of the union of the table, column and alias 										|:x:
+**sequence**    | Stores the last value in the sequence |:white_check_mark:
+**source**          | Stores the table name | :white_check_mark:
+**column_id**   | Concatenated name and alias | :white_check_mark:
+**created_at**  | Indicates the date and time the sequence was created |:x:
+**updated_at**  | Indicates the last time the sequence is updated |:x:
+
+You can see another example of this in the `test` folder and look for the files [`CustomSequence.php`](https://github.com/vaened/laravel-sequenceable/blob/master/tests/Models/CustomSequence.php) and [`migrations/2017_04_23_200525_create_custom_sequences_table.php`](https://github.com/vaened/laravel-sequenceable/blob/master/tests/migrations/2017_04_23_200525_create_custom_sequences_table.php)
 
 ## More documentation
+
 You can find a lot of comments within the source code as well as the tests located in the `tests` directory.
