@@ -104,7 +104,7 @@ We exemplify all the options to generate a `sequence` with the case of a payment
     {
         return [ 
             Wrap::create(PaymentSequence::class, 
-                         fn(Wrap $wrap) => Serie::lineal('document_number')->alias($this->type())->length(10))
+                         fn(Wrap $wrap) => $wrap->column('document_number')->alias($this->type())->length(10))
         ];
     }
 ```
