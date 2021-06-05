@@ -5,8 +5,6 @@
 
 namespace Enea\Tests;
 
-use Orchestra\Database\ConsoleServiceProvider;
-
 class DatabaseTestCase extends TestCase
 {
     public function setUp(): void
@@ -24,12 +22,5 @@ class DatabaseTestCase extends TestCase
             'database' => ':memory:',
             'prefix' => '',
         ]);
-    }
-
-    protected function getPackageProviders($app)
-    {
-        return [
-            ConsoleServiceProvider::class
-        ];
     }
 }
