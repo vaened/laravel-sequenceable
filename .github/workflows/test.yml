@@ -33,7 +33,9 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer require "laravel/framework:8.*" --no-update --no-interaction
+          command: |
+            composer require "laravel/framework:8.*" --no-update --no-interaction
+            composer require "orchestra/testbench:6.*" --no-update --no-interaction
         if: "matrix.laravel == '8'"
 
       - name: Select Laravel 9
@@ -41,7 +43,9 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer require "laravel/framework:9.*" --no-update --no-interaction
+          command: |
+            composer require "laravel/framework:9.*" --no-update --no-interaction
+            composer require "orchestra/testbench:7.*" --no-update --no-interaction
         if: "matrix.laravel == '9'"
 
       - name: Install PHP  Dependencies
