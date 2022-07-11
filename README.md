@@ -1,6 +1,6 @@
 # Laravel Sequenceable Package
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/vaened/laravel-sequenceable/badges/quality-score.png?b=upgrade)](https://scrutinizer-ci.com/g/vaened/laravel-sequenceable/?branch=upgrade)  [![Build Status](https://travis-ci.org/vaened/laravel-sequenceable.svg?branch=master)](https://travis-ci.org/vaened/laravel-sequenceable)  [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) 
+[![Build Status](https://github.com/vaened/laravel-sequenceable/actions/workflows/test.yml/badge.svg)](https://github.com/vaened/laravel-sequenceable/actions?query=workflow%3ATests) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/vaened/laravel-sequenceable/badges/quality-score.png?b=upgrade)](https://scrutinizer-ci.com/g/vaened/laravel-sequenceable/?branch=upgrade) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) 
 
 Laravel Sequenceable is a library to generate and manage sequences for laravel models.
 
@@ -16,7 +16,7 @@ Serie::lineal('document_number')->alias('invoice')->length(8);
 ```
 
 ## Installation
-Laravel Sequenceable requires PHP 7.4. This version supports Laravel 7
+Laravel Sequenceable requires PHP 8.1. This version supports Laravel 8
 
 To get the latest version, simply require the project using Composer:
 ```sh
