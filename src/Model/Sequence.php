@@ -6,10 +6,11 @@
 namespace Enea\Sequenceable\Model;
 
 use Enea\Sequenceable\Contracts\SequenceContract;
-use Enea\Sequenceable\Serie;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
+use Vaened\SequenceGenerator\Contracts\SequenceValue;
+use Vaened\SequenceGenerator\Serie;
+use function hash;
 
 /**
  * Model Sequence.
@@ -130,54 +131,65 @@ class Sequence extends Model implements SequenceContract
         return $this->sequence;
     }
 
-    /**
-     * {@inheritdoc}
-     * */
-    public function getColumnID(): string
+    public function getAllFrom(string $source): array
     {
-        return $this->column_id;
+        return static::query()->where('source', '=', $source)->get()->all();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getSourceValue(): string
+    public function getCurrentValue(string $source, Serie $serie): SequenceValue
+    {
+        return $this->findOrCreateSeSequenceModel($source, $serie);
+    }
+
+    public function incrementByOne(string $source, Serie $serie): SequenceValue
+    {
+        $model = $this->findOrCreateSeSequenceModel($source, $serie);
+        $model->increment('sequence', 1);
+        return $model;
+    }
+
+    public function setValue(string $source, Serie $serie, int $quantity): SequenceValue
+    {
+        $model = $this->getSequenceModelInstance($source, $serie);
+        $model->setAttribute('sequence', $quantity);
+        $model->save();
+
+        return $model;
+    }
+
+    protected function findOrCreateSeSequenceModel(string $table, Serie $serie): static
+    {
+        $model = $this->getSequenceModelInstance($table, $serie);
+        $model->save();
+        return $model;
+    }
+
+    private function getSequenceModelInstance(string $source, Serie $serie): static
+    {
+        $qualifiedName = $serie->getQualifiedName();
+        $sequenceID    = $this->createSequenceID($source, $qualifiedName);
+
+        $model = static::query()->firstOrNew(['id' => $sequenceID], [
+            'source' => $source,
+            'column_id' => $qualifiedName,
+            'created_at' => Carbon::now(),
+        ]);
+
+        return $model;
+    }
+
+    public function getSource(): string
     {
         return $this->source;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getSeriesFrom(string $table): Collection
+    public function getQualifiedName(): string
     {
-        return static::query()->where('source', '=', $table)->get();
+        return $this->column_id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function incrementOneTo(string $table, Serie $serie): int
+    protected function createSequenceID(string $table, string $qualifiedName): string
     {
-        $model = $this->findOrCreateSerieModel($table, $serie);
-        $model->increment('sequence', 1);
-        return $model->getAttributeValue('sequence');
-    }
-
-    protected function findOrCreateSerieModel(string $table, Serie $serie): Model
-    {
-        $columnID = $serie->getColumnID();
-        $serieID = $this->createSerieID($table, $columnID);
-
-        return static::query()->firstOrCreate(['id' => $serieID], [
-            'source' => $table,
-            'column_id' => $columnID,
-            'created_at' => Carbon::now(),
-        ]);
-    }
-
-    protected function createSerieID(string $table, string $columnID): string
-    {
-        return hash(self::HASH, "{$table}.{$columnID}", false);
+        return hash(self::HASH, "$table.$qualifiedName", false);
     }
 }
