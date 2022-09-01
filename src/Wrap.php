@@ -6,6 +6,7 @@
 namespace Enea\Sequenceable;
 
 use Closure;
+use Vaened\SequenceGenerator\Collection as SerieCollection;
 
 class Wrap
 {
@@ -18,16 +19,17 @@ class Wrap
         $this->sequence = $sequence;
     }
 
-    public static function create(string $sequence, Closure $configure): array
+    public static function create(string $sequence, Closure $configure): SerieCollection
     {
         $wrap = new static($sequence);
         $configure($wrap);
-        return $wrap->sequences;
+
+        return new SerieCollection(new $sequence, $wrap->sequences);
     }
 
     public function column(string $column): Serie
     {
-        $this->sequences[] = $serie = new Serie($column, $this->sequence);
+        $this->sequences[] = $serie = new Serie($column);
         return $serie;
     }
 }

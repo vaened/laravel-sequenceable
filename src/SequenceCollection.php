@@ -19,7 +19,7 @@ class SequenceCollection
 
     public function push(SequenceContract $sequence)
     {
-        $this->sequences[$sequence->getColumnID()] = $sequence;
+        $this->sequences[$sequence->getQualifiedName()] = $sequence;
     }
 
     public function find(string $column, string $alias = null): ?SequenceContract
