@@ -5,9 +5,9 @@
 
 namespace Enea\Sequenceable\Exceptions;
 
-use Exception;
+use Vaened\SequenceGenerator\Exceptions\SequenceError;
 
-class SequenceException extends Exception
+class SequenceException extends SequenceError
 {
     // ...
 }
