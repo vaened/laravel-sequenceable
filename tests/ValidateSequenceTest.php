@@ -7,14 +7,14 @@ namespace Enea\Tests;
 
 use Enea\Sequenceable\Serie;
 use Enea\Tests\Models\Document;
-use LogicException;
+use Vaened\SequenceGenerator\Exceptions\SequenceError;
 
 class ValidateSequenceTest extends DatabaseTestCase
 {
     public function test_add_the_same_column_multiple_times_throw_an_exception(): void
     {
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage("Column 'number' should only have one sequence");
+        $this->expectException(SequenceError::class);
+        $this->expectExceptionMessage("the name 'number' is already registered");
 
         Document::create([
             Serie::lineal('number'),

@@ -10,6 +10,8 @@ use Enea\Sequenceable\SequenceCollection;
 use Enea\Sequenceable\Succession;
 use Enea\Tests\Models\CustomSequence;
 use Enea\Tests\Models\Document;
+use Vaened\SequenceGenerator\Normalizer;
+use function resolve;
 
 class SuccessionTest extends DatabaseTestCase
 {
@@ -31,7 +33,7 @@ class SuccessionTest extends DatabaseTestCase
         $sequence = $collection->find('number_string');
 
         $this->assertEquals(3, $sequence->current());
-        $this->assertEquals('number_string', $sequence->getColumnID());
+        $this->assertEquals('number_string', $sequence->getQualifiedName());
     }
 
     public function test_find_a_model_with_alias(): void
@@ -40,7 +42,7 @@ class SuccessionTest extends DatabaseTestCase
         $sequence = $collection->find('number', 'document');
 
         $this->assertEquals(3, $sequence->current());
-        $this->assertEquals('number.document', $sequence->getColumnID());
+        $this->assertEquals('number.document', $sequence->getQualifiedName());
     }
 
     public function test_returns_the_specific_model_of_the_sequence(): void
@@ -53,7 +55,7 @@ class SuccessionTest extends DatabaseTestCase
 
     private function getSequenceCollection(): SequenceCollection
     {
-        return (new Succession())->from(Document::class);
+        return resolve(Succession::class)->from(Document::class);
     }
 
     private function loadSequences(): void

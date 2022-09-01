@@ -7,6 +7,7 @@ namespace Enea\Tests\Sequences;
 
 use Enea\Sequenceable\Serie;
 use Enea\Tests\Models\Document;
+use Vaened\SequenceGenerator\Stylists\FixedLength;
 
 class FixedLengthSequenceTest extends SequenceTestCase
 {
@@ -22,9 +23,9 @@ class FixedLengthSequenceTest extends SequenceTestCase
     protected function models(): array
     {
         return [
-            Document::create([Serie::lineal('number_string')->length(10)]),
-            Document::create([Serie::lineal('number_string')->length(10)]),
-            Document::create([Serie::lineal('number_string')->length(10)]),
+            Document::create([Serie::lineal('number_string')->styles([FixedLength::of(10)])]),
+            Document::create([Serie::lineal('number_string')->styles([FixedLength::of(10)])]),
+            Document::create([Serie::lineal('number_string')->styles([FixedLength::of(10)])]),
         ];
     }
 

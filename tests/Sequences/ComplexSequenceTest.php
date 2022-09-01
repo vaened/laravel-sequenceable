@@ -9,6 +9,8 @@ use Enea\Sequenceable\Serie;
 use Enea\Sequenceable\Wrap;
 use Enea\Tests\Models\CustomSequence;
 use Enea\Tests\Models\Document;
+use Vaened\SequenceGenerator\Stylists\FixedLength;
+use Vaened\SequenceGenerator\Stylists\Prefixed;
 
 class ComplexSequenceTest extends SequenceTestCase
 {
@@ -42,9 +44,12 @@ class ComplexSequenceTest extends SequenceTestCase
     protected function models(): array
     {
         return [
-            Document::create([Serie::lineal('number_string')->alias('invoice')->length(5)], ['type' => 'invoice']),
-            Document::create([Serie::lineal('number_string')->alias('ticket')->length(8)], ['type' => 'ticket']),
-            Document::create([Serie::lineal('number_string')->alias('ticket')->length(8)], ['type' => 'ticket']),
+            Document::create([Serie::for('number_string')->alias('invoice')->styles([FixedLength::of(5)])], ['type' => 'invoice']),
+            Document::create([Serie::for('number_string')->alias('ticket')->styles([FixedLength::of(8)])], ['type' => 'ticket']),
+            Document::create([Serie::for('number_string')->alias('ticket')->styles([
+                FixedLength::of(8),
+                Prefixed::of('A')
+            ])], ['type' => 'ticket']),
 
             Document::create([
                 Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('val')),
@@ -53,7 +58,7 @@ class ComplexSequenceTest extends SequenceTestCase
             Document::create([
                 Wrap::create(CustomSequence::class, function (Wrap $wrap): void {
                     $wrap->column('number')->alias('val');
-                    $wrap->column('number_string')->alias('val')->length(3);
+                    $wrap->column('number_string')->alias('val')->styles([FixedLength::of(3)]);
                 }),
             ], ['type' => 'val']),
         ];
@@ -64,7 +69,7 @@ class ComplexSequenceTest extends SequenceTestCase
         return [
             ['number' => null, 'number_string' => '00001', 'type' => 'invoice'],
             ['number' => null, 'number_string' => '00000001', 'type' => 'ticket'],
-            ['number' => null, 'number_string' => '00000002', 'type' => 'ticket'],
+            ['number' => null, 'number_string' => 'A0000002', 'type' => 'ticket'],
 
             ['number' => 1, 'number_string' => null, 'type' => 'val'],
             ['number' => 2, 'number_string' => '001', 'type' => 'val'],

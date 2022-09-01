@@ -6,9 +6,10 @@
 namespace Enea\Tests\Models;
 
 use Enea\Sequenceable\Contracts\SequenceContract;
-use Enea\Sequenceable\Serie;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Vaened\SequenceGenerator\Contracts\SequenceValue;
+use Vaened\SequenceGenerator\Serie as BaseSerie;
 
 /**
  * Model Sequence.
@@ -69,42 +70,55 @@ class CustomSequence extends Model implements SequenceContract
     /**
      * {@inheritdoc}
      * */
-    public function getColumnID(): string
-    {
-        return $this->getAttributeValue('column_id');
-    }
-
-    /**
-     * {@inheritdoc}
-     * */
     public function getSeriesFrom(string $table): Collection
     {
         return static::query()->where('source', $table)->get();
     }
 
-    /**
-     * {@inheritdoc}
-     * */
-    public function getSourceValue(): string
-    {
-        return $this->getAttributeValue('source');
-    }
-
-    /**
-     * {@inheritdoc}
-     * */
-    public function incrementOneTo(string $table, Serie $serie): int
-    {
-        $model = $this->locateSerieModel($table, $serie);
-        $model->increment('sequence');
-        return $model->getAttributeValue('sequence');
-    }
-
-    protected function locateSerieModel(string $table, Serie $serie): Model
+    protected function locateSerieModel(string $table, BaseSerie $serie): static
     {
         return static::query()->firstOrCreate([
             'source' => $table,
-            'column_id' => $serie->getColumnID()
+            'column_id' => $serie->getQualifiedName()
         ]);
+    }
+
+    public function getAllFrom(string $source): array
+    {
+        return $this->getSeriesFrom($source)->all();
+    }
+
+    public function getCurrentValue(string $source, BaseSerie $serie): SequenceValue
+    {
+        return $this->locateSerieModel($source, $serie);
+    }
+
+    public function incrementByOne(string $source, BaseSerie $serie): SequenceValue
+    {
+        $model = $this->locateSerieModel($source, $serie);
+        $model->increment('sequence');
+        return $model;
+    }
+
+    public function setValue(string $source, BaseSerie $serie, int $quantity): SequenceValue
+    {
+        $model = static::query()->updateOrCreate([
+            'source' => $source,
+            'column_id' => $serie->getSerieName()
+        ], [
+            'sequence' => $quantity,
+        ]);
+
+        return $model;
+    }
+
+    public function getSource(): string
+    {
+        return $this->getSourceValue();
+    }
+
+    public function getQualifiedName(): string
+    {
+        return $this->getAttributeValue('column_id');
     }
 }

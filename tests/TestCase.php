@@ -5,9 +5,30 @@
 
 namespace Enea\Tests;
 
+use Enea\Sequenceable\Contracts\SequenceContract;
+use Enea\Sequenceable\Model\Sequence;
+use Enea\Sequenceable\SequenceableServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use function config;
 
 class TestCase extends BaseTestCase
 {
-    //..
+    public function getDefaultSequenceModel(): SequenceContract
+    {
+        $model = config('sequenceable.model') ?: Sequence::class;
+        return new $model();
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        $config = $app->make('config');
+        $config->set('sequenceable.model', Sequence::class);
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [
+            SequenceableServiceProvider::class,
+        ];
+    }
 }
