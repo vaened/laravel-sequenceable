@@ -5,7 +5,6 @@
 
 namespace Enea\Sequenceable;
 
-use JetBrains\PhpStorm\Deprecated;
 use Vaened\SequenceGenerator\Serie as BaseSerie;
 use Vaened\SequenceGenerator\Stylists\FixedLength;
 
@@ -16,8 +15,14 @@ final class Serie extends BaseSerie
         return new self($column);
     }
 
-    #[Deprecated]
-    public function length(?int $fixedLength): self
+    /** @Deprecated */
+    public function alias(string ...$aliases): self
+    {
+        $this->scope(...$aliases);
+        return $this;
+    }
+
+    public function length(int $fixedLength): self
     {
         $this->styles([new FixedLength($fixedLength)]);
         return $this;

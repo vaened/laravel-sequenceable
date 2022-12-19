@@ -8,15 +8,15 @@ Laravel Sequenceable is a library to generate and manage sequences for laravel m
 // simple sequence
 Serie::lineal('document_number');
 
-// sequence with an alias
-Serie::lineal('document_number')->alias('invoice');
+// sequence with scope
+Serie::lineal('document_number')->scope('invoice');
 
-// sequence with an alias and fixed length
-Serie::lineal('document_number')->alias('invoice')->length(8);
+// sequence with scope and fixed length
+Serie::lineal('document_number')->scope('invoice')->length(8);
 ```
 
 ## Installation
-Laravel Sequenceable requires PHP 8.1. This version supports Laravel 8
+Laravel Sequenceable requires PHP 8.1.
 
 To get the latest version, simply require the project using Composer:
 ```sh
@@ -70,13 +70,13 @@ We exemplify all the options to generate a `sequence` with the case of a payment
         return [ Serie::lineal('document_number') ];
     }
 ```
-- Now that we have the column defined, we realize that we need to create a separate sequence for each type of document. For this problem, the library offers the possibility of adding an alias for the column.
+- Now that we have the column defined, we realize that we need to create a separate sequence for each type of document. For this problem, the library offers the possibility of adding an scope for the column.
 
 ```php
     public function sequencesSetup(): array
     {
         return [ 
-            Serie::lineal('document_number')->alias($this->type())
+            Serie::lineal('document_number')->scope($this->type())
         ];
     }
 
@@ -91,7 +91,7 @@ We exemplify all the options to generate a `sequence` with the case of a payment
     public function sequencesSetup(): array
     {
         return [ 
-            Serie::lineal('document_number')->alias($this->type())->length(10)
+            Serie::lineal('document_number')->scope($this->type())->length(10)
         ];
     }
 ```
@@ -104,7 +104,7 @@ We exemplify all the options to generate a `sequence` with the case of a payment
     {
         return [ 
             Wrap::create(PaymentSequence::class, 
-                         fn(Wrap $wrap) => $wrap->column('document_number')->alias($this->type())->length(10))
+                         fn(Wrap $wrap) => $wrap->column('document_number')->scope($this->type())->length(10))
         ];
     }
 ```
@@ -161,7 +161,7 @@ if you already have a model to store your sequences, you need to implement the [
 
 In case you have your own sequence model, there are some fields that you should store in its sequence table:
 
-1. The **column ID**, and this is obtained by concatenating the column name and alias.
+1. The **column ID**, and this is obtained by concatenating the column name and scope.
 2. The name of the **table** to which the sequence belongs.
 3. An integer type **sequence**.
 
@@ -182,10 +182,10 @@ The table structure has the required fields, you can see the migration in [`Crea
 
  Column         | Description								| Required 
 ------------------------|---------------------------------------------------------------------------------|:-:
- **id**      | It is generated on the basis of the union of the table, column and alias 										|:x:
+ **id**      | It is generated on the basis of the union of the table, column and scope 										|:x:
 **sequence**    | Stores the last value in the sequence |:white_check_mark:
 **source**          | Stores the table name | :white_check_mark:
-**column_id**   | Concatenated name and alias | :white_check_mark:
+**column_id**   | Concatenated name and scope | :white_check_mark:
 **created_at**  | Indicates the date and time the sequence was created |:x:
 **updated_at**  | Indicates the last time the sequence is updated |:x:
 
