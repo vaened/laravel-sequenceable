@@ -44,7 +44,7 @@ class Document extends Model implements SequenceableContract
     private function defaultSequences(): array
     {
         return [
-            Serie::lineal('number')->alias('document'),
+            Serie::lineal('number')->scope('document'),
             Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number_string')),
         ];
     }

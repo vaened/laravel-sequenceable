@@ -28,9 +28,9 @@ class AliasSequenceTest extends SequenceTestCase
     protected function models(): array
     {
         return [
-            Document::create([Serie::lineal('number')->alias('invoice')], ['type' => 'invoice']),
-            Document::create([Serie::lineal('number')->alias('invoice')], ['type' => 'invoice']),
-            Document::create([Serie::lineal('number')->alias('ticket')], ['type' => 'ticket']),
+            Document::create([Serie::lineal('number')->scope('invoice')], ['type' => 'invoice']),
+            Document::create([Serie::lineal('number')->scope('invoice')], ['type' => 'invoice']),
+            Document::create([Serie::lineal('number')->scope('ticket')], ['type' => 'ticket']),
         ];
     }
 

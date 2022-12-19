@@ -18,7 +18,7 @@ class ValidateSequenceTest extends DatabaseTestCase
 
         Document::create([
             Serie::lineal('number'),
-            Serie::lineal('number')->alias('invoice'),
+            Serie::lineal('number')->scope('invoice'),
         ])->save();
     }
 

@@ -17,48 +17,65 @@ class ComplexSequenceTest extends SequenceTestCase
     public function test_generate_sequence(): void
     {
         $this->assertDatabaseHas('sequences', [
-            'source' => 'documents',
+            'source'    => 'documents',
             'column_id' => 'number_string.invoice',
-            'sequence' => 1
+            'sequence'  => 1
         ]);
 
         $this->assertDatabaseHas('sequences', [
-            'source' => 'documents',
+            'source'    => 'documents',
             'column_id' => 'number_string.ticket',
-            'sequence' => 2
+            'sequence'  => 2
         ]);
 
         $this->assertDatabaseHas('custom_sequences', [
-            'source' => 'documents',
+            'source'    => 'documents',
             'column_id' => 'number.val',
-            'sequence' => 2
+            'sequence'  => 2
         ]);
 
         $this->assertDatabaseHas('custom_sequences', [
-            'source' => 'documents',
+            'source'    => 'documents',
             'column_id' => 'number_string.val',
-            'sequence' => 1
+            'sequence'  => 1
         ]);
     }
 
     protected function models(): array
     {
         return [
-            Document::create([Serie::for('number_string')->alias('invoice')->styles([FixedLength::of(5)])], ['type' => 'invoice']),
-            Document::create([Serie::for('number_string')->alias('ticket')->styles([FixedLength::of(8)])], ['type' => 'ticket']),
-            Document::create([Serie::for('number_string')->alias('ticket')->styles([
-                FixedLength::of(8),
-                Prefixed::of('A')
-            ])], ['type' => 'ticket']),
+            Document::create(
+                [
+                    Serie::for('number_string')
+                        ->scope('invoice')
+                        ->styles([FixedLength::of(5)])
+                ], ['type' => 'invoice']
+            ),
+            Document::create([
+                Serie::for('number_string')
+                    ->scope('ticket')
+                    ->styles([FixedLength::of(8)])
+            ], ['type' => 'ticket']),
+            Document::create([
+                Serie::for('number_string')
+                    ->scope('ticket')
+                    ->styles([
+                        FixedLength::of(8),
+                        Prefixed::of('A')
+                    ])
+            ], ['type' => 'ticket']),
 
             Document::create([
-                Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('val')),
+                Wrap::create(
+                    CustomSequence::class,
+                    static fn(Wrap $wrap) => $wrap->column('number')->scope('val')
+                ),
             ], ['type' => 'val']),
 
             Document::create([
                 Wrap::create(CustomSequence::class, function (Wrap $wrap): void {
-                    $wrap->column('number')->alias('val');
-                    $wrap->column('number_string')->alias('val')->styles([FixedLength::of(3)]);
+                    $wrap->column('number')->scope('val');
+                    $wrap->column('number_string')->scope('val')->styles([FixedLength::of(3)]);
                 }),
             ], ['type' => 'val']),
         ];

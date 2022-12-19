@@ -15,9 +15,9 @@ class CustomSequenceModelTest extends SequenceTestCase
     {
         $this->assertDatabaseCount('sequences', 0);
         $this->assertDatabaseHas('custom_sequences', [
-            'source' => 'documents',
+            'source'    => 'documents',
             'column_id' => 'number.hai',
-            'sequence' => 2
+            'sequence'  => 2
         ]);
     }
 
@@ -25,11 +25,17 @@ class CustomSequenceModelTest extends SequenceTestCase
     {
         return [
             Document::create([
-                Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('hai')),
+                Wrap::create(
+                    CustomSequence::class,
+                    static fn(Wrap $wrap) => $wrap->column('number')->scope('hai')
+                ),
             ], ['type' => 'hai']),
 
             Document::create([
-                Wrap::create(CustomSequence::class, fn(Wrap $wrap) => $wrap->column('number')->alias('hai')),
+                Wrap::create(
+                    CustomSequence::class,
+                    static fn(Wrap $wrap) => $wrap->column('number')->scope('hai')
+                ),
             ], ['type' => 'hai']),
         ];
     }
