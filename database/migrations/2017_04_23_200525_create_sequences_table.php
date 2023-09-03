@@ -11,10 +11,10 @@ class CreateSequencesTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('sequences', function (Blueprint $table) {
-            $table->char('id', 8);
+            $table->char('id', 64);
             $table->primary('id');
 
             $table->unsignedBigInteger('sequence')->default(0);

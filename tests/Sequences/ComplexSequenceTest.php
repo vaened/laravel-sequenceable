@@ -5,12 +5,15 @@
 
 namespace Enea\Tests\Sequences;
 
+use Enea\Sequenceable\Model\Sequence;
 use Enea\Sequenceable\Serie;
 use Enea\Sequenceable\Wrap;
 use Enea\Tests\Models\CustomSequence;
 use Enea\Tests\Models\Document;
 use Vaened\SequenceGenerator\Stylists\FixedLength;
 use Vaened\SequenceGenerator\Stylists\Prefixed;
+
+use function dd;
 
 class ComplexSequenceTest extends SequenceTestCase
 {
@@ -79,6 +82,12 @@ class ComplexSequenceTest extends SequenceTestCase
                 }),
             ], ['type' => 'val']),
         ];
+    }
+
+    public function test_test(): void
+    {
+        $this->test_generate_sequence();
+        dd(Sequence::query()->get()->toArray());
     }
 
     public function getExpectedDocumentValues(): array

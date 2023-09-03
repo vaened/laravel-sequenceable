@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Vaened\SequenceGenerator\Contracts\SequenceValue;
 use Vaened\SequenceGenerator\Serie;
+
+use function config;
+use function dd;
 use function hash;
 
 /**
@@ -24,13 +27,6 @@ use function hash;
  * */
 class Sequence extends Model implements SequenceContract
 {
-    /**
-     * Codification adler32.
-     *
-     * @var string
-     */
-    const HASH = 'adler32';
-
     /**
      * The table associated with the model.
      *
@@ -190,6 +186,6 @@ class Sequence extends Model implements SequenceContract
 
     protected function createSequenceID(string $table, string $qualifiedName): string
     {
-        return hash(self::HASH, "$table.$qualifiedName", false);
+        return hash(config('sequenceable.hash', 'sha256'), "$table.$qualifiedName");
     }
 }

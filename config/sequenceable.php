@@ -4,6 +4,18 @@
  */
 
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | ID Hash
+    |--------------------------------------------------------------------------
+    |
+    | This is used to determine the default hashing method
+    | applied to the generated IDs within the default sequences model.
+    |
+    */
+    'hash' => 'sha256',
+
     /*
     |--------------------------------------------------------------------------
     | Sequence Model
@@ -15,5 +27,5 @@ return [
     |
     */
 
-    'model' => \Enea\Sequenceable\Model\Sequence::class
+    'model' => Enea\Sequenceable\Model\Sequence::class
 ];
