@@ -1,6 +1,7 @@
 # Laravel Sequenceable Package
 
-[![Build Status](https://github.com/vaened/laravel-sequenceable/actions/workflows/test.yml/badge.svg)](https://github.com/vaened/laravel-sequenceable/actions?query=workflow%3ATests) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/vaened/laravel-sequenceable/badges/quality-score.png?b=upgrade)](https://scrutinizer-ci.com/g/vaened/laravel-sequenceable/?branch=upgrade) [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) 
+[![Build Status](https://github.com/vaened/laravel-sequenceable/actions/workflows/test.yml/badge.svg)](https://github.com/vaened/laravel-sequenceable/actions?query=workflow%3ATests) 
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md) 
 
 Laravel Sequenceable is a library to generate and manage sequences for laravel models.
 
@@ -20,7 +21,7 @@ Laravel Sequenceable requires PHP 8.1.
 
 To get the latest version, simply require the project using Composer:
 ```sh
-$ composer require enea/laravel-sequenceable
+composer require enea/laravel-sequenceable
 ```
 
 Once installed, if you are not using automatic package discovery, then you need to register the [`Enea\Sequenceable\SequenceableServiceProvider`](https://github.com/vaened/laravel-sequenceable/blob/master/src/SequenceableServiceProvider.php) service provider in your `config/app.php`.
@@ -28,12 +29,12 @@ Once installed, if you are not using automatic package discovery, then you need 
 Now. Publish the configuration file.
 
 ```sh
-$ php artisan vendor:publish --provider='Enea\Sequenceable\SequenceableServiceProvider'
+php artisan vendor:publish --provider='Enea\Sequenceable\SequenceableServiceProvider'
 ```
 And finally run migrations.
 
 ```sh
-$ php artisan migrate
+php artisan migrate
 ```
 
 ## Basic Usage
