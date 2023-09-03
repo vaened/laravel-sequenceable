@@ -7,17 +7,37 @@ namespace Enea\Sequenceable;
 
 use Vaened\SequenceGenerator\Serie as BaseSerie;
 use Vaened\SequenceGenerator\Stylists\FixedLength;
+use Vaened\SequenceGenerator\Stylists\Prefixed;
 
-final class Serie extends BaseSerie
+class Serie extends BaseSerie
 {
-    public static function lineal(string $column): self
+    private array $stylists = [];
+
+    public static function lineal(string $column): static
     {
         return new self($column);
     }
 
-    public function length(int $fixedLength): self
+    public function prefixed(string $prefix): static
     {
-        $this->styles([new FixedLength($fixedLength)]);
+        $this->stylists[] = new Prefixed($prefix);
         return $this;
+    }
+
+    public function length(int $fixedLength): static
+    {
+        $this->stylists[] = new FixedLength($fixedLength);
+        return $this;
+    }
+
+    public function styles(array $stylists): static
+    {
+        $this->stylists = $stylists;
+        return $this;
+    }
+
+    public function getStylists(): array
+    {
+        return $this->stylists;
     }
 }
