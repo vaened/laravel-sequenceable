@@ -5,15 +5,12 @@
 
 namespace Enea\Tests\Sequences;
 
-use Enea\Sequenceable\Model\Sequence;
 use Enea\Sequenceable\Serie;
 use Enea\Sequenceable\Wrap;
 use Enea\Tests\Models\CustomSequence;
 use Enea\Tests\Models\Document;
 use Vaened\SequenceGenerator\Stylists\FixedLength;
 use Vaened\SequenceGenerator\Stylists\Prefixed;
-
-use function dd;
 
 class ComplexSequenceTest extends SequenceTestCase
 {
@@ -44,52 +41,6 @@ class ComplexSequenceTest extends SequenceTestCase
         ]);
     }
 
-    protected function models(): array
-    {
-        return [
-            Document::create(
-                [
-                    Serie::for('number_string')
-                        ->scope('invoice')
-                        ->styles([FixedLength::of(5)])
-                ], ['type' => 'invoice']
-            ),
-            Document::create([
-                Serie::for('number_string')
-                    ->scope('ticket')
-                    ->styles([FixedLength::of(8)])
-            ], ['type' => 'ticket']),
-            Document::create([
-                Serie::for('number_string')
-                    ->scope('ticket')
-                    ->styles([
-                        FixedLength::of(8),
-                        Prefixed::of('A')
-                    ])
-            ], ['type' => 'ticket']),
-
-            Document::create([
-                Wrap::create(
-                    CustomSequence::class,
-                    static fn(Wrap $wrap) => $wrap->column('number')->scope('val')
-                ),
-            ], ['type' => 'val']),
-
-            Document::create([
-                Wrap::create(CustomSequence::class, function (Wrap $wrap): void {
-                    $wrap->column('number')->scope('val');
-                    $wrap->column('number_string')->scope('val')->styles([FixedLength::of(3)]);
-                }),
-            ], ['type' => 'val']),
-        ];
-    }
-
-    public function test_test(): void
-    {
-        $this->test_generate_sequence();
-        dd(Sequence::query()->get()->toArray());
-    }
-
     public function getExpectedDocumentValues(): array
     {
         return [
@@ -99,6 +50,46 @@ class ComplexSequenceTest extends SequenceTestCase
 
             ['number' => 1, 'number_string' => null, 'type' => 'val'],
             ['number' => 2, 'number_string' => '001', 'type' => 'val'],
+        ];
+    }
+
+    protected function models(): array
+    {
+        return [
+            Document::create(
+                [
+                    Serie::for('number_string')
+                         ->scope('invoice')
+                         ->styles([FixedLength::of(5)])
+                ], ['type' => 'invoice']
+            ),
+            Document::create([
+                                 Serie::for('number_string')
+                                      ->scope('ticket')
+                                      ->styles([FixedLength::of(8)])
+                             ], ['type' => 'ticket']),
+            Document::create([
+                                 Serie::for('number_string')
+                                      ->scope('ticket')
+                                      ->styles([
+                                                   FixedLength::of(8),
+                                                   Prefixed::of('A')
+                                               ])
+                             ], ['type' => 'ticket']),
+
+            Document::create([
+                                 Wrap::create(
+                                     CustomSequence::class,
+                                     static fn(Wrap $wrap) => $wrap->column('number')->scope('val')
+                                 ),
+                             ], ['type' => 'val']),
+
+            Document::create([
+                                 Wrap::create(CustomSequence::class, function (Wrap $wrap): void {
+                                     $wrap->column('number')->scope('val');
+                                     $wrap->column('number_string')->scope('val')->styles([FixedLength::of(3)]);
+                                 }),
+                             ], ['type' => 'val']),
         ];
     }
 }
