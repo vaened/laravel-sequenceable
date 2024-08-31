@@ -8,6 +8,7 @@ namespace Enea\Tests\Models;
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Vaened\SequenceGenerator\Contracts\SequenceValue;
 use Vaened\SequenceGenerator\Serie as BaseSerie;
 
@@ -16,10 +17,18 @@ use Vaened\SequenceGenerator\Serie as BaseSerie;
  *
  * Attributes
  *
+ * @property  string source
  * @property  int sequence
  * */
 class CustomSequence extends Model implements SequenceContract
 {
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -35,13 +44,6 @@ class CustomSequence extends Model implements SequenceContract
     protected $casts = [
         'sequence' => 'int'
     ];
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     /**
      * {@inheritdoc}
@@ -75,14 +77,6 @@ class CustomSequence extends Model implements SequenceContract
         return static::query()->where('source', $table)->get();
     }
 
-    protected function locateSerieModel(string $table, BaseSerie $serie): static
-    {
-        return static::query()->firstOrCreate([
-            'source' => $table,
-            'column_id' => $serie->getQualifiedName()
-        ]);
-    }
-
     public function getAllFrom(string $source): array
     {
         return $this->getSeriesFrom($source)->all();
@@ -95,30 +89,40 @@ class CustomSequence extends Model implements SequenceContract
 
     public function incrementByOne(string $source, BaseSerie $serie): SequenceValue
     {
-        $model = $this->locateSerieModel($source, $serie);
-        $model->increment('sequence');
-        return $model;
+        return DB::transaction(function () use ($source, $serie) {
+            $model = $this->locateSerieModel($source, $serie);
+            $model->increment('sequence');
+            return $model;
+        });
     }
 
     public function setValue(string $source, BaseSerie $serie, int $quantity): SequenceValue
     {
-        $model = static::query()->updateOrCreate([
-            'source' => $source,
-            'column_id' => $serie->getSerieName()
-        ], [
-            'sequence' => $quantity,
-        ]);
-
-        return $model;
+        return DB::transaction(function () use ($source, $serie, $quantity) {
+            return static::query()->lockForUpdate()->updateOrCreate([
+                'source'    => $source,
+                'column_id' => $serie->getSerieName()
+            ], [
+                'sequence' => $quantity,
+            ]);
+        });
     }
 
     public function getSource(): string
     {
-        return $this->getSourceValue();
+        return $this->source;
     }
 
     public function getQualifiedName(): string
     {
         return $this->getAttributeValue('column_id');
+    }
+
+    protected function locateSerieModel(string $table, BaseSerie $serie): static
+    {
+        return static::query()->lockForUpdate()->firstOrCreate([
+            'source'    => $table,
+            'column_id' => $serie->getQualifiedName()
+        ]);
     }
 }

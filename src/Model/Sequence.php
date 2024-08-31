@@ -8,11 +8,11 @@ namespace Enea\Sequenceable\Model;
 use Enea\Sequenceable\Contracts\SequenceContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Vaened\SequenceGenerator\Contracts\SequenceValue;
 use Vaened\SequenceGenerator\Serie;
 
 use function config;
-use function dd;
 use function hash;
 
 /**
@@ -28,20 +28,6 @@ use function hash;
 class Sequence extends Model implements SequenceContract
 {
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'sequences';
-
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = ['next', 'prev', 'current'];
-
-    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
@@ -54,6 +40,20 @@ class Sequence extends Model implements SequenceContract
      * @var bool
      */
     public $incrementing = false;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'sequences';
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['next', 'prev', 'current'];
 
     /**
      * The attributes that are mass assignable.
@@ -139,39 +139,23 @@ class Sequence extends Model implements SequenceContract
 
     public function incrementByOne(string $source, Serie $serie): SequenceValue
     {
-        $model = $this->findOrCreateSeSequenceModel($source, $serie);
-        $model->increment('sequence', 1);
-        return $model;
+        return DB::transaction(function () use ($source, $serie) {
+            $model = $this->findOrCreateSeSequenceModel($source, $serie);
+            $model->increment('sequence');
+
+            return $model;
+        });
     }
 
     public function setValue(string $source, Serie $serie, int $quantity): SequenceValue
     {
-        $model = $this->getSequenceModelInstance($source, $serie);
-        $model->setAttribute('sequence', $quantity);
-        $model->save();
+        return DB::transaction(function () use ($source, $serie, $quantity) {
+            $model = $this->getSequenceModelInstance($source, $serie);
+            $model->setAttribute('sequence', $quantity);
+            $model->save();
 
-        return $model;
-    }
-
-    protected function findOrCreateSeSequenceModel(string $table, Serie $serie): static
-    {
-        $model = $this->getSequenceModelInstance($table, $serie);
-        $model->save();
-        return $model;
-    }
-
-    private function getSequenceModelInstance(string $source, Serie $serie): static
-    {
-        $qualifiedName = $serie->getQualifiedName();
-        $sequenceID    = $this->createSequenceID($source, $qualifiedName);
-
-        $model = static::query()->firstOrNew(['id' => $sequenceID], [
-            'source' => $source,
-            'column_id' => $qualifiedName,
-            'created_at' => Carbon::now(),
-        ]);
-
-        return $model;
+            return $model;
+        });
     }
 
     public function getSource(): string
@@ -184,8 +168,33 @@ class Sequence extends Model implements SequenceContract
         return $this->column_id;
     }
 
+    protected function findOrCreateSeSequenceModel(string $table, Serie $serie): static
+    {
+        $sequence = $this->getSequenceModelInstance($table, $serie);
+
+        if (!$sequence->exists) {
+            $sequence->save();
+        }
+
+        return $sequence;
+    }
+
     protected function createSequenceID(string $table, string $qualifiedName): string
     {
         return hash(config('sequenceable.hash', 'sha256'), "$table.$qualifiedName");
+    }
+
+    private function getSequenceModelInstance(string $source, Serie $serie): static
+    {
+        $qualifiedName = $serie->getQualifiedName();
+        $sequenceID    = $this->createSequenceID($source, $qualifiedName);
+
+        return static::query()
+                     ->lockForUpdate()
+                     ->firstOrNew(['id' => $sequenceID], [
+                         'source'     => $source,
+                         'column_id'  => $qualifiedName,
+                         'created_at' => Carbon::now(),
+                     ]);
     }
 }
