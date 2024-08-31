@@ -9,7 +9,7 @@ use function config;
 
 class SequenceableServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         $this->app->bind(SequenceRepository::class, function () {
             $model = config('sequenceable.model') ?: Sequence::class;

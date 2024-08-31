@@ -17,7 +17,7 @@ class SequenceCollection
         return collect($this->sequences);
     }
 
-    public function push(SequenceContract $sequence)
+    public function push(SequenceContract $sequence): void
     {
         $this->sequences[$sequence->getQualifiedName()] = $sequence;
     }
