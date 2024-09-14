@@ -127,7 +127,7 @@ class Sequence extends Model implements SequenceContract
         return $this->sequence;
     }
 
-    public function getAllFrom(string $source): array
+    public function getAllFrom(string $source): iterable
     {
         return static::query()->where('source', '=', $source)->get()->all();
     }

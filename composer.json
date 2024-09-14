@@ -18,7 +18,7 @@
   "require": {
     "php": "^8.2",
     "laravel/framework": "^10.21|^v11.15",
-    "vaened/php-sequence-generator": "^1.0.0"
+    "vaened/php-sequence-generator": "^2.0.0"
   },
   "license": "MIT",
   "type": "library",

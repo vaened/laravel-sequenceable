@@ -77,7 +77,7 @@ class CustomSequence extends Model implements SequenceContract
         return static::query()->where('source', $table)->get();
     }
 
-    public function getAllFrom(string $source): array
+    public function getAllFrom(string $source): iterable
     {
         return $this->getSeriesFrom($source)->all();
     }
