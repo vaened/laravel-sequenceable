@@ -3,9 +3,9 @@
  * Created by eneasdh-fs - 11/12/16 09:35 PM.
  */
 
-namespace Enea\Sequenceable\Model;
+namespace Vaened\Sequenceable\Model;
 
-use Enea\Sequenceable\Contracts\SequenceContract;
+use Vaened\Sequenceable\Contracts\SequenceContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;

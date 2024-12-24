@@ -3,21 +3,21 @@
  * Created by enea dhack - 17/06/17 10:16 PM.
  */
 
-namespace Enea\Tests\Models;
+namespace Vaened\Sequenceable\Tests\Models;
 
-use Enea\Sequenceable\Contracts\SequenceableContract;
-use Enea\Sequenceable\Sequenceable;
-use Enea\Sequenceable\Serie;
-use Enea\Sequenceable\Wrap;
 use Illuminate\Database\Eloquent\Model;
+use Vaened\Sequenceable\Contracts\SequenceableContract;
+use Vaened\Sequenceable\Sequenceable;
+use Vaened\Sequenceable\Serie;
+use Vaened\Sequenceable\Wrap;
 
 class Document extends Model implements SequenceableContract
 {
     use Sequenceable;
 
-    protected $fillable = ['number', 'number_string', 'type'];
+    protected     $fillable = ['number', 'number_string', 'type'];
 
-    protected $table = 'documents';
+    protected     $table    = 'documents';
 
     private array $sequences;
 
@@ -34,7 +34,7 @@ class Document extends Model implements SequenceableContract
 
     public function sequencesSetup(): array
     {
-        if (! empty($this->sequences)) {
+        if (!empty($this->sequences)) {
             return $this->sequences;
         }
 

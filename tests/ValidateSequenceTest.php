@@ -3,10 +3,10 @@
  * Created by enea dhack - 30/06/2020 18:21.
  */
 
-namespace Enea\Tests;
+namespace Vaened\Sequenceable\Tests;
 
-use Enea\Sequenceable\Serie;
-use Enea\Tests\Models\Document;
+use Vaened\Sequenceable\Serie;
+use Vaened\Sequenceable\Tests\Models\Document;
 use Vaened\SequenceGenerator\Exceptions\SequenceError;
 
 class ValidateSequenceTest extends DatabaseTestCase

@@ -27,5 +27,5 @@ return [
     |
     */
 
-    'model' => Enea\Sequenceable\Model\Sequence::class
+    'model' => Vaened\Sequenceable\Model\Sequence::class
 ];

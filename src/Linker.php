@@ -3,11 +3,12 @@
  * Created by enea dhack - 25/06/17 02:16 PM.
  */
 
-namespace Enea\Sequenceable;
+namespace Vaened\Sequenceable;
 
-use Enea\Sequenceable\Contracts\SequenceableContract;
+use Vaened\Sequenceable\Contracts\SequenceableContract;
 use Vaened\SequenceGenerator\Generated;
 use Vaened\SequenceGenerator\Generator;
+
 use function collect;
 
 class Linker
@@ -15,7 +16,8 @@ class Linker
     public function __construct(
         private readonly Generator            $generator,
         private readonly SequenceableContract $model
-    ) {
+    )
+    {
     }
 
     public function bind(): void

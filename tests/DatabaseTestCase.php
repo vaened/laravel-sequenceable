@@ -3,7 +3,7 @@
  * Created by enea dhack - 24/06/17 09:52 PM.
  */
 
-namespace Enea\Tests;
+namespace Vaened\Sequenceable\Tests;
 
 class DatabaseTestCase extends TestCase
 {
@@ -19,9 +19,9 @@ class DatabaseTestCase extends TestCase
     {
         parent::getEnvironmentSetUp($app);
         $app['config']->set('database.connections.sqlite', [
-            'driver' => 'sqlite',
+            'driver'   => 'sqlite',
             'database' => ':memory:',
-            'prefix' => '',
+            'prefix'   => '',
         ]);
     }
 }

@@ -3,9 +3,9 @@
  * Created by enea dhack - 27/06/2020 0:15.
  */
 
-namespace Enea\Sequenceable;
+namespace Vaened\Sequenceable;
 
-use Enea\Sequenceable\Contracts\SequenceContract;
+use Vaened\Sequenceable\Contracts\SequenceContract;
 use Illuminate\Support\Collection;
 
 class SequenceCollection

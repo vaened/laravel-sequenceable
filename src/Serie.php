@@ -3,7 +3,7 @@
  * Created by enea dhack - 26/06/2020 15:07.
  */
 
-namespace Enea\Sequenceable;
+namespace Vaened\Sequenceable;
 
 use Vaened\SequenceGenerator\Serie as BaseSerie;
 use Vaened\SequenceGenerator\Stylists\FixedLength;

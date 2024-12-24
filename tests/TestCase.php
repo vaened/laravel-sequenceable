@@ -3,12 +3,12 @@
  * Created by enea dhack - 30/05/2017 04:42 PM.
  */
 
-namespace Enea\Tests;
+namespace Vaened\Sequenceable\Tests;
 
-use Enea\Sequenceable\Contracts\SequenceContract;
-use Enea\Sequenceable\Model\Sequence;
-use Enea\Sequenceable\SequenceableServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use Vaened\Sequenceable\Contracts\SequenceContract;
+use Vaened\Sequenceable\Model\Sequence;
+use Vaened\Sequenceable\SequenceableServiceProvider;
 
 use function config;
 

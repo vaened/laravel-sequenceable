@@ -3,12 +3,12 @@
  * Created by enea dhack - 24/06/17 11:33 PM.
  */
 
-namespace Enea\Tests\Models;
+namespace Vaened\Sequenceable\Tests\Models;
 
-use Enea\Sequenceable\Contracts\SequenceContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Vaened\Sequenceable\Contracts\SequenceContract;
 use Vaened\SequenceGenerator\Contracts\SequenceValue;
 use Vaened\SequenceGenerator\Serie as BaseSerie;
 

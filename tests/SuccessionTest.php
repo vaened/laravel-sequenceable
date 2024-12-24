@@ -3,14 +3,14 @@
  * Created by enea dhack - 27/06/2020 20:10.
  */
 
-namespace Enea\Tests;
+namespace Vaened\Sequenceable\Tests;
 
-use Enea\Sequenceable\Model\Sequence;
-use Enea\Sequenceable\SequenceCollection;
-use Enea\Sequenceable\Succession;
-use Enea\Tests\Models\CustomSequence;
-use Enea\Tests\Models\Document;
-use Vaened\SequenceGenerator\Normalizer;
+use Vaened\Sequenceable\Model\Sequence;
+use Vaened\Sequenceable\SequenceCollection;
+use Vaened\Sequenceable\Succession;
+use Vaened\Sequenceable\Tests\Models\CustomSequence;
+use Vaened\Sequenceable\Tests\Models\Document;
+
 use function resolve;
 
 class SuccessionTest extends DatabaseTestCase
@@ -30,7 +30,7 @@ class SuccessionTest extends DatabaseTestCase
     public function test_find_a_model(): void
     {
         $collection = $this->getSequenceCollection();
-        $sequence = $collection->find('number_string');
+        $sequence   = $collection->find('number_string');
 
         $this->assertEquals(3, $sequence->current());
         $this->assertEquals('number_string', $sequence->getQualifiedName());
@@ -39,7 +39,7 @@ class SuccessionTest extends DatabaseTestCase
     public function test_find_a_model_with_alias(): void
     {
         $collection = $this->getSequenceCollection();
-        $sequence = $collection->find('number', 'document');
+        $sequence   = $collection->find('number', 'document');
 
         $this->assertEquals(3, $sequence->current());
         $this->assertEquals('number.document', $sequence->getQualifiedName());

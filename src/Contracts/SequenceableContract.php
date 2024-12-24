@@ -3,7 +3,7 @@
  * Created by enea dhack - 17/06/17 10:16 PM.
  */
 
-namespace Enea\Sequenceable\Contracts;
+namespace Vaened\Sequenceable\Contracts;
 
 use Illuminate\Support\Collection;
 

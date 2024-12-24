@@ -3,12 +3,13 @@
  * Created by enea dhack - 24/06/17 02:01 PM.
  */
 
-namespace Enea\Sequenceable;
+namespace Vaened\Sequenceable;
 
-use Enea\Sequenceable\Contracts\SequenceableContract;
-use Enea\Sequenceable\Contracts\SequenceContract;
-use Enea\Sequenceable\Exceptions\SequenceException;
+use Vaened\Sequenceable\Contracts\SequenceableContract;
+use Vaened\Sequenceable\Contracts\SequenceContract;
+use Vaened\Sequenceable\Exceptions\SequenceException;
 use Vaened\SequenceGenerator\Collection as SerieCollection;
+
 use function collect;
 
 class Succession

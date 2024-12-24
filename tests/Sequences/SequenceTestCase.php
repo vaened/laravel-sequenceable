@@ -3,18 +3,18 @@
  * Created by enea dhack - 27/06/2020 17:18.
  */
 
-namespace Enea\Tests\Sequences;
+namespace Vaened\Sequenceable\Tests\Sequences;
 
-use Enea\Tests\DatabaseTestCase;
-use Enea\Tests\Models\Document;
+use Vaened\Sequenceable\Tests\DatabaseTestCase;
+use Vaened\Sequenceable\Tests\Models\Document;
 
 abstract class SequenceTestCase extends DatabaseTestCase
 {
     abstract public function test_generate_sequence(): void;
 
-    abstract protected function models(): array;
-
     abstract public function getExpectedDocumentValues(): array;
+
+    abstract protected function models(): array;
 
     public function setUp(): void
     {
@@ -29,9 +29,9 @@ abstract class SequenceTestCase extends DatabaseTestCase
         $this->assertDatabaseCount('documents', count($documents));
         foreach ($documents as $document) {
             $this->assertDatabaseHas('documents', [
-                'number' => $document['number'],
+                'number'        => $document['number'],
                 'number_string' => $document['number_string'],
-                'type' => $document['type'],
+                'type'          => $document['type'],
             ]);
         }
     }

@@ -1,5 +1,5 @@
 {
-  "name": "enea/laravel-sequenceable",
+  "name": "vaened/laravel-sequenceable",
   "description": "Facilitates the generation and autocompletion of a sequential value in the database",
   "keywords": [
     "sequence",
@@ -28,18 +28,18 @@
   },
   "autoload": {
     "psr-4": {
-      "Enea\\Sequenceable\\": "src/"
+      "Vaened\\Sequenceable\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Enea\\Tests\\": "tests/"
+      "Vaened\\Sequenceable\\Tests\\": "tests/"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "Enea\\Sequenceable\\SequenceableServiceProvider"
+        "Vaened\\Sequenceable\\SequenceableServiceProvider"
       ]
     }
   }

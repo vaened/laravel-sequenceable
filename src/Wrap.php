@@ -3,14 +3,14 @@
  * Created by enea dhack - 26/06/2020 20:12.
  */
 
-namespace Enea\Sequenceable;
+namespace Vaened\Sequenceable;
 
 use Closure;
 use Vaened\SequenceGenerator\Collection as SerieCollection;
 
 class Wrap
 {
-    protected array $sequences = [];
+    protected array  $sequences = [];
 
     protected string $sequence;
 

@@ -3,12 +3,13 @@
  * Created by enea dhack - 17/06/17 10:16 PM.
  */
 
-namespace Enea\Sequenceable;
+namespace Vaened\Sequenceable;
 
-use Enea\Sequenceable\Contracts\SequenceableContract;
+use Vaened\Sequenceable\Contracts\SequenceableContract;
 use Illuminate\Support\Collection;
 use Vaened\SequenceGenerator\Generator as SequenceGenerator;
 use Vaened\SequenceGenerator\Normalizer;
+
 use function collect;
 use function resolve;
 

@@ -1,10 +1,11 @@
 <?php
 
-namespace Enea\Sequenceable;
+namespace Vaened\Sequenceable;
 
-use Enea\Sequenceable\Model\Sequence;
+use Vaened\Sequenceable\Model\Sequence;
 use Illuminate\Support\ServiceProvider;
 use Vaened\SequenceGenerator\Contracts\SequenceRepository;
+
 use function config;
 
 class SequenceableServiceProvider extends ServiceProvider

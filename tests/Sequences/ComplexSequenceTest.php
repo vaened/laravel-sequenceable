@@ -3,12 +3,12 @@
  * Created by enea dhack - 27/06/2020 18:05.
  */
 
-namespace Enea\Tests\Sequences;
+namespace Vaened\Sequenceable\Tests\Sequences;
 
-use Enea\Sequenceable\Serie;
-use Enea\Sequenceable\Wrap;
-use Enea\Tests\Models\CustomSequence;
-use Enea\Tests\Models\Document;
+use Vaened\Sequenceable\Serie;
+use Vaened\Sequenceable\Tests\Models\CustomSequence;
+use Vaened\Sequenceable\Tests\Models\Document;
+use Vaened\Sequenceable\Wrap;
 use Vaened\SequenceGenerator\Stylists\FixedLength;
 use Vaened\SequenceGenerator\Stylists\Prefixed;
 
@@ -64,32 +64,32 @@ class ComplexSequenceTest extends SequenceTestCase
                 ], ['type' => 'invoice']
             ),
             Document::create([
-                                 Serie::for('number_string')
-                                      ->scope('ticket')
-                                      ->styles([FixedLength::of(8)])
-                             ], ['type' => 'ticket']),
+                Serie::for('number_string')
+                     ->scope('ticket')
+                     ->styles([FixedLength::of(8)])
+            ], ['type' => 'ticket']),
             Document::create([
-                                 Serie::for('number_string')
-                                      ->scope('ticket')
-                                      ->styles([
-                                                   FixedLength::of(8),
-                                                   Prefixed::of('A')
-                                               ])
-                             ], ['type' => 'ticket']),
+                Serie::for('number_string')
+                     ->scope('ticket')
+                     ->styles([
+                         FixedLength::of(8),
+                         Prefixed::of('A')
+                     ])
+            ], ['type' => 'ticket']),
 
             Document::create([
-                                 Wrap::create(
-                                     CustomSequence::class,
-                                     static fn(Wrap $wrap) => $wrap->column('number')->scope('val')
-                                 ),
-                             ], ['type' => 'val']),
+                Wrap::create(
+                    CustomSequence::class,
+                    static fn(Wrap $wrap) => $wrap->column('number')->scope('val')
+                ),
+            ], ['type' => 'val']),
 
             Document::create([
-                                 Wrap::create(CustomSequence::class, function (Wrap $wrap): void {
-                                     $wrap->column('number')->scope('val');
-                                     $wrap->column('number_string')->scope('val')->styles([FixedLength::of(3)]);
-                                 }),
-                             ], ['type' => 'val']),
+                Wrap::create(CustomSequence::class, function (Wrap $wrap): void {
+                    $wrap->column('number')->scope('val');
+                    $wrap->column('number_string')->scope('val')->styles([FixedLength::of(3)]);
+                }),
+            ], ['type' => 'val']),
         ];
     }
 }

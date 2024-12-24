@@ -3,11 +3,11 @@
  * Created by enea dhack - 27/06/2020 17:55.
  */
 
-namespace Enea\Tests\Sequences;
+namespace Vaened\Sequenceable\Tests\Sequences;
 
-use Enea\Sequenceable\Wrap;
-use Enea\Tests\Models\CustomSequence;
-use Enea\Tests\Models\Document;
+use Vaened\Sequenceable\Tests\Models\CustomSequence;
+use Vaened\Sequenceable\Tests\Models\Document;
+use Vaened\Sequenceable\Wrap;
 
 class CustomSequenceModelTest extends SequenceTestCase
 {
@@ -15,10 +15,18 @@ class CustomSequenceModelTest extends SequenceTestCase
     {
         $this->assertDatabaseCount('sequences', 0);
         $this->assertDatabaseHas('custom_sequences', [
-            'source'    => 'documents',
+            'source' => 'documents',
             'column_id' => 'number.hai',
-            'sequence'  => 2
+            'sequence' => 2
         ]);
+    }
+
+    public function getExpectedDocumentValues(): array
+    {
+        return [
+            ['number' => 1, 'number_string' => null, 'type' => 'hai'],
+            ['number' => 2, 'number_string' => null, 'type' => 'hai'],
+        ];
     }
 
     protected function models(): array
@@ -37,14 +45,6 @@ class CustomSequenceModelTest extends SequenceTestCase
                     static fn(Wrap $wrap) => $wrap->column('number')->scope('hai')
                 ),
             ], ['type' => 'hai']),
-        ];
-    }
-
-    public function getExpectedDocumentValues(): array
-    {
-        return [
-            ['number' => 1, 'number_string' => null, 'type' => 'hai'],
-            ['number' => 2, 'number_string' => null, 'type' => 'hai'],
         ];
     }
 }
