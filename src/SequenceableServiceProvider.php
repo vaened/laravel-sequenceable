@@ -2,11 +2,13 @@
 
 namespace Vaened\Sequenceable;
 
-use Vaened\Sequenceable\Model\Sequence;
 use Illuminate\Support\ServiceProvider;
+use Vaened\Sequenceable\Model\Sequence;
 use Vaened\SequenceGenerator\Contracts\SequenceRepository;
 
+use function base_path;
 use function config;
+use function database_path;
 
 class SequenceableServiceProvider extends ServiceProvider
 {
@@ -20,7 +22,12 @@ class SequenceableServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'migrations');
-        $this->publishes([__DIR__ . '/../config/sequenceable.php' => base_path('config/sequenceable.php')]);
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../database/migrations'     => database_path('migrations'),
+                __DIR__ . '/../config/sequenceable.php' => base_path('config/sequenceable.php'),
+            ], 'sequenceable');
+        }
     }
 }
+
