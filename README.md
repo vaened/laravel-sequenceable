@@ -25,11 +25,6 @@ To get the latest version, simply require the project using Composer:
 ```sh
 composer require vaened/laravel-sequenceable
 ```
-
-Once installed, if you are not using automatic package discovery, then you need to register the [
-`Vaened\Sequenceable\SequenceableServiceProvider`](https://github.com/vaened/laravel-sequenceable/blob/master/src/SequenceableServiceProvider.php)
-service provider in your `config/app.php`.
-
 Now. Publish the configuration file.
 
 ```sh
