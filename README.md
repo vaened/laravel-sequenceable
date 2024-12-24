@@ -33,7 +33,7 @@ service provider in your `config/app.php`.
 Now. Publish the configuration file.
 
 ```sh
-php artisan vendor:publish --provider='Vaened\Sequenceable\SequenceableServiceProvider'
+php artisan vendor:publish --tag='sequenceable'
 ```
 
 And finally run migrations.
