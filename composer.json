@@ -18,8 +18,7 @@
   "require": {
     "php": "^8.2",
     "laravel/framework": "^v11.15|^12.0",
-    "vaened/php-sequence-generator": "^2.0.0",
-    "savia/nubefact-integration": "^0.2.0"
+    "vaened/php-sequence-generator": "^2.0.0"
   },
   "license": "MIT",
   "type": "library",
@@ -43,11 +42,5 @@
         "Vaened\\Sequenceable\\SequenceableServiceProvider"
       ]
     }
-  },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:barnald1000/nubefact-integration.git"
-    }
-  ]
+  }
 }
