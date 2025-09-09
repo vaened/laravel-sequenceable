@@ -18,15 +18,15 @@ class Serie extends BaseSerie
         return new self($column);
     }
 
-    public function prefixed(string $prefix): static
+    public function prefixed(string $prefix, bool $additional = false): static
     {
-        $this->stylists[] = new Prefixed($prefix);
+        $this->stylists[] = new Prefixed($prefix, $additional);
         return $this;
     }
 
-    public function length(int $fixedLength): static
+    public function length(int $fixedLength, int $padType = STR_PAD_LEFT): static
     {
-        $this->stylists[] = new FixedLength($fixedLength);
+        $this->stylists[] = new FixedLength($fixedLength, $padType);
         return $this;
     }
 
